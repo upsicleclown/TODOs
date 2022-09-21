@@ -14,7 +14,7 @@ The wiki contains a [landing page for the project](https://git.uwaterloo.ca/m5fo
 
 ## Issues and Milestones
 
-We use [Issues](https://git.uwaterloo.ca/m5fortin/cs346-template/-/issues) to track the work to be done (where an issue represents an assignable task, which may be a new feature, change to an existing feature, or a bug fix). [Milestones](https://git.uwaterloo.ca/m5fortin/cs346-template/-/milestones) are a way of grouping issues into Sprints.
+We use [Issues](https://git.uwaterloo.ca/m5fortin/cs346-project/-/issues) to track the work to be done (where an issue represents an assignable task, which may be a new feature, change to an existing feature, or a bug fix). [Milestones](https://git.uwaterloo.ca/m5fortin/cs346-project/-/milestones) are a way of grouping issues into Sprints.
 
 * Unassigned issues represent your Product Backlog (i.e. unassigned work).
 * Issues are generally assigned to a sprint during the sprint kickoff meeting. 
