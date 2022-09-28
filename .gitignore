@@ -1,4 +1,6 @@
 build/
 out/
+*.class
+.grade
 .DS_Store
 .idea/
