@@ -1,6 +1,7 @@
 build/
 out/
 *.class
-.grade
+.gradle/
+gradle/
 .DS_Store
 .idea/
