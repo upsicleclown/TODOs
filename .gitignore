@@ -2,6 +2,3 @@ build/
 out/
 .DS_Store
 .idea/
-source/.idea
-source/.gradle
-source/gradle
