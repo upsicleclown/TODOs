@@ -1,12 +1,12 @@
 plugins {
     id 'java'
     id 'application'
-    id 'org.jetbrains.kotlin.jvm' version '1.5.31'
-    id 'org.openjfx.javafxplugin' version '0.0.10'
+    id 'org.jetbrains.kotlin.jvm' version '1.7.10'
+    id 'org.openjfx.javafxplugin' version '0.0.12'
     id 'org.beryx.jlink' version '2.24.1'
 }
 
-group 'com.example'
+group 'net.codebot'
 version '1.0-SNAPSHOT'
 
 repositories {
@@ -14,19 +14,18 @@ repositories {
 }
 
 ext {
-    junitVersion = '5.8.1'
+    junitVersion = '5.8.2'
 }
 
-sourceCompatibility = '16'
-targetCompatibility = '16'
+sourceCompatibility = '17'
+targetCompatibility = '17'
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
 
 application {
-    mainModule = 'com.example.source'
-    mainClass = 'com.example.source.HelloApplication'
+    mainClass = 'Main'
 }
 
 [compileKotlin, compileTestKotlin].forEach {
@@ -36,14 +35,11 @@ application {
 }
 
 javafx {
-    version = '16'
+    version = '17.0.2'
     modules = ['javafx.controls', 'javafx.fxml']
 }
 
 dependencies {
-    implementation('org.controlsfx:controlsfx:11.1.0')
-    implementation 'org.junit.jupiter:junit-jupiter:5.8.1'
-
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
 }
