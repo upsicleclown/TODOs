@@ -19,7 +19,6 @@ variables:
 before_script:
   - GRADLE_USER_HOME="$(pwd)/.gradlew"
   - export GRADLE_USER_HOME
-  - gradle wrapper
 
 build:
   stage: build
