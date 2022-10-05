@@ -43,7 +43,7 @@ javafx {
 dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0'
     testImplementation 'org.jetbrains.kotlin:kotlin-test'
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.0'
+    testImplementation "org.junit.jupiter:junit-jupiter:${junitVersion}"
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
 }
 
