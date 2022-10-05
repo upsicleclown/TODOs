@@ -11,5 +11,6 @@ internal class GroupTest {
 
         val group = Group(expectedName)
         assertEquals(group.name, expectedName)
+        assertEquals(group.labelIds, listOf<Int>())
     }
 }
