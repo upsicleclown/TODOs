@@ -2,7 +2,5 @@ build/
 out/
 *.class
 .gradle/
-gradle/
 .DS_Store
 .idea/
-!gradle/wrapper/gradle-wrapper.jar
