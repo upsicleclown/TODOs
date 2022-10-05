@@ -4,6 +4,7 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.7.10'
     id 'org.openjfx.javafxplugin' version '0.0.12'
     id 'org.beryx.jlink' version '2.24.1'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.7.10'
 }
 
 group 'net.codebot'
@@ -40,7 +41,9 @@ javafx {
 }
 
 dependencies {
-    testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
+    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0'
+    testImplementation 'org.jetbrains.kotlin:kotlin-test'
+    testImplementation "org.junit.jupiter:junit-jupiter:${junitVersion}"
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
 }
 

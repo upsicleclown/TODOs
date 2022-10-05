@@ -1,0 +1,5 @@
+[
+  {"title":"item1","isCompleted":false,"id":1},
+  {"title":"item2","isCompleted":false,"id":2},
+  {"title":"item3","isCompleted":true,"groupId":1,"id":3}
+]
