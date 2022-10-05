@@ -17,8 +17,9 @@ variables:
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"
 
 before_script:
-  - GRADLE_USER_HOME="$(pwd)/.gradle"
+  - GRADLE_USER_HOME="$(pwd)/.gradlew"
   - export GRADLE_USER_HOME
+  - gradle wrapper
 
 build:
   stage: build
@@ -32,7 +33,7 @@ build:
 
 test:
   stage: test
-  script: gradle check
+  script: ./gradlew check
   cache:
     key: "$CI_COMMIT_REF_NAME"
     policy: pull
