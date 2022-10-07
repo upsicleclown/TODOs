@@ -10,9 +10,11 @@ class Main : Application() {
         val layout = BorderPane()
         layout.top = VBox()
         val scene = Scene(layout, 500.0, 500.0)
-        primaryStage.title = "Application"
+        primaryStage.title = "TODO List"
         primaryStage.scene = scene
-        primaryStage.isResizable = false
+        primaryStage.isResizable = true
+        primaryStage.minHeight = 500.0
+        primaryStage.minWidth = 500.0
         primaryStage.show()
     }
 }
