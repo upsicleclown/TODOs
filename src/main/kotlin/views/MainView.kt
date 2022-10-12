@@ -1,14 +1,26 @@
 package views
 
-import tornadofx.View
-import tornadofx.borderpane;
-import tornadofx.vbox;
+import controllers.GroupViewController
+import controllers.SidepaneController
+import tornadofx.*;
 
 class MainView: View() {
-    override val root = borderpane () {
-        top = vbox()
-        title = "TODO list"
-        minWidth = 500.0
-        maxWidth = 500.0
+    val sidepaneController : SidepaneController by inject()
+    val groupViewController : GroupViewController by inject()
+
+    override val root = borderpane {
+        title = "TODO list" // TODO: if we want to eventually support localization, save this as an i18n resource
+
+        left {
+            listmenu {
+                sidepaneController.groups().map { group ->
+                    button(group.name) {
+                        action { sidepaneController.focusGroup(group)}
+                    }
+                }
+            }
+        }
+
+        center<GroupView>()
     }
 }

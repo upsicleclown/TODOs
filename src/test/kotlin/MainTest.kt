@@ -5,6 +5,6 @@ internal class MainTest {
 
     @Test
     fun testMain() {
-        Main().init()
+        Application().init()
     }
 }
