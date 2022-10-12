@@ -2,6 +2,7 @@ package server.database
 
 import models.Group
 import models.Item
+import models.Label
 
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
@@ -12,10 +13,14 @@ import java.io.File
 /*
    In file database represented as a JSON.
  */
-class FileDB(private val itemFilepath: String, val groupFilepath: String) {
+class FileDB(private val itemFilepath: String, private val labelFilepath: String, private val groupFilepath: String) {
     /* Properties related to items. */
     private var items: MutableList<Item> = mutableListOf()
     private var nextItemId: Int = 1
+
+    /* Properties related to labels. */
+    private var labels: MutableList<Label> = mutableListOf()
+    private var nextLabelId: Int = 1
 
     /* Properties related to groups. */
     private var groups: MutableList<Group> = mutableListOf()
@@ -46,7 +51,7 @@ class FileDB(private val itemFilepath: String, val groupFilepath: String) {
             if (item.id == itemId) {
                 item.title = newItem.title
                 item.isCompleted = newItem.isCompleted
-                item.groupId = newItem.groupId
+                item.labelIds = newItem.labelIds
                 return
             }
         }
@@ -66,6 +71,51 @@ class FileDB(private val itemFilepath: String, val groupFilepath: String) {
         val jsonList = File(itemFilepath).readText()
         items.addAll(Json.decodeFromString(jsonList))
         nextItemId = items.maxOf { item -> item.id } + 1
+    }
+
+    /* Methods related to labels. */
+    fun addLabel(label: Label) {
+        label.id = nextLabelId
+        nextLabelId += 1
+        labels.add(label)
+    }
+
+    fun removeLabel(labelId: Int) {
+        for (currLabel in labels) {
+            if (currLabel.id == labelId) {
+                labels.remove(currLabel)
+                return
+            }
+        }
+        throw IllegalArgumentException("Could not remove label with id $labelId since no such label in database.")
+    }
+
+    /*
+        Label with provided id will now become new label. Hence, ensure new label has all fields it needs to have.
+     */
+    fun editLabel(labelId: Int, newLabel: Label) {
+        for (label in labels) {
+            if (label.id == labelId) {
+                label.name = newLabel.name
+                return
+            }
+        }
+        throw IllegalArgumentException("Could not edit label with id $labelId since no such label in database.")
+    }
+
+    fun getLabels(): List<Label> {
+        return labels
+    }
+
+    fun saveLabels() {
+        val jsonList: List<JsonElement> = groups.map { label -> Json.encodeToJsonElement(label) }
+        File(labelFilepath).writeText(jsonList.toString())
+    }
+
+    fun loadLabels() {
+        val jsonList = File(labelFilepath).readText()
+        labels.addAll(Json.decodeFromString(jsonList))
+        nextLabelId = labels.maxOf { label -> label.id } + 1
     }
 
     /* Methods related to groups. */
@@ -104,7 +154,7 @@ class FileDB(private val itemFilepath: String, val groupFilepath: String) {
     }
 
     fun saveGroups() {
-        val jsonList: List<JsonElement> = groups.map { item -> Json.encodeToJsonElement(item) }
+        val jsonList: List<JsonElement> = groups.map { group -> Json.encodeToJsonElement(group) }
         File(groupFilepath).writeText(jsonList.toString())
     }
 

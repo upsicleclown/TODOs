@@ -13,5 +13,6 @@ internal class ItemTest {
         val item = Item(expectedTitle, expectedIsCompleted)
         assertEquals(item.title, expectedTitle)
         assertEquals(item.isCompleted, expectedIsCompleted)
+        assertEquals(item.labelIds, listOf<Int>())
     }
 }

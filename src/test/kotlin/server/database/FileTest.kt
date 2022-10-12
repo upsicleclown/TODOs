@@ -2,6 +2,7 @@ package server.database
 
 import models.Group
 import models.Item
+import models.Label
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -11,12 +12,15 @@ internal class FileTest {
     // We know the files exist.
     private val db: FileDB = FileDB(
         this.javaClass.classLoader.getResource("server/database/items.json")!!.path,
-        this.javaClass.classLoader.getResource("server/database/groups.json")!!.path
+        this.javaClass.classLoader.getResource("server/database/labels.json")!!.path,
+        this.javaClass.classLoader.getResource("server/database/groups.json")!!.path,
+
     )
 
     @BeforeTest
     fun setup() {
         db.loadItems()
+        db.loadLabels()
         db.loadGroups()
     }
 
@@ -64,6 +68,51 @@ internal class FileTest {
 
         // load is already done in @BeforeTest
         assertEquals(db.getItems().map { item: Item -> item.id }, expectedItemIds)
+    }
+
+    /*
+       Tests related to labels.
+     */
+    @Test
+    fun testAddLabel() {
+        val expectedLabelId = 4
+        val expectedLabelName = "label4"
+
+        db.addLabel(Label(expectedLabelName))
+        assert(db.getLabels().contains(Label(expectedLabelName, id=expectedLabelId)))
+    }
+
+    @Test
+    fun testRemoveLabel() {
+        val expectedLabelId = 1
+
+        db.removeLabel(expectedLabelId)
+        assertFalse(db.getLabels().map { label: Label -> label.id }.contains(expectedLabelId))
+    }
+
+    @Test
+    fun testEditLabel() {
+        val expectedLabelId = 1
+        val newName = "newLabel1"
+
+        db.editLabel(expectedLabelId, Label(newName))
+        assert(db.getLabels().first { label: Label -> label.id == expectedLabelId }.name == newName)
+    }
+
+    @Test
+    fun testGetLabels() {
+        val expectedLabelIds = listOf(1, 2, 3, 4)
+
+        db.addLabel(Label("test4"))
+        assertEquals(db.getLabels().map { label: Label -> label.id }, expectedLabelIds)
+    }
+
+    @Test
+    fun testLoadLabels() {
+        val expectedLabelIds = listOf(1, 2, 3)
+
+        // load is already done in @BeforeTest
+        assertEquals(db.getLabels().map { label: Label -> label.id }, expectedLabelIds)
     }
 
     /*
