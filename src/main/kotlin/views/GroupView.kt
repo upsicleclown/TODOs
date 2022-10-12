@@ -1,12 +1,6 @@
 package views
 
 import controllers.GroupViewController
-import controllers.SidepaneController
-import javafx.collections.FXCollections
-import javafx.collections.ObservableArray
-import javafx.collections.ObservableList
-import javafx.scene.Parent
-import models.Group
 import models.InvalidateGroupViewEvent
 import models.Item
 import tornadofx.*;
