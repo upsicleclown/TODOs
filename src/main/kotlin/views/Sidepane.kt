@@ -2,15 +2,18 @@ package views
 
 import controllers.SidepaneController
 import javafx.scene.Parent
-import javafx.scene.layout.VBox
-import tornadofx.View
+import tornadofx.*;
 
 class Sidepane() : View() {
-    val controller: SidepaneController by inject()
+    val sidepaneController: SidepaneController by inject()
 
-    override val root: Parent = VBox()
-
-    init {
-
+    override val root: Parent = vbox {
+        listmenu {
+            sidepaneController.groups().map { group ->
+                button(group.name) {
+                    action { sidepaneController.focusGroup(group)}
+                }
+            }
+        }
     }
 }
