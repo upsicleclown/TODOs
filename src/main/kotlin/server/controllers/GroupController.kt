@@ -1,8 +1,10 @@
 package server.controllers
 
 import models.Group
-import org.springframework.web.bind.annotation.*
 import server.Service
+
+import org.springframework.web.bind.annotation.*
+
 
 @RestController
 internal class GroupController(private val service: Service) {

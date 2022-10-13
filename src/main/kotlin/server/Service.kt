@@ -3,9 +3,9 @@ package server
 import models.Group
 import models.Item
 import models.Label
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.stereotype.Service
 import server.database.FileDB
+
+import org.springframework.stereotype.Service
 
 @Service
 class Service () {
