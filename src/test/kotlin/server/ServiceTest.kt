@@ -9,11 +9,7 @@ import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
 
 class ServiceTest {
-    private val service = Service(
-        this.javaClass.classLoader.getResource("server/database/items.json")!!.path,
-        this.javaClass.classLoader.getResource("server/database/labels.json")!!.path,
-        this.javaClass.classLoader.getResource("server/database/groups.json")!!.path
-    )
+    private val service = Service()
 
     @Test
     fun testInit() {
