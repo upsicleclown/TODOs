@@ -3,17 +3,19 @@ package server
 import models.Group
 import models.Item
 import models.Label
+
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
 
+/**
+ *
+ * This class holds integration tests for Service
+ *
+ * */
 class ServiceTest {
-    private val service = Service(
-        this.javaClass.classLoader.getResource("server/database/items.json")!!.path,
-        this.javaClass.classLoader.getResource("server/database/labels.json")!!.path,
-        this.javaClass.classLoader.getResource("server/database/groups.json")!!.path
-    )
+    private val service = Service()
 
     @Test
     fun testInit() {

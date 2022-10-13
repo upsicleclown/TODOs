@@ -4,10 +4,18 @@ import models.Group
 import models.Item
 import models.Label
 import server.database.FileDB
-import kotlin.IllegalArgumentException
 
-class Service (itemDBFilepath: String, labelFilepath: String, groupDBFilePath: String) {
-    var fileDB: FileDB = FileDB(itemDBFilepath, labelFilepath, groupDBFilePath)
+import org.springframework.stereotype.Service
+
+@Service
+class Service () {
+
+    // TODO: remove these once FileDB replaced by real DB
+    private val itemDBFilepath = this.javaClass.classLoader.getResource("server/database/items.json")!!.path
+    private val labelDBFilepath = this.javaClass.classLoader.getResource("server/database/labels.json")!!.path
+    private val groupDBFilepath = this.javaClass.classLoader.getResource("server/database/groups.json")!!.path
+
+    var fileDB: FileDB = FileDB(itemDBFilepath, labelDBFilepath, groupDBFilepath)
 
     init {
         fileDB.loadItems()
@@ -61,6 +69,7 @@ class Service (itemDBFilepath: String, labelFilepath: String, groupDBFilePath: S
     fun removeItem(itemId: Int) {
         fileDB.removeItem(itemId)
     }
+
 
     fun getItems(): List<Item> {
         return fileDB.getItems()
