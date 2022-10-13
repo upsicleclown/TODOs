@@ -9,6 +9,11 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
 
+/**
+ *
+ * This class holds integration tests for Service
+ *
+ * */
 class ServiceTest {
     private val service = Service()
 
