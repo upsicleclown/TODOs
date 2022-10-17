@@ -3,6 +3,7 @@ package server.database
 import models.Group
 import models.Item
 import models.Label
+import models.WindowSettings
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -11,10 +12,10 @@ import kotlin.test.assertFalse
 internal class FileTest {
     // We know the files exist.
     private val db: FileDB = FileDB(
+        this.javaClass.classLoader.getResource("server/database/window_settings.json")!!.path,
         this.javaClass.classLoader.getResource("server/database/items.json")!!.path,
         this.javaClass.classLoader.getResource("server/database/labels.json")!!.path,
         this.javaClass.classLoader.getResource("server/database/groups.json")!!.path
-
     )
 
     @BeforeTest
@@ -22,6 +23,29 @@ internal class FileTest {
         db.loadItems()
         db.loadLabels()
         db.loadGroups()
+    }
+
+    /*
+       Tests related to window settings.
+     */
+    @Test
+    fun testEditWindowSettings() {
+        val newHeight = 600.0
+        val newWidth = 400.0
+
+        db.editWindowSettings(WindowSettings(newHeight, newWidth))
+        val newWindowSettings = db.getWindowSettings()
+        assertEquals(newWindowSettings.height, newHeight)
+        assertEquals(newWindowSettings.width, newWidth)
+    }
+
+    @Test
+    fun testGetWindowSettings() {
+        val expectedValue = 500.0
+
+        val windowSettings = db.getWindowSettings()
+        assertEquals(windowSettings.height, expectedValue)
+        assertEquals(windowSettings.width, expectedValue)
     }
 
     /*

@@ -7,12 +7,22 @@ import kotlinx.serialization.json.encodeToJsonElement
 import models.Group
 import models.Item
 import models.Label
+import models.WindowSettings
 import java.io.File
 
 /*
    In file database represented as a JSON.
  */
-class FileDB(private val itemFilepath: String, private val labelFilepath: String, private val groupFilepath: String) {
+class FileDB(
+    private val windowSettingFilePath: String,
+    private val itemFilepath: String,
+    private val labelFilepath: String,
+    private val groupFilepath: String
+) {
+
+    /* Properties related to window settings. */
+    private var windowSettings: WindowSettings = WindowSettings()
+
     /* Properties related to items. */
     private var items: MutableList<Item> = mutableListOf()
     private var nextItemId: Int = 1
@@ -24,6 +34,25 @@ class FileDB(private val itemFilepath: String, private val labelFilepath: String
     /* Properties related to groups. */
     private var groups: MutableList<Group> = mutableListOf()
     private var nextGroupId: Int = 1
+
+    /* Methods related to window settings */
+    fun editWindowSettings(windowSettings: WindowSettings) {
+        this.windowSettings = windowSettings
+    }
+
+    fun getWindowSettings(): WindowSettings {
+        return windowSettings
+    }
+
+    fun saveWindowSettings() {
+        val jsonDict: JsonElement = Json.encodeToJsonElement(windowSettings)
+        File(windowSettingFilePath).writeText(jsonDict.toString())
+    }
+
+    fun loadWindowSettings() {
+        val jsonDict = File(windowSettingFilePath).readText()
+        windowSettings = Json.decodeFromString(jsonDict)
+    }
 
     /* Methods related to items. */
     fun addItem(item: Item) {

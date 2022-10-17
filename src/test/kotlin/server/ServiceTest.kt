@@ -3,6 +3,7 @@ package server
 import models.Group
 import models.Item
 import models.Label
+import models.WindowSettings
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -18,11 +19,13 @@ class ServiceTest {
 
     @Test
     fun testInit() {
-        // Loads items and groups on init, ensure everything is loaded.
+        // Loads window settings, items, labels and groups on init, ensure everything is loaded.
+        val expectedWindowSettings = WindowSettings(1000.0, 1000.0)
         val expectedItemIds = listOf(1, 2, 3)
         val expectedLabelIds = listOf(1, 2, 3)
         val expectedGroupIds = listOf(1, 2, 3)
 
+        assertEquals(service.getWindowSettings(), expectedWindowSettings)
         assertEquals(service.getItems().map { item: Item -> item.id }, expectedItemIds)
         assertEquals(service.getLabels().map { label: Label -> label.id }, expectedLabelIds)
         assertEquals(service.getGroups().map { group: Group -> group.id }, expectedGroupIds)

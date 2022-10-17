@@ -3,20 +3,24 @@ package server
 import models.Group
 import models.Item
 import models.Label
+import models.WindowSettings
 import org.springframework.stereotype.Service
 import server.database.FileDB
 
 @Service
-class Service() {
+class Service {
+    // Window settings will remain saved in file. File path could potentially become a secret.
+    private val windowSettingDBFilePath = this.javaClass.classLoader.getResource("server/database/window_settings.json")!!.path
 
     // TODO: remove these once FileDB replaced by real DB
     private val itemDBFilepath = this.javaClass.classLoader.getResource("server/database/items.json")!!.path
     private val labelDBFilepath = this.javaClass.classLoader.getResource("server/database/labels.json")!!.path
     private val groupDBFilepath = this.javaClass.classLoader.getResource("server/database/groups.json")!!.path
 
-    var fileDB: FileDB = FileDB(itemDBFilepath, labelDBFilepath, groupDBFilepath)
+    private var fileDB: FileDB = FileDB(windowSettingDBFilePath, itemDBFilepath, labelDBFilepath, groupDBFilepath)
 
     init {
+        fileDB.loadWindowSettings()
         fileDB.loadItems()
         fileDB.loadLabels()
         fileDB.loadGroups()
@@ -26,9 +30,24 @@ class Service() {
        This method must be called when the client is done using the service.
      */
     fun close() {
+        fileDB.saveWindowSettings()
         fileDB.saveItems()
         fileDB.saveLabels()
         fileDB.saveGroups()
+    }
+
+    /*
+       Window setting endpoints
+     */
+    fun getWindowSettings(): WindowSettings {
+        return fileDB.getWindowSettings()
+    }
+
+    /*
+        WindowSettings will now become new settings. Hence, ensure new window settings has all fields it needs to have.
+     */
+    fun editWindowSettings(newWindowSettings: WindowSettings) {
+        fileDB.editWindowSettings(newWindowSettings)
     }
 
     /*
