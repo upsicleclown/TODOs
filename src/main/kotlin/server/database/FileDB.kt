@@ -1,13 +1,12 @@
 package server.database
 
-import models.Group
-import models.Item
-import models.Label
-
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.encodeToJsonElement
+import models.Group
+import models.Item
+import models.Label
 import java.io.File
 
 /*
@@ -163,5 +162,4 @@ class FileDB(private val itemFilepath: String, private val labelFilepath: String
         groups.addAll(Json.decodeFromString(jsonList))
         nextGroupId = groups.maxOf { group -> group.id } + 1
     }
-
 }

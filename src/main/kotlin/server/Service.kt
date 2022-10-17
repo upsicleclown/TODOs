@@ -3,12 +3,11 @@ package server
 import models.Group
 import models.Item
 import models.Label
+import org.springframework.stereotype.Service
 import server.database.FileDB
 
-import org.springframework.stereotype.Service
-
 @Service
-class Service () {
+class Service() {
 
     // TODO: remove these once FileDB replaced by real DB
     private val itemDBFilepath = this.javaClass.classLoader.getResource("server/database/items.json")!!.path
@@ -42,7 +41,7 @@ class Service () {
             if (labelIdsNotInDb.isNotEmpty()) {
                 throw IllegalArgumentException(
                     "Cannot add item with label ids $labelIdsNotInDb " +
-                            "since these label ids do not exist in the database."
+                        "since these label ids do not exist in the database."
                 )
             }
         }
@@ -59,7 +58,7 @@ class Service () {
             if (labelIdsNotInDb.isNotEmpty()) {
                 throw IllegalArgumentException(
                     "Cannot add item with label ids $labelIdsNotInDb " +
-                            "since these label ids do not exist in the database."
+                        "since these label ids do not exist in the database."
                 )
             }
         }
@@ -69,7 +68,6 @@ class Service () {
     fun removeItem(itemId: Int) {
         fileDB.removeItem(itemId)
     }
-
 
     fun getItems(): List<Item> {
         return fileDB.getItems()
@@ -134,7 +132,7 @@ class Service () {
             if (labelIdsNotInDb.isNotEmpty()) {
                 throw IllegalArgumentException(
                     "Cannot add group with label ids $labelIdsNotInDb " +
-                            "since these label ids do not exist in the database."
+                        "since these label ids do not exist in the database."
                 )
             }
         }
@@ -151,7 +149,7 @@ class Service () {
             if (labelIdsNotInDb.isNotEmpty()) {
                 throw IllegalArgumentException(
                     "Cannot edit group with label ids $labelIdsNotInDb " +
-                            "since these label ids do not exist in the database."
+                        "since these label ids do not exist in the database."
                 )
             }
         }
@@ -165,5 +163,4 @@ class Service () {
     fun getGroups(): List<Group> {
         return fileDB.getGroups()
     }
-
 }

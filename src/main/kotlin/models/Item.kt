@@ -9,7 +9,11 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class Item(
-    var title: String, var isCompleted: Boolean, var labelIds: MutableList<Int> = mutableListOf(), var id: Int = 0) {
+    var title: String,
+    var isCompleted: Boolean,
+    var labelIds: MutableList<Int> = mutableListOf(),
+    var id: Int = 0
+) {
     /*
         Two items are said to be equal if they have the same id.
      */
