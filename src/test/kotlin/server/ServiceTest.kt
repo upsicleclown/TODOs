@@ -20,7 +20,7 @@ class ServiceTest {
     @Test
     fun testInit() {
         // Loads window settings, items, labels and groups on init, ensure everything is loaded.
-        val expectedWindowSettings = WindowSettings(1000.0, 1000.0)
+        val expectedWindowSettings = WindowSettings(500.0, 500.0)
         val expectedItemIds = listOf(1, 2, 3)
         val expectedLabelIds = listOf(1, 2, 3)
         val expectedGroupIds = listOf(1, 2, 3)

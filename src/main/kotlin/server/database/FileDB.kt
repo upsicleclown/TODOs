@@ -21,7 +21,7 @@ class FileDB(
 ) {
 
     /* Properties related to window settings. */
-    private var windowSettings: WindowSettings = WindowSettings()
+    private lateinit var windowSettings: WindowSettings
 
     /* Properties related to items. */
     private var items: MutableList<Item> = mutableListOf()
@@ -34,6 +34,10 @@ class FileDB(
     /* Properties related to groups. */
     private var groups: MutableList<Group> = mutableListOf()
     private var nextGroupId: Int = 1
+
+    init {
+        loadWindowSettings()
+    }
 
     /* Methods related to window settings */
     fun editWindowSettings(windowSettings: WindowSettings) {
@@ -49,7 +53,7 @@ class FileDB(
         File(windowSettingFilePath).writeText(jsonDict.toString())
     }
 
-    fun loadWindowSettings() {
+    private fun loadWindowSettings() {
         val jsonDict = File(windowSettingFilePath).readText()
         windowSettings = Json.decodeFromString(jsonDict)
     }

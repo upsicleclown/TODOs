@@ -34,7 +34,7 @@ class ApplicationTest {
 
     @Test
     fun testRUWindowSettings() {
-        val expectedValue = 1000.0
+        val expectedValue = 500.0
         val newHeight = 600.0
         val newWidth = 400.0
 

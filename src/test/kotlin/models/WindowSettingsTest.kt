@@ -9,7 +9,7 @@ internal class WindowSettingsTest {
     fun testConstructor() {
         val expectedValue = 500.0
 
-        val windowSettings = WindowSettings()
+        val windowSettings = WindowSettings(expectedValue, expectedValue)
         assertEquals(windowSettings.height, expectedValue)
         assertEquals(windowSettings.width, expectedValue)
     }

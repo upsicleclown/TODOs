@@ -20,7 +20,6 @@ class Service {
     private var fileDB: FileDB = FileDB(windowSettingDBFilePath, itemDBFilepath, labelDBFilepath, groupDBFilepath)
 
     init {
-        fileDB.loadWindowSettings()
         fileDB.loadItems()
         fileDB.loadLabels()
         fileDB.loadGroups()
