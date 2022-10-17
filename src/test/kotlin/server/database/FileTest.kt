@@ -13,7 +13,7 @@ internal class FileTest {
     private val db: FileDB = FileDB(
         this.javaClass.classLoader.getResource("server/database/items.json")!!.path,
         this.javaClass.classLoader.getResource("server/database/labels.json")!!.path,
-        this.javaClass.classLoader.getResource("server/database/groups.json")!!.path,
+        this.javaClass.classLoader.getResource("server/database/groups.json")!!.path
 
     )
 
@@ -34,7 +34,7 @@ internal class FileTest {
         val expectedItemIsCompleted = true
 
         db.addItem(Item(expectedItemTitle, expectedItemIsCompleted))
-        assert(db.getItems().contains(Item(expectedItemTitle, expectedItemIsCompleted, id=expectedItemId)))
+        assert(db.getItems().contains(Item(expectedItemTitle, expectedItemIsCompleted, id = expectedItemId)))
     }
 
     @Test
@@ -79,7 +79,7 @@ internal class FileTest {
         val expectedLabelName = "label4"
 
         db.addLabel(Label(expectedLabelName))
-        assert(db.getLabels().contains(Label(expectedLabelName, id=expectedLabelId)))
+        assert(db.getLabels().contains(Label(expectedLabelName, id = expectedLabelId)))
     }
 
     @Test
@@ -124,7 +124,7 @@ internal class FileTest {
         val expectedGroupTitle = "group4"
 
         db.addGroup(Group(expectedGroupTitle))
-        assert(db.getGroups().contains(Group(expectedGroupTitle, id=expectedGroupId)))
+        assert(db.getGroups().contains(Group(expectedGroupTitle, id = expectedGroupId)))
     }
 
     @Test

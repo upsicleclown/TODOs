@@ -39,17 +39,18 @@ javafx {
 }
 
 dependencies {
-    testImplementation(enforcedPlatform("org.junit:junit-bom:5.9.0"))
     implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0'
-    implementation 'junit:junit:4.13.1'
-    testImplementation 'org.jetbrains.kotlin:kotlin-test'
-    testImplementation "org.junit.jupiter:junit-jupiter"
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+    implementation 'junit:junit:4.13.2'
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.jetbrains.kotlin:kotlin-reflect'
     implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    testImplementation 'org.jetbrains.kotlin:kotlin-test'
+    testImplementation "org.junit.jupiter:junit-jupiter"
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation(enforcedPlatform("org.junit:junit-bom:5.9.0"))
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 }
 
 test {
