@@ -13,7 +13,7 @@ class SidepaneController(todoApp: TODOApplication)  {
     init {
         app = todoApp
     }
-    private var groups: List<Group> = listOf(Group("test-group1"),
+    private var groups: List<Group> = listOf(Group("test-group-1"),
         Group("test-group-2"),
         Group("test-group-3"))
     private var focusedGroup: Group? = null
@@ -30,7 +30,6 @@ class SidepaneController(todoApp: TODOApplication)  {
         if (focus !in groups) return
         focusedGroup = focus
         app?.groupViewController?.loadGroup(focusedGroup)
-//        fire(InvalidateGroupViewRequest(focus))
     }
 
     fun createGroup() {}
