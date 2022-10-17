@@ -5,7 +5,7 @@ import models.Group
 import models.Item
 import views.GroupView
 
-class GroupViewController(app: TODOApplication) {
+class GroupViewController() {
     private var items = listOf<Item>()
     private var view: GroupView? = null
 
