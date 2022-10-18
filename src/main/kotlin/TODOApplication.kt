@@ -18,7 +18,7 @@ class TODOApplication : Application() {
         sidepaneController.addView(sidepaneView)
         groupViewController.addView(groupView)
     }
-    class MainView(sidepaneView: SidepaneView, groupView: GroupView): GridPane() {
+    class MainView(sidepaneView: SidepaneView, groupView: GroupView) : GridPane() {
         init {
             this.add(sidepaneView, 0, 0)
             this.add(groupView, 1, 0)

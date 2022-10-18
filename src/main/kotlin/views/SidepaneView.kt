@@ -6,7 +6,7 @@ import javafx.scene.control.Button
 import javafx.scene.control.ListView
 import javafx.scene.layout.VBox
 
-class SidepaneView(sidepaneController: SidepaneController): VBox() {
+class SidepaneView(sidepaneController: SidepaneController) : VBox() {
 
     var groupButtons = FXCollections.observableArrayList<Button>()
 
