@@ -6,7 +6,13 @@ import models.Item
 import views.GroupView
 
 class GroupViewController() {
+
+
     private var items = listOf<Item>()
+
+
+
+
     private var view: GroupView? = null
 
     fun loadGroup(group: Group?) {
