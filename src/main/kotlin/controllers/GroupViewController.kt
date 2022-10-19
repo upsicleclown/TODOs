@@ -12,7 +12,7 @@ class GroupViewController() {
         if (group === null) { return }
         /* Should be used for fetching group info from server necessary to render */
         items = listOf(Item("Task 1", isCompleted = true), Item("Task 2", isCompleted = false))
-        view?.refreshWithItems(items)
+        view?.refreshWithItems(group, items)
     }
 
     // view management
