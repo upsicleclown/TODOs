@@ -1,8 +1,8 @@
-package controllers
+package ui.controllers
 
 import TODOApplication
 import models.Group
-import views.SidepaneView
+import ui.views.SidepaneView
 
 class SidepaneController(todoApp: TODOApplication) {
     private var app: TODOApplication? = null
