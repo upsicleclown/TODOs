@@ -1,8 +1,8 @@
-package controllers
+package ui.controllers
 
 import models.Group
 import models.Item
-import views.GroupView
+import ui.views.GroupView
 
 class GroupViewController() {
     private var items = listOf<Item>()
