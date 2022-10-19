@@ -9,10 +9,10 @@ import views.SidepaneView
 
 class TODOApplication : Application() {
 
-    public val sidepaneController = SidepaneController(this)
-    public val groupViewController = GroupViewController()
-    public val sidepaneView = SidepaneView(sidepaneController)
-    public val groupView = GroupView(groupViewController)
+    private val sidepaneController = SidepaneController(this)
+    val groupViewController = GroupViewController()
+    private val sidepaneView = SidepaneView(sidepaneController)
+    private val groupView = GroupView(groupViewController)
 
     init {
         sidepaneController.addView(sidepaneView)
