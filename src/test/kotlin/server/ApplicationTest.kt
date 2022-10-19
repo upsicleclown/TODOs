@@ -1,6 +1,5 @@
 package server
 
-import junit.framework.Assert.assertEquals
 import org.json.JSONArray
 import org.json.JSONTokener
 import org.junit.jupiter.api.Test
@@ -15,6 +14,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.test.context.junit4.SpringRunner
+import kotlin.test.assertEquals
 
 /**
  *
@@ -23,7 +23,7 @@ import org.springframework.test.context.junit4.SpringRunner
  * */
 @RunWith(SpringRunner::class)
 @SpringBootTest(
-    classes = arrayOf(Application::class),
+    classes = [Application::class],
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 )
 class ApplicationTest {
@@ -39,7 +39,7 @@ class ApplicationTest {
         // Test creating new Group
         val newGroupResponse: ResponseEntity<Any> = testRestTemplate
             .postForEntity("/groups", HttpEntity("{\"name\":\"group4\"}", headers))
-        assertEquals(HttpStatus.OK, newGroupResponse?.statusCode)
+        assertEquals(HttpStatus.OK, newGroupResponse.statusCode)
 
         // Test retrieving existing Groups
         var getGroupsResponse = testRestTemplate.getForEntity("/groups", String::class.java)
@@ -49,7 +49,7 @@ class ApplicationTest {
             .filter { i -> getGroupsResponseBody.getJSONObject(i).get("name") == "group4" }
             .map { i -> getGroupsResponseBody.getJSONObject(i) }
         assertEquals(1, newGroups.size)
-        val newGroup = newGroups.get(0)
+        val newGroup = newGroups[0]
 
         // Test updating previously created Group
         testRestTemplate.put("/groups/" + newGroup.get("id"), HttpEntity("{\"name\":\"group4.1\"}", headers))
@@ -82,7 +82,7 @@ class ApplicationTest {
         // Test creating new Item
         val newItemResponse: ResponseEntity<Any> = testRestTemplate
             .postForEntity("/items", HttpEntity("{\"title\":\"item4\", \"isCompleted\": false}", headers))
-        assertEquals(HttpStatus.OK, newItemResponse?.statusCode)
+        assertEquals(HttpStatus.OK, newItemResponse.statusCode)
 
         // Test retrieving existing Items
         var getItemsResponse = testRestTemplate.getForEntity("/items", String::class.java)
@@ -92,7 +92,7 @@ class ApplicationTest {
             .filter { i -> getItemsResponseBody.getJSONObject(i).get("title") == "item4" }
             .map { i -> getItemsResponseBody.getJSONObject(i) }
         assertEquals(1, newItems.size)
-        val newItem = newItems.get(0)
+        val newItem = newItems[0]
 
         // Test updating previously created Item
         testRestTemplate.put("/items/" + newItem.get("id"), HttpEntity("{\"title\":\"item4.1\", \"isCompleted\": false}", headers))
@@ -125,7 +125,7 @@ class ApplicationTest {
         // Test creating new Label
         val newLabelResponse: ResponseEntity<Any> = testRestTemplate
             .postForEntity("/labels", HttpEntity("{\"name\":\"label4\"}", headers))
-        assertEquals(HttpStatus.OK, newLabelResponse?.statusCode)
+        assertEquals(HttpStatus.OK, newLabelResponse.statusCode)
 
         // Test retrieving existing Labels
         var getLabelsResponse = testRestTemplate.getForEntity("/labels", String::class.java)
@@ -135,7 +135,7 @@ class ApplicationTest {
             .filter { i -> getLabelsResponseBody.getJSONObject(i).get("name") == "label4" }
             .map { i -> getLabelsResponseBody.getJSONObject(i) }
         assertEquals(1, newLabels.size)
-        val newLabel = newLabels.get(0)
+        val newLabel = newLabels[0]
 
         // Test deleting previously created Label
         testRestTemplate.delete("/labels/" + newLabel.get("id"))

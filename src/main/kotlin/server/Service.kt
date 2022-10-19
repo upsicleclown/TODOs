@@ -7,14 +7,14 @@ import org.springframework.stereotype.Service
 import server.database.FileDB
 
 @Service
-class Service() {
+class Service {
 
     // TODO: remove these once FileDB replaced by real DB
     private val itemDBFilepath = this.javaClass.classLoader.getResource("server/database/items.json")!!.path
     private val labelDBFilepath = this.javaClass.classLoader.getResource("server/database/labels.json")!!.path
     private val groupDBFilepath = this.javaClass.classLoader.getResource("server/database/groups.json")!!.path
 
-    var fileDB: FileDB = FileDB(itemDBFilepath, labelDBFilepath, groupDBFilepath)
+    private var fileDB: FileDB = FileDB(itemDBFilepath, labelDBFilepath, groupDBFilepath)
 
     init {
         fileDB.loadItems()

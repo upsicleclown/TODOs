@@ -18,7 +18,7 @@ class ServiceTest {
 
     @Test
     fun testInit() {
-        // Loads items and groups on init, ensure everything is loaded.
+        // Loads items, labels and groups on init, ensure everything is loaded.
         val expectedItemIds = listOf(1, 2, 3)
         val expectedLabelIds = listOf(1, 2, 3)
         val expectedGroupIds = listOf(1, 2, 3)

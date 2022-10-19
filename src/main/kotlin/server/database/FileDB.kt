@@ -12,7 +12,12 @@ import java.io.File
 /*
    In file database represented as a JSON.
  */
-class FileDB(private val itemFilepath: String, private val labelFilepath: String, private val groupFilepath: String) {
+class FileDB(
+    private val itemFilepath: String,
+    private val labelFilepath: String,
+    private val groupFilepath: String
+) {
+
     /* Properties related to items. */
     private var items: MutableList<Item> = mutableListOf()
     private var nextItemId: Int = 1

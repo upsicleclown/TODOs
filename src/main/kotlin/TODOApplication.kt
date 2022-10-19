@@ -2,6 +2,7 @@ import javafx.application.Application
 import javafx.scene.Scene
 import javafx.scene.layout.GridPane
 import javafx.stage.Stage
+import ui.Cache
 import ui.controllers.GroupViewController
 import ui.controllers.SidepaneController
 import ui.views.GroupView
@@ -13,6 +14,7 @@ class TODOApplication : Application() {
     val groupViewController = GroupViewController()
     private val sidepaneView = SidepaneView(sidepaneController)
     private val groupView = GroupView(groupViewController)
+    private val cache = Cache()
 
     init {
         sidepaneController.addView(sidepaneView)

@@ -14,7 +14,6 @@ internal class FileTest {
         this.javaClass.classLoader.getResource("server/database/items.json")!!.path,
         this.javaClass.classLoader.getResource("server/database/labels.json")!!.path,
         this.javaClass.classLoader.getResource("server/database/groups.json")!!.path
-
     )
 
     @BeforeTest
