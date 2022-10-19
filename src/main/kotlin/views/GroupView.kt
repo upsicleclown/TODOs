@@ -2,23 +2,27 @@ package views
 
 import controllers.GroupViewController
 import javafx.collections.FXCollections
+import javafx.scene.control.Label
 import javafx.scene.control.ListView
-import javafx.scene.layout.GridPane
+import javafx.scene.layout.Pane
 import javafx.scene.layout.VBox
+import models.Group
 import models.Item
 
 class GroupView(@Suppress("UNUSED_PARAMETER") controller: GroupViewController) : VBox() {
 
     val focusedGroupItemsSource = FXCollections.observableArrayList<Item>()
+    var currentGroupName = Label("")
 
-    init {
-        @Suppress("UNUSED_VARIABLE")
-        var root = GridPane()
-        val listView = ListView(focusedGroupItemsSource)
-        this.children.add(listView)
-    }
-
-    fun refreshWithItems(items: List<Item>) {
+    fun refreshWithItems(group: Group, items: List<Item>) {
+        children.clear()
+        currentGroupName = Label(group.name)
+        children.add(currentGroupName)
         focusedGroupItemsSource.setAll(items)
+        val listView = ListView<String>()
+        for (item in focusedGroupItemsSource) {
+            listView.items.add(item.title)
+        }
+        children.add(listView)
     }
 }
