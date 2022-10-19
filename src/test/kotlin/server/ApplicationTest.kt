@@ -1,7 +1,6 @@
 package server
 
 import org.json.JSONArray
-import org.json.JSONObject
 import org.json.JSONTokener
 import org.junit.jupiter.api.Test
 import org.junit.runner.RunWith
@@ -31,32 +30,6 @@ class ApplicationTest {
 
     @Autowired
     lateinit var testRestTemplate: TestRestTemplate
-
-    @Test
-    fun testRUWindowSettings() {
-        val expectedValue = 500.0
-        val newHeight = 600.0
-        val newWidth = 400.0
-
-        val headers = HttpHeaders()
-        headers.contentType = MediaType.APPLICATION_JSON
-
-        // Test retrieving existing WindowSettings
-        var getWindowSettingsResponse = testRestTemplate.getForEntity("/window-settings", String::class.java)
-        assertEquals(HttpStatus.OK, getWindowSettingsResponse?.statusCode)
-        var getWindowSettingsResponseBody = JSONTokener(getWindowSettingsResponse?.body).nextValue() as JSONObject
-        assertEquals(getWindowSettingsResponseBody["height"] as Double, expectedValue)
-        assertEquals(getWindowSettingsResponseBody["width"] as Double, expectedValue)
-
-        // Test updating existing WindowSettings
-        testRestTemplate.put("/window-settings", HttpEntity("{\"height\":$newHeight, \"width\": $newWidth}", headers))
-
-        getWindowSettingsResponse = testRestTemplate.getForEntity("/window-settings", String::class.java)
-        assertEquals(HttpStatus.OK, getWindowSettingsResponse?.statusCode)
-        getWindowSettingsResponseBody = JSONTokener(getWindowSettingsResponse?.body).nextValue() as JSONObject
-        assertEquals(getWindowSettingsResponseBody["height"] as Double, newHeight)
-        assertEquals(getWindowSettingsResponseBody["width"] as Double, newWidth)
-    }
 
     @Test
     fun testCRUDGroup() {
