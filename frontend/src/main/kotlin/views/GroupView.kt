@@ -1,12 +1,12 @@
-package ui.views
+package views
 
+import controllers.GroupViewController
 import javafx.collections.FXCollections
 import javafx.scene.control.Label
 import javafx.scene.control.ListView
 import javafx.scene.layout.VBox
 import models.Group
 import models.Item
-import ui.controllers.GroupViewController
 
 class GroupView(@Suppress("UNUSED_PARAMETER") controller: GroupViewController) : VBox() {
 

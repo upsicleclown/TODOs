@@ -1,20 +1,23 @@
+import cache.Cache
+import controllers.GroupViewController
+import controllers.SidepaneController
 import javafx.application.Application
 import javafx.scene.Scene
 import javafx.scene.layout.GridPane
 import javafx.stage.Stage
-import ui.Cache
-import ui.controllers.GroupViewController
-import ui.controllers.SidepaneController
-import ui.views.GroupView
-import ui.views.SidepaneView
+import models.WindowSettings
+import views.GroupView
+import views.SidepaneView
 
 class TODOApplication : Application() {
 
+    private var primaryStage = Stage()
     private val sidepaneController = SidepaneController(this)
     val groupViewController = GroupViewController()
     private val sidepaneView = SidepaneView(sidepaneController)
     private val groupView = GroupView(groupViewController)
     private val cache = Cache()
+    private val minSize = 500.0
 
     init {
         sidepaneController.addView(sidepaneView)
@@ -27,15 +30,27 @@ class TODOApplication : Application() {
         }
     }
 
-    override fun start(primaryStage: Stage) {
+    override fun start(stage: Stage) {
+        primaryStage = stage
         val root = MainView(sidepaneView, groupView)
 
-        val scene = Scene(root, 500.0, 500.0)
-        primaryStage.title = "TODO List"
-        primaryStage.scene = scene
-        primaryStage.isResizable = true
-        primaryStage.minHeight = 500.0
-        primaryStage.minWidth = 500.0
-        primaryStage.show()
+        val scene = Scene(root)
+
+        stage.title = "TODO List"
+        stage.scene = scene
+        stage.isResizable = true
+        stage.x = cache.getWindowSettings().x
+        stage.y = cache.getWindowSettings().y
+        stage.width = cache.getWindowSettings().width
+        stage.height = cache.getWindowSettings().height
+        stage.minHeight = minSize
+        stage.minWidth = minSize
+        stage.show()
+    }
+
+    override fun stop() {
+        super.stop()
+        cache.editWindowSettings(WindowSettings(primaryStage.x, primaryStage.y, primaryStage.height, primaryStage.width))
+        cache.saveWindowSettings()
     }
 }
