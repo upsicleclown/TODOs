@@ -22,6 +22,7 @@ class Cache {
     /* Methods related to window settings */
     fun editWindowSettings(windowSettings: WindowSettings) {
         this.windowSettings = windowSettings
+        saveWindowSettings()
     }
 
     fun getWindowSettings(): WindowSettings {
@@ -30,6 +31,8 @@ class Cache {
 
     fun saveWindowSettings() {
         val jsonDict: JsonElement = Json.encodeToJsonElement(windowSettings)
+        println(2)
+        println(jsonDict)
         File(windowSettingFilePath).writeText(jsonDict.toString())
     }
 
