@@ -1,17 +1,23 @@
 package ui.controllers
 
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 import models.Group
 import models.Item
 import ui.views.GroupView
+import java.net.URL
 
 class GroupViewController() {
     private var items = listOf<Item>()
     private var view: GroupView? = null
 
+    init {
+        val cachedItems = URL("http://localhost:8080/items").readText()
+        items = Json.decodeFromString<List<Item>>(cachedItems)
+    }
+
     fun loadGroup(group: Group?) {
         if (group === null) { return }
-        /* Should be used for fetching group info from server necessary to render */
-        items = listOf(Item("Task 1", isCompleted = true), Item("Task 2", isCompleted = false))
         view?.refreshWithItems(group, items)
     }
 

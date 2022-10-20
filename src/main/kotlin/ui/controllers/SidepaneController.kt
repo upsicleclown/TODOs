@@ -1,26 +1,25 @@
 package ui.controllers
 
 import TODOApplication
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 import models.Group
 import ui.views.SidepaneView
+import java.net.URL
 
 class SidepaneController(todoApp: TODOApplication) {
     private var app: TODOApplication? = null
     private var view: SidepaneView? = null
+    private var groups: List<Group> = listOf()
 
     init {
         app = todoApp
+        val cachedGroups = URL("http://localhost:8080/groups").readText()
+        groups = Json.decodeFromString<List<Group>>(cachedGroups)
     }
-    private var groups: List<Group> = listOf(
-        Group("test-group-1"),
-        Group("test-group-2"),
-        Group("test-group-3")
-    )
     private var focusedGroup: Group? = null
 
-    /* TODO: should be loaded from server in init builder */
     fun groups(): List<Group> {
-        // These will be loaded from the Server using the by lazy directive, or cached
         return groups
     }
 
