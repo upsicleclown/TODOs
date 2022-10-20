@@ -17,6 +17,7 @@ class TODOApplication : Application() {
     private val sidepaneView = SidepaneView(sidepaneController)
     private val groupView = GroupView(groupViewController)
     private val cache = Cache()
+    private val minSize = 500.0
 
     init {
         sidepaneController.addView(sidepaneView)
@@ -42,8 +43,8 @@ class TODOApplication : Application() {
         stage.y = cache.getWindowSettings().y
         stage.width = cache.getWindowSettings().width
         stage.height = cache.getWindowSettings().height
-        stage.minHeight = 500.0
-        stage.minWidth = 500.0
+        stage.minHeight = minSize
+        stage.minWidth = minSize
         stage.show()
     }
 
