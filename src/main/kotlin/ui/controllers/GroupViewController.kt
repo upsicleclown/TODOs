@@ -1,19 +1,17 @@
 package ui.controllers
 
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.json.Json
 import models.Group
 import models.Item
+import ui.client.TODOClient
 import ui.views.GroupView
-import java.net.URL
 
 class GroupViewController() {
     private var items = listOf<Item>()
     private var view: GroupView? = null
+    private val todoClient = TODOClient()
 
     init {
-        val cachedItems = URL("http://localhost:8080/items").readText()
-        items = Json.decodeFromString<List<Item>>(cachedItems)
+        items = todoClient.getItems()
     }
 
     fun loadGroup(group: Group?) {
