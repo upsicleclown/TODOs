@@ -4,3 +4,4 @@ out/
 .gradle/
 .DS_Store
 .idea/
+.gitattributes

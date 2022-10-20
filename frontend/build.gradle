@@ -1,0 +1,67 @@
+plugins {
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.7.10'
+    id 'java'
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.12'
+    id 'org.jetbrains.kotlin.jvm'
+    id 'org.beryx.jlink'
+    id 'todo.kotlin-conventions'
+}
+
+group 'net.codebot'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+sourceCompatibility = '17'
+targetCompatibility = '17'
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+application {
+    mainClass = 'TODOApplication'
+}
+
+[compileKotlin, compileTestKotlin].forEach {
+    it.kotlinOptions {
+        jvmTarget = '11'
+    }
+}
+
+javafx {
+    version = '17.0.2'
+    modules = ['javafx.controls', 'javafx.fxml']
+}
+
+dependencies {
+    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0'
+    implementation 'junit:junit:4.13.2'
+    implementation 'org.jetbrains.kotlin:kotlin-reflect'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
+    implementation project(':common')
+
+    testImplementation 'org.jetbrains.kotlin:kotlin-test'
+    testImplementation "org.junit.jupiter:junit-jupiter"
+    testImplementation(enforcedPlatform("org.junit:junit-bom:5.9.0"))
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+}
+
+test {
+    useJUnitPlatform()
+}
+
+jlink {
+    imageZip = project.file("${buildDir}/distributions/app-${javafx.platform.classifier}.zip")
+    options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
+    launcher {
+        name = 'app'
+    }
+}
+
+jlinkZip {
+    group = 'distribution'
+}
