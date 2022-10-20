@@ -10,9 +10,9 @@ import server.database.FileDB
 class Service {
 
     // TODO: remove these once FileDB replaced by real DB
-    private val itemDBFilepath = this.javaClass.classLoader.getResource("server/database/items.json")!!.path
-    private val labelDBFilepath = this.javaClass.classLoader.getResource("server/database/labels.json")!!.path
-    private val groupDBFilepath = this.javaClass.classLoader.getResource("server/database/groups.json")!!.path
+    private val itemDBFilepath = this.javaClass.classLoader.getResource("database/items.json")!!.path
+    private val labelDBFilepath = this.javaClass.classLoader.getResource("database/labels.json")!!.path
+    private val groupDBFilepath = this.javaClass.classLoader.getResource("database/groups.json")!!.path
 
     private var fileDB: FileDB = FileDB(itemDBFilepath, labelDBFilepath, groupDBFilepath)
 

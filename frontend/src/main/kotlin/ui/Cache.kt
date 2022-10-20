@@ -13,7 +13,7 @@ class Cache {
     private lateinit var windowSettings: WindowSettings
 
     // Window settings will remain saved in file. File path could potentially become a secret.
-    private val windowSettingFilePath = this.javaClass.classLoader.getResource("server/database/window_settings.json")!!.path
+    private val windowSettingFilePath = this.javaClass.classLoader.getResource("window_settings.json")!!.path
 
     init {
         loadWindowSettings()

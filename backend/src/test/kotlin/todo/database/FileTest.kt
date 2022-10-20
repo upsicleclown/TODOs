@@ -11,9 +11,9 @@ import kotlin.test.assertFalse
 internal class FileTest {
     // We know the files exist.
     private val db: FileDB = FileDB(
-        this.javaClass.classLoader.getResource("server/database/items.json")!!.path,
-        this.javaClass.classLoader.getResource("server/database/labels.json")!!.path,
-        this.javaClass.classLoader.getResource("server/database/groups.json")!!.path
+        this.javaClass.classLoader.getResource("database/items.json")!!.path,
+        this.javaClass.classLoader.getResource("database/labels.json")!!.path,
+        this.javaClass.classLoader.getResource("database/groups.json")!!.path
     )
 
     @BeforeTest
