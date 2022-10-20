@@ -1,9 +1,9 @@
-package ui.controllers
+package controllers
 
 import models.Group
 import models.Item
-import ui.client.TODOClient
-import ui.views.GroupView
+import client.TODOClient
+import views.GroupView
 
 class GroupViewController() {
     private var items = listOf<Item>()

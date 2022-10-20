@@ -1,4 +1,4 @@
-package ui.client
+package client
 
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json

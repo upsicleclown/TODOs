@@ -2,14 +2,12 @@ import javafx.application.Application
 import javafx.scene.Scene
 import javafx.scene.layout.GridPane
 import javafx.stage.Stage
-import javafx.stage.WindowEvent
 import models.WindowSettings
-import ui.Cache
-import ui.controllers.GroupViewController
-import ui.controllers.SidepaneController
-import ui.views.GroupView
-import ui.views.SidepaneView
-import java.beans.EventHandler
+import cache.Cache
+import controllers.GroupViewController
+import controllers.SidepaneController
+import views.GroupView
+import views.SidepaneView
 
 class TODOApplication : Application() {
 
@@ -35,11 +33,15 @@ class TODOApplication : Application() {
         primaryStage = stage
         val root = MainView(sidepaneView, groupView)
 
-        val scene = Scene(root, cache.getWindowSettings().width, cache.getWindowSettings().height)
+        val scene = Scene(root)
 
         stage.title = "TODO List"
         stage.scene = scene
         stage.isResizable = true
+        stage.x = cache.getWindowSettings().x
+        stage.y = cache.getWindowSettings().y
+        stage.width = cache.getWindowSettings().width
+        stage.height = cache.getWindowSettings().height
         stage.minHeight = 500.0
         stage.minWidth = 500.0
         stage.show()
@@ -47,9 +49,8 @@ class TODOApplication : Application() {
 
     override fun stop() {
         super.stop()
-        cache.editWindowSettings(WindowSettings(primaryStage.scene.height, primaryStage.scene.width))
-        println(primaryStage.scene.width)
-        println(primaryStage.scene.height)
+        cache.editWindowSettings(WindowSettings(primaryStage.x, primaryStage.y, primaryStage.height, primaryStage.width))
+        cache.saveWindowSettings()
     }
 
 }

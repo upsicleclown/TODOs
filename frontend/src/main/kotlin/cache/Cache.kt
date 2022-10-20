@@ -1,4 +1,4 @@
-package ui
+package cache
 
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
@@ -7,13 +7,14 @@ import kotlinx.serialization.json.encodeToJsonElement
 import models.WindowSettings
 import java.io.File
 
-class Cache {
+/*
+Class to cache items for the frontend.
+The window settings file path could be a secret.
+*/
+class Cache(private val windowSettingsFilePath: String = "src/main/kotlin/cache/window_settings.json") {
 
     /* Properties related to window settings. */
     private lateinit var windowSettings: WindowSettings
-
-    // Window settings will remain saved in file. File path could potentially become a secret.
-    private val windowSettingFilePath = this.javaClass.classLoader.getResource("window_settings.json")!!.path
 
     init {
         loadWindowSettings()
@@ -22,7 +23,6 @@ class Cache {
     /* Methods related to window settings */
     fun editWindowSettings(windowSettings: WindowSettings) {
         this.windowSettings = windowSettings
-        saveWindowSettings()
     }
 
     fun getWindowSettings(): WindowSettings {
@@ -31,13 +31,11 @@ class Cache {
 
     fun saveWindowSettings() {
         val jsonDict: JsonElement = Json.encodeToJsonElement(windowSettings)
-        println(2)
-        println(jsonDict)
-        File(windowSettingFilePath).writeText(jsonDict.toString())
+        File(windowSettingsFilePath).writeText(jsonDict.toString())
     }
 
     private fun loadWindowSettings() {
-        val jsonDict = File(windowSettingFilePath).readText()
+        val jsonDict = File(windowSettingsFilePath).readText()
         windowSettings = Json.decodeFromString(jsonDict)
     }
 }
