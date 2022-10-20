@@ -1,10 +1,10 @@
 package views
 
+import controllers.SidepaneController
 import javafx.collections.FXCollections
 import javafx.scene.control.Button
 import javafx.scene.control.ListView
 import javafx.scene.layout.VBox
-import controllers.SidepaneController
 
 class SidepaneView(sidepaneController: SidepaneController) : VBox() {
 

@@ -1,8 +1,8 @@
 package controllers
 
+import client.TODOClient
 import models.Group
 import models.Item
-import client.TODOClient
 import views.GroupView
 
 class GroupViewController() {

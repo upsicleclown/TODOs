@@ -1,8 +1,8 @@
 package controllers
 
 import TODOApplication
-import models.Group
 import client.TODOClient
+import models.Group
 import views.SidepaneView
 
 class SidepaneController(todoApp: TODOApplication) {

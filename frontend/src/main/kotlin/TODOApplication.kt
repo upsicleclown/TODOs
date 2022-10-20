@@ -1,11 +1,11 @@
+import cache.Cache
+import controllers.GroupViewController
+import controllers.SidepaneController
 import javafx.application.Application
 import javafx.scene.Scene
 import javafx.scene.layout.GridPane
 import javafx.stage.Stage
 import models.WindowSettings
-import cache.Cache
-import controllers.GroupViewController
-import controllers.SidepaneController
 import views.GroupView
 import views.SidepaneView
 
@@ -52,5 +52,4 @@ class TODOApplication : Application() {
         cache.editWindowSettings(WindowSettings(primaryStage.x, primaryStage.y, primaryStage.height, primaryStage.width))
         cache.saveWindowSettings()
     }
-
 }
