@@ -2,10 +2,10 @@ package models
 
 import kotlinx.serialization.Serializable
 
-/*
-    Group which is formed of labels.
-
-    Value passed for group's id will be ignored. This property is managed by the database.
+/**
+ *  Group which is formed of labels.
+ *
+ *  Value passed for group's id will be ignored. This property is managed by the database.
  */
 @Serializable
 data class Group(var name: String, var labelIds: MutableList<Int> = mutableListOf(), var id: Int = 0) {

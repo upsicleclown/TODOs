@@ -1,34 +1,55 @@
-package server.database
+package todo.database
 
 import models.Group
 import models.Item
 import models.Label
+import java.io.File
+import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 
-internal class FileTest {
-    // We know the files exist.
-    private val db: FileDB = FileDB(
-        this.javaClass.classLoader.getResource("database/items.json")!!.path,
-        this.javaClass.classLoader.getResource("database/labels.json")!!.path,
-        this.javaClass.classLoader.getResource("database/groups.json")!!.path
-    )
+internal class SQLiteDBTest {
+    private val db = MockSQLiteDB()
 
+    /**
+     * Before each test we lock the mock data.
+     */
     @BeforeTest
     fun setup() {
-        db.loadItems()
-        db.loadLabels()
-        db.loadGroups()
+        db.loadData()
     }
 
-    /*
-       Tests related to items.
+    /**
+     * To make each test idempotent, after each test, we delete the database.
+     */
+    @AfterTest
+    fun cleanup() {
+        File("src/test/kotlin/todo/database/test.db").delete()
+    }
+
+    /**
+     * Tests related to mock data loading.
+     */
+    @Test
+    fun testInit() {
+        // Loads items, labels and groups on init, ensure everything is loaded.
+        val expectedItemIds = listOf(1, 2, 3)
+        val expectedLabelIds = listOf(1, 2, 3)
+        val expectedGroupIds = listOf(1, 2, 3)
+
+        assertEquals(db.getItems().map { item: Item -> item.id }, expectedItemIds)
+        assertEquals(db.getLabels().map { label: Label -> label.id }, expectedLabelIds)
+        assertEquals(db.getGroups().map { group: Group -> group.id }, expectedGroupIds)
+    }
+
+    /**
+     *  Tests related to items.
      */
     @Test
     fun testAddItem() {
-        val expectedItemId = 4
+        val expectedItemId = 1
         val expectedItemTitle = "item4"
         val expectedItemIsCompleted = true
 
@@ -69,8 +90,8 @@ internal class FileTest {
         assertEquals(db.getItems().map { item: Item -> item.id }, expectedItemIds)
     }
 
-    /*
-       Tests related to labels.
+    /**
+     * Tests related to labels.
      */
     @Test
     fun testAddLabel() {
@@ -114,8 +135,8 @@ internal class FileTest {
         assertEquals(db.getLabels().map { label: Label -> label.id }, expectedLabelIds)
     }
 
-    /*
-       Tests related to groups.
+    /**
+     * Tests related to groups.
      */
     @Test
     fun testAddGroup() {
@@ -157,5 +178,20 @@ internal class FileTest {
 
         // load is already done in @BeforeTest
         assertEquals(db.getGroups().map { group: Group -> group.id }, expectedGroupIds)
+    }
+
+    /**
+     * Tests related to items, groups and labels.
+     */
+    @Test
+    fun testRemoveLabelFromItemsAndGroups() {
+        val expectedLabelId = 1
+        val itemIdWithLabel = 3
+        val groupIdWithLabel = 3
+
+        db.removeLabel(expectedLabelId)
+        assert(db.getItems().first { item: Item -> item.id == itemIdWithLabel }.labelIds.isEmpty())
+        assert(db.getGroups().first { group: Group -> group.id == groupIdWithLabel }.labelIds.isEmpty())
+        assertFalse(db.getLabels().map { label: Label -> label.id }.contains(expectedLabelId))
     }
 }

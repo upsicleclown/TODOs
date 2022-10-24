@@ -2,10 +2,10 @@ package models
 
 import kotlinx.serialization.Serializable
 
-/*
-    Individual TO-DO item. An item can have multiple labels.
-
-    Value passed for item's id will be ignored. This property is managed by the database.
+/**
+ *  Individual TO-DO item. An item can have multiple labels.
+ *
+ *  Value passed for item's id will be ignored. This property is managed by the database.
  */
 @Serializable
 data class Item(
