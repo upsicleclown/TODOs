@@ -1,4 +1,5 @@
 import cache.Cache
+import commands.CommandHandler
 import controllers.GroupViewController
 import controllers.SidepaneController
 import javafx.application.Application
@@ -13,9 +14,12 @@ class TODOApplication : Application() {
 
     private var primaryStage = Stage()
     private val sidepaneController = SidepaneController(this)
-    val groupViewController = GroupViewController()
+    val groupViewController = GroupViewController(this)
     private val sidepaneView = SidepaneView(sidepaneController)
     private val groupView = GroupView(groupViewController)
+
+    val commandHandler = CommandHandler()
+
     private val cache = Cache()
     private val minSize = 500.0
 
