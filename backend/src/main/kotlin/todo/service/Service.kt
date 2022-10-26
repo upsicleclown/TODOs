@@ -1,166 +1,118 @@
-package server
+package todo.service
 
-import models.Group
-import models.Item
-import models.Label
 import org.springframework.stereotype.Service
-import server.database.FileDB
+import todo.database.SQLiteDB
 
 @Service
 class Service {
+    private val sqliteDB = SQLiteDB()
 
-    // TODO: remove these once FileDB replaced by real DB
-    private val itemDBFilepath = this.javaClass.classLoader.getResource("database/items.json")!!.path
-    private val labelDBFilepath = this.javaClass.classLoader.getResource("database/labels.json")!!.path
-    private val groupDBFilepath = this.javaClass.classLoader.getResource("database/groups.json")!!.path
+    //
+    // Item endpoints.
+    //
 
-    private var fileDB: FileDB = FileDB(itemDBFilepath, labelDBFilepath, groupDBFilepath)
-
-    init {
-        fileDB.loadItems()
-        fileDB.loadLabels()
-        fileDB.loadGroups()
-    }
-
-    /*
-       This method must be called when the client is done using the service.
+    /**
+     * Adds the provided item.
+     *
+     * @throws IllegalArgumentException if any of the labels in item do not exist.
      */
-    fun close() {
-        fileDB.saveItems()
-        fileDB.saveLabels()
-        fileDB.saveGroups()
+    fun addItem(item: models.Item) {
+        sqliteDB.addItem(item)
     }
 
-    /*
-       Item endpoints
+    /**
+     * Item with provided id will now become new item. Hence, ensure new item has all fields it needs to have.
+     *
+     * @throws IllegalArgumentException if no such item with provided id or if any of the labels in item do not exist.
      */
-    fun addItem(item: Item) {
-        // if item has label ids, ensure they exist.
-        if (item.labelIds.isNotEmpty()) {
-            val labelIdsNotInDb: List<Int> = getLabelIdsNotInDb(item.labelIds)
-            if (labelIdsNotInDb.isNotEmpty()) {
-                throw IllegalArgumentException(
-                    "Cannot add item with label ids $labelIdsNotInDb " +
-                        "since these label ids do not exist in the database."
-                )
-            }
-        }
-        fileDB.addItem(item)
+    fun editItem(itemId: Int, newItem: models.Item) {
+        sqliteDB.editItem(itemId, newItem)
     }
 
-    /*
-        Item with provided id will now become new item. Hence, ensure new item has all fields it needs to have.
+    /**
+     * Deletes the item with the provided id.
+     *
+     * @throws NoSuchElementException if no such item with provided id.
      */
-    fun editItem(itemId: Int, newItem: Item) {
-        // if item has label ids, ensure they exist.
-        if (newItem.labelIds.isNotEmpty()) {
-            val labelIdsNotInDb: List<Int> = getLabelIdsNotInDb(newItem.labelIds)
-            if (labelIdsNotInDb.isNotEmpty()) {
-                throw IllegalArgumentException(
-                    "Cannot add item with label ids $labelIdsNotInDb " +
-                        "since these label ids do not exist in the database."
-                )
-            }
-        }
-        fileDB.editItem(itemId, newItem)
-    }
-
     fun removeItem(itemId: Int) {
-        fileDB.removeItem(itemId)
+        sqliteDB.removeItem(itemId)
     }
 
-    fun getItems(): List<Item> {
-        return fileDB.getItems()
-    }
-
-    /*
-       Private helpers for labels.
+    /**
+     * Returns all items in the database.
      */
-    private fun getLabelIdsNotInDb(labelIds: List<Int>): List<Int> {
-        val labelIdsNotInDB = mutableListOf<Int>()
-        val labelIdsInDb: List<Int> = fileDB.getLabels().map { label: Label -> label.id }
-        for (labelId in labelIds) {
-            if (!labelIdsInDb.contains(labelId)) {
-                labelIdsNotInDB.add(labelId)
-            }
-        }
-        return labelIdsNotInDB
+    fun getItems(): List<models.Item> {
+        return sqliteDB.getItems()
     }
 
-    /*
-       Label endpoints
+    //
+    // Label endpoints
+    //
+
+    /**
+     * Adds the provided label.
      */
-    fun addLabel(label: Label) {
-        fileDB.addLabel(label)
+    fun addLabel(label: models.Label) {
+        sqliteDB.addLabel(label)
     }
 
-    /*
-        Label with provided id will now become new label. Hence, ensure new label has all fields it needs to have.
+    /**
+     * Label with provided id will now become new label. Hence, ensure new label has all fields it needs to have.
+     *
+     * @throws NoSuchElementException if no such label with provided id.
      */
-    fun editLabel(labelId: Int, newLabel: Label) {
-        fileDB.editLabel(labelId, newLabel)
+    fun editLabel(labelId: Int, newLabel: models.Label) {
+        sqliteDB.editLabel(labelId, newLabel)
     }
 
+    /**
+     * Deletes the label with the provided id.
+     *
+     * @throws IllegalArgumentException if no such label with provided id.
+     */
     fun removeLabel(labelId: Int) {
-        // Remove label id from items with this label
-        val itemsWithLabel: List<Item> = fileDB.getItems().filter { item: Item -> item.labelIds.contains(labelId) }
-        for (item in itemsWithLabel) {
-            item.labelIds.remove(labelId)
-            fileDB.editItem(item.id, item)
-        }
-        // Remove groups with this label.
-        val groupsWithLabel: List<Group> = fileDB.getGroups().filter { group: Group -> group.labelIds.contains(labelId) }
-        for (group in groupsWithLabel) {
-            group.labelIds.remove(labelId)
-            fileDB.editGroup(group.id, group)
-        }
-        // Remove label.
-        fileDB.removeLabel(labelId)
+        sqliteDB.removeLabel(labelId)
     }
 
-    fun getLabels(): List<Label> {
-        return fileDB.getLabels()
-    }
-
-    /*
-       Group endpoints
+    /**
+     * Returns all label in the database.
      */
-    fun addGroup(group: Group) {
-        // if group has label ids, ensure they exist.
-        if (group.labelIds.isNotEmpty()) {
-            val labelIdsNotInDb: List<Int> = getLabelIdsNotInDb(group.labelIds)
-            if (labelIdsNotInDb.isNotEmpty()) {
-                throw IllegalArgumentException(
-                    "Cannot add group with label ids $labelIdsNotInDb " +
-                        "since these label ids do not exist in the database."
-                )
-            }
-        }
-        fileDB.addGroup(group)
+    fun getLabels(): List<models.Label> {
+        return sqliteDB.getLabels()
     }
 
-    /*
-        Group with provided id will now become new group. Hence, ensure new group has all fields it needs to have.
+    //
+    // Group endpoints
+    //
+
+    /**
+     * Adds the provided group.
+     *
+     * @throws IllegalArgumentException if any of the labels in group do not exist.
      */
-    fun editGroup(groupId: Int, newGroup: Group) {
-        // if group has label ids, ensure they exist.
-        if (newGroup.labelIds.isNotEmpty()) {
-            val labelIdsNotInDb: List<Int> = getLabelIdsNotInDb(newGroup.labelIds)
-            if (labelIdsNotInDb.isNotEmpty()) {
-                throw IllegalArgumentException(
-                    "Cannot edit group with label ids $labelIdsNotInDb " +
-                        "since these label ids do not exist in the database."
-                )
-            }
-        }
-        fileDB.editGroup(groupId, newGroup)
+    fun addGroup(group: models.Group) {
+        sqliteDB.addGroup(group)
     }
 
+    /**
+     * Group with provided id will now become new group. Hence, ensure new group has all fields it needs to have.
+     *
+     * @throws IllegalArgumentException if no such item with provided id or if any of the labels in item do not exist.
+     */
+    fun editGroup(groupId: Int, newGroup: models.Group) {
+        sqliteDB.editGroup(groupId, newGroup)
+    }
+
+    /**
+     * Deletes the group with the provided id.
+     *
+     * @throws IllegalArgumentException if no such group with provided id.
+     */
     fun removeGroup(groupId: Int) {
-        fileDB.removeGroup(groupId)
+        sqliteDB.removeGroup(groupId)
     }
 
-    fun getGroups(): List<Group> {
-        return fileDB.getGroups()
+    fun getGroups(): List<models.Group> {
+        return sqliteDB.getGroups()
     }
 }
