@@ -7,6 +7,7 @@ class CommandHandler {
     fun execute(command: Command) {
         command.execute()
         executedCommandsStack.addLast(command)
+        // follows normal undo functionality, once new commands are run, undoing previous commands may cause conflicts
         undoneCommandsStack.clear()
     }
 
