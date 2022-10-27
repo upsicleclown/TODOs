@@ -30,7 +30,7 @@ class GroupView(controller: GroupViewController) : VBox() {
 
         // when enter is pressed
         itemCreationField.setOnAction {
-            controller.createItem(itemCreationField.text)
+            controller.createItem(Item(itemCreationField.text, false))
             itemCreationField.text = ""
         }
 

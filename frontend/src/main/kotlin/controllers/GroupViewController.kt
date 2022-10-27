@@ -35,8 +35,8 @@ class GroupViewController(todoApp: TODOApplication) {
         reloadGroupView()
     }
 
-    fun createItem(itemTitle: String) {
-        val createItemCommand = CreateItemCommand(itemTitle)
+    fun createItem(item: Item) {
+        val createItemCommand = CreateItemCommand(item)
         app?.commandHandler?.execute(createItemCommand)
         reloadGroupView()
     }

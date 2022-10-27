@@ -7,8 +7,8 @@ class CreateItemCommand : Command {
     private val todoClient = TODOClient()
     var item: Item = Item("default", false)
 
-    constructor(itemTitle: String) {
-        this.item = Item(itemTitle, false)
+    constructor(newItem: Item) {
+        this.item = newItem
     }
 
     override fun execute() {
