@@ -1,5 +1,0 @@
-[
-  {"title":"item1","isCompleted":false,"labelIds":[],"id":1},
-  {"title":"item2","isCompleted":false,"labelIds":[],"id":2},
-  {"title":"item3","isCompleted":true,"labelIds":[1],"id":3}
-]
