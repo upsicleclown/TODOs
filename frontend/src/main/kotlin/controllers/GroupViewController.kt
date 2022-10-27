@@ -3,6 +3,7 @@ package controllers
 import TODOApplication
 import client.TODOClient
 import commands.CreateItemCommand
+import commands.DeleteItemCommand
 import commands.EditItemCommand
 import models.Group
 import models.Item
@@ -43,6 +44,12 @@ class GroupViewController(todoApp: TODOApplication) {
     fun editItem(item: Item) {
         val editItemCommand = EditItemCommand(item)
         app?.commandHandler?.execute(editItemCommand)
+        reloadGroupView()
+    }
+
+    fun deleteItem(item: Item) {
+        val deleteItemCommand = DeleteItemCommand(item)
+        app?.commandHandler?.execute(deleteItemCommand)
         reloadGroupView()
     }
 

@@ -4,6 +4,7 @@ import controllers.GroupViewController
 import javafx.collections.FXCollections
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
+import javafx.scene.control.Button
 import javafx.scene.control.Label
 import javafx.scene.control.ListCell
 import javafx.scene.control.ListView
@@ -38,16 +39,17 @@ class GroupView(controller: GroupViewController) : VBox() {
         listView.isEditable = true
 
         // from https://stackoverflow.com/questions/35963888/how-to-create-a-listview-of-complex-objects-and-allow-editing-a-field-on-the-obj
-        listView.setCellFactory { lv: ListView<Item?>? ->
+        listView.setCellFactory { _: ListView<Item?>? ->
             object : ListCell<Item?>() {
                 private val textField = TextField()
 
                 init {
-                    textField.onAction = EventHandler { e: ActionEvent? ->
+                    textField.onAction = EventHandler { _: ActionEvent? ->
                         commitEdit(
                             item
                         )
                     }
+
                     textField.addEventFilter(
                         KeyEvent.KEY_RELEASED
                     ) { e: KeyEvent ->
@@ -56,6 +58,8 @@ class GroupView(controller: GroupViewController) : VBox() {
                         }
                     }
                 }
+
+                private val deleteButton = Button("x")
 
                 override fun updateItem(item: Item?, empty: Boolean) {
                     super.updateItem(item, empty)
@@ -67,8 +71,13 @@ class GroupView(controller: GroupViewController) : VBox() {
                         text = null
                         graphic = textField
                     } else {
-                        text = item?.title
-                        graphic = null
+                        if (item != null) {
+                            text = item.title
+                            graphic = deleteButton
+                            deleteButton.setOnAction {
+                                controller.deleteItem(item)
+                            }
+                        }
                     }
                 }
 

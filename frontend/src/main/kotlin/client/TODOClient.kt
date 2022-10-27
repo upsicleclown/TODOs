@@ -42,6 +42,7 @@ class TODOClient {
             .header("Content-Type", "application/json")
             .PUT(HttpRequest.BodyPublishers.ofString(string))
             .build()
+        client.send(request, HttpResponse.BodyHandlers.ofString())
     }
 
     fun deleteItem(item: Item) {
