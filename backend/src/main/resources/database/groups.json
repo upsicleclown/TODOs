@@ -1,5 +1,0 @@
-[
-  {"name":"group1","labelIds":[],"id":1},
-  {"name":"group2","labelIds":[],"id":2},
-  {"name":"group3","labelIds":[1],"id":3}
-]
