@@ -41,8 +41,8 @@ class GroupViewController(todoApp: TODOApplication) {
         reloadGroupView()
     }
 
-    fun editItem(item: Item) {
-        val editItemCommand = EditItemCommand(item)
+    fun editItem(newItem: Item, originalItem: Item) {
+        val editItemCommand = EditItemCommand(newItem, originalItem)
         app?.commandHandler?.execute(editItemCommand)
         reloadGroupView()
     }

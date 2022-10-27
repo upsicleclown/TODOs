@@ -99,10 +99,11 @@ class GroupView(controller: GroupViewController) : VBox() {
                 override fun commitEdit(item: Item?) {
                     super.commitEdit(item)
                     if (item != null) {
+                        val originalItem = item.copy()
                         item.title = textField.text
                         text = textField.text
                         graphic = null
-                        controller.editItem(item)
+                        controller.editItem(item, originalItem!!)
                     }
                 }
             }

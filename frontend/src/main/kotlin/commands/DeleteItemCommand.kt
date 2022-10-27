@@ -16,8 +16,10 @@ class DeleteItemCommand : Command {
     }
 
     override fun undo() {
+        todoClient.createItem(item)
     }
 
     override fun redo() {
+        todoClient.deleteItem(item)
     }
 }

@@ -5,19 +5,23 @@ import models.Item
 
 class EditItemCommand : Command {
     private val todoClient = TODOClient()
-    var item: Item = Item("default", false)
+    var newItem = Item("default", false)
+    var originalItem = Item("default", false)
 
-    constructor(item: Item) {
-        this.item = item
+    constructor(newItem: Item, originalItem: Item) {
+        this.newItem = newItem
+        this.originalItem = originalItem
     }
 
     override fun execute() {
-        todoClient.editItem(item)
+        todoClient.editItem(newItem)
     }
 
     override fun undo() {
+        todoClient.editItem(originalItem)
     }
 
     override fun redo() {
+        todoClient.editItem(newItem)
     }
 }
