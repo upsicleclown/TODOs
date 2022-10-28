@@ -38,7 +38,7 @@ class TODOClient {
         val string = Json.encodeToString(newItem)
 
         val request = HttpRequest.newBuilder()
-            .uri(URI.create("${serviceEndpoint}items/${id}"))
+            .uri(URI.create("${serviceEndpoint}items/$id"))
             .header("Content-Type", "application/json")
             .PUT(HttpRequest.BodyPublishers.ofString(string))
             .build()
