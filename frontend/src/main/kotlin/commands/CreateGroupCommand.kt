@@ -1,25 +1,25 @@
 package commands
 
 import client.TODOClient
-import models.Item
+import models.Group
 
-class CreateItemCommand : Command {
+class CreateGroupCommand : Command {
     private val todoClient = TODOClient()
-    var item: Item = Item("default", false)
+    var group = Group("default")
 
-    constructor(newItem: Item) {
-        this.item = newItem
+    constructor(newGroup: Group) {
+        this.group = newGroup
     }
 
     override fun execute() {
-        todoClient.createItem(item)
+        todoClient.createGroup(group)
     }
 
     override fun undo() {
-        todoClient.deleteItem(item)
+        todoClient.deleteGroup(group)
     }
 
     override fun redo() {
-        todoClient.createItem(item)
+        todoClient.createGroup(group)
     }
 }
