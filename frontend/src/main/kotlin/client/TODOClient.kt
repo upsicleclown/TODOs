@@ -34,11 +34,11 @@ class TODOClient {
         client.send(request, HttpResponse.BodyHandlers.ofString())
     }
 
-    fun editItem(item: Item) {
-        val string = Json.encodeToString(item)
+    fun editItem(id: Int, newItem: Item) {
+        val string = Json.encodeToString(newItem)
 
         val request = HttpRequest.newBuilder()
-            .uri(URI.create("${serviceEndpoint}items/${item.id}"))
+            .uri(URI.create("${serviceEndpoint}items/${id}"))
             .header("Content-Type", "application/json")
             .PUT(HttpRequest.BodyPublishers.ofString(string))
             .build()

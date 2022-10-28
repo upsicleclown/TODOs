@@ -14,14 +14,14 @@ class EditItemCommand : Command {
     }
 
     override fun execute() {
-        todoClient.editItem(newItem)
+        todoClient.editItem(originalItem.id, newItem)
     }
 
     override fun undo() {
-        todoClient.editItem(originalItem)
+        todoClient.editItem(newItem.id, originalItem)
     }
 
     override fun redo() {
-        todoClient.editItem(newItem)
+        todoClient.editItem(originalItem.id, newItem)
     }
 }

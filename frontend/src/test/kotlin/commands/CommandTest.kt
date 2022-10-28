@@ -49,6 +49,10 @@ class CommandTest {
         assertEquals((commandHandler.executedCommandsStack.last() as TestCommand).value, oldValue + 1)
         commandHandler.undo()
         assertNull(commandHandler.executedCommandsStack.lastOrNull())
+        commandHandler.execute(testCommand)
+        assertEquals((commandHandler.executedCommandsStack.last() as TestCommand).value, oldValue + 1)
+        commandHandler.undo()
+        assertNull(commandHandler.executedCommandsStack.lastOrNull())
     }
 
     @Test
@@ -64,11 +68,22 @@ class CommandTest {
 
         commandHandler.undo()
         assertEquals((commandHandler.executedCommandsStack.last() as TestCommand).value, oldValue + 2)
+        assertEquals((commandHandler.undoneCommandsStack.last() as TestCommand).value, oldValue + 2)
         commandHandler.undo()
         assertEquals((commandHandler.executedCommandsStack.last() as TestCommand).value, oldValue + 1)
+        assertEquals((commandHandler.undoneCommandsStack.last() as TestCommand).value, oldValue + 1)
         commandHandler.redo()
         assertEquals((commandHandler.executedCommandsStack.last() as TestCommand).value, oldValue + 2)
+        assertEquals((commandHandler.undoneCommandsStack.last() as TestCommand).value, oldValue + 2)
         commandHandler.redo()
         assertEquals((commandHandler.executedCommandsStack.last() as TestCommand).value, oldValue + 3)
+        assertNull(commandHandler.undoneCommandsStack.lastOrNull())
+
+        commandHandler.execute(testCommand)
+        assertEquals((commandHandler.executedCommandsStack.last() as TestCommand).value, oldValue + 4)
+        assertNull(commandHandler.undoneCommandsStack.lastOrNull())
+        commandHandler.redo()
+        assertEquals((commandHandler.executedCommandsStack.last() as TestCommand).value, oldValue + 4)
+        assertNull(commandHandler.undoneCommandsStack.lastOrNull())
     }
 }
