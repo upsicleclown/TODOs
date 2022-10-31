@@ -8,14 +8,12 @@ import javafx.scene.control.TextField
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
 
-class ItemContainer<Item>: ListCell<models.Item>(item: Item) {
+class ItemContainer<Item> : ListCell<models.Item>() {
 
     // from https://stackoverflow.com/questions/35963888/how-to-create-a-listview-of-complex-objects-and-allow-editing-a-field-on-the-obj
 //    listView.setCellFactory { _: ListView<Item?>? ->
 //        object : ListCell<models.Item?>() {
     private val textField = TextField()
-
-    
 
     init {
         textField.onAction = EventHandler { _: ActionEvent? ->

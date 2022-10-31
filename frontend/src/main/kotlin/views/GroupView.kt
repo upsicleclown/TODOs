@@ -37,12 +37,13 @@ class GroupView(controller: GroupViewController) : VBox() {
 
 //        listView.items = focusedGroupItemsSource
 
-        listView.setCellFactory(Callback<ListView<ItemContainer<Item>>, ListCell<ItemContainer<Item>>> {
-            ItemContainer(item)
-        }
+        listView.setCellFactory(
+            Callback<ListView<ItemContainer<Item>>, ListCell<ItemContainer<Item>>> {
+                ItemContainer(item)
+            }
+        )
 
-
-        children.add(listView)
+//        children.add(listView)
     }
 
     fun refreshWithItems(group: Group, items: List<Item>) {
