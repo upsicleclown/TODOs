@@ -103,7 +103,7 @@ class GroupView(controller: GroupViewController) : VBox() {
                         item.title = textField.text
                         text = textField.text
                         graphic = null
-                        controller.editItem(item, originalItem!!)
+                        controller.editItem(item, originalItem)
                     }
                 }
             }
