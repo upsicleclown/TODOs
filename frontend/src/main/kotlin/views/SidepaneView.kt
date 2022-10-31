@@ -27,7 +27,6 @@ class SidepaneView(sidepaneController: SidepaneController) : VBox() {
                 private val textField = TextField()
 
                 init {
-                    // TODO: How do I do this better?
                     this.onMousePressed = EventHandler { sidepaneController.focusGroup(item) }
                     textField.onAction = EventHandler { _: ActionEvent? ->
                         commitEdit(
@@ -78,7 +77,7 @@ class SidepaneView(sidepaneController: SidepaneController) : VBox() {
                 override fun cancelEdit() {
                     super.cancelEdit()
                     text = item?.name
-                    graphic = null
+                    graphic = deleteButton
                 }
 
                 override fun commitEdit(group: Group?) {
