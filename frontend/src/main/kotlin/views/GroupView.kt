@@ -24,7 +24,7 @@ class GroupView(controller: GroupViewController) : VBox() {
     init {
         children.add(currentGroupName)
 
-        // create a textfield
+        // create a text-field
         val itemCreationField = TextField()
         itemCreationField.promptText = "Create a new item..."
 
@@ -103,7 +103,7 @@ class GroupView(controller: GroupViewController) : VBox() {
                         item.title = textField.text
                         text = textField.text
                         graphic = null
-                        controller.editItem(item, originalItem!!)
+                        controller.editItem(item, originalItem)
                     }
                 }
             }

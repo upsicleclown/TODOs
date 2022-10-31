@@ -59,4 +59,35 @@ class TODOClient {
         val groupsResponse = URL("${serviceEndpoint}groups").readText()
         return Json.decodeFromString(groupsResponse)
     }
+
+    fun createGroup(group: Group) {
+        val string = Json.encodeToString(group)
+
+        val request = HttpRequest.newBuilder()
+            .uri(URI.create("${serviceEndpoint}groups"))
+            .header("Content-Type", "application/json")
+            .POST(HttpRequest.BodyPublishers.ofString(string))
+            .build()
+        client.send(request, HttpResponse.BodyHandlers.ofString())
+    }
+
+    fun editGroup(id: Int, newGroup: Group) {
+        val string = Json.encodeToString(newGroup)
+
+        val request = HttpRequest.newBuilder()
+            .uri(URI.create("${serviceEndpoint}groups/$id"))
+            .header("Content-Type", "application/json")
+            .PUT(HttpRequest.BodyPublishers.ofString(string))
+            .build()
+        client.send(request, HttpResponse.BodyHandlers.ofString())
+    }
+
+    fun deleteGroup(group: Group) {
+        val request = HttpRequest.newBuilder()
+            .uri(URI.create("${serviceEndpoint}groups/${group.id}"))
+            .header("Content-Type", "application/json")
+            .DELETE()
+            .build()
+        client.send(request, HttpResponse.BodyHandlers.ofString())
+    }
 }
