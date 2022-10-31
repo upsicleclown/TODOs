@@ -87,7 +87,7 @@ class SidepaneView(sidepaneController: SidepaneController) : VBox() {
                         group.name = textField.text
                         text = textField.text
                         graphic = null
-                        controller.editGroup(group, originalGroup!!)
+                        controller.editGroup(group, originalGroup)
                     }
                 }
             }
