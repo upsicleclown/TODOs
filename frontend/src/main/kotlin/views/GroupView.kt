@@ -24,7 +24,7 @@ class GroupView(controller: GroupViewController) : VBox() {
     init {
         children.add(currentGroupName)
 
-        // create a textfield
+        // create a text-field
         val itemCreationField = TextField()
         itemCreationField.promptText = "Create a new item..."
 

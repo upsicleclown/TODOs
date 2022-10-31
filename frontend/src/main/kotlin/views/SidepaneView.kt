@@ -28,7 +28,7 @@ class SidepaneView(sidepaneController: SidepaneController) : VBox() {
 
                 init {
                     // TODO: How do I do this better?
-                    this.onMousePressed = EventHandler { sidepaneController.focusGroup(item!!) }
+                    this.onMousePressed = EventHandler { sidepaneController.focusGroup(item) }
                     textField.onAction = EventHandler { _: ActionEvent? ->
                         commitEdit(
                             item

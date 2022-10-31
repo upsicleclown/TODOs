@@ -30,7 +30,7 @@ class SidepaneController(todoApp: TODOApplication) {
 
     fun focusedGroup(): Group? { return focusedGroup }
 
-    fun focusGroup(focus: Group) {
+    fun focusGroup(focus: Group?) {
         if (focus !in groups) return
         focusedGroup = focus
         app?.groupViewController?.loadGroup(focusedGroup)
