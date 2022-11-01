@@ -58,7 +58,8 @@ class ItemView(private val controller: GroupViewController): ListCell<Item>() {
 
     private fun setupLabelView() {
         labelViewContainer.isFitToHeight = true
-        labelViewContainer.prefHeight = 24.0
+        labelViewContainer.prefHeight = 54.0
+        labelViewContainer.vbarPolicy = ScrollPane.ScrollBarPolicy.NEVER
         labelViewContainer.content = labelView
         labelView.orientation = Orientation.HORIZONTAL
 
