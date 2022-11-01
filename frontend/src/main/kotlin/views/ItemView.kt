@@ -108,7 +108,6 @@ class ItemView(private val controller: GroupViewController): ListCell<Item>() {
                 textField.text = item.title
                 deleteButton.setOnAction {
                     controller.deleteItem(item)
-                    println("deleted")
                 }
             }
         }
