@@ -22,13 +22,13 @@ import models.Label
 class ItemView(private val controller: GroupViewController) : ListCell<Item>() {
     private val root = BorderPane()
     private val textField = TextField()
-    private val completeButton = Button()
+    private val completionButton = Button()
     private val deleteButton = Button("x")
     private val labelViewContainer = ScrollPane()
     private val labelView = ListView<BorderPane>()
 
     init {
-        root.left = completeButton
+        root.left = completionButton
         root.right = deleteButton
         root.center = textField
         root.bottom = labelViewContainer
@@ -62,7 +62,7 @@ class ItemView(private val controller: GroupViewController) : ListCell<Item>() {
     }
 
     fun unfocusItem() {
-        root.left = completeButton
+        root.left = completionButton
         root.right = deleteButton
     }
 
@@ -168,7 +168,7 @@ class ItemView(private val controller: GroupViewController) : ListCell<Item>() {
                 textField.text = item.title
 
                 configDeleteButton(item)
-                configCompleteUnCompleteButton(item)
+                configCompletionButton(item)
             }
         }
     }
@@ -203,14 +203,14 @@ class ItemView(private val controller: GroupViewController) : ListCell<Item>() {
         }
     }
 
-    private fun configCompleteUnCompleteButton(item: Item) {
+    private fun configCompletionButton(item: Item) {
         val imageUrl = if (item.isCompleted) "completed_item_48.png" else "uncompleted_item_48.png"
         val image = Image(imageUrl)
         val view = ImageView(image)
         view.fitHeight = 18.0
         view.isPreserveRatio = true
-        completeButton.graphic = view
-        completeButton.setOnAction {
+        completionButton.graphic = view
+        completionButton.setOnAction {
             val newItem = item.copy()
             newItem.isCompleted = !item.isCompleted
             controller.editItem(newItem, item)
