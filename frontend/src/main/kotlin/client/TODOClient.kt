@@ -5,6 +5,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import models.Group
 import models.Item
+import models.Label
 import java.net.URI
 import java.net.URL
 import java.net.http.HttpClient
@@ -50,6 +51,23 @@ class TODOClient {
             .uri(URI.create("${serviceEndpoint}items/${item.id}"))
             .header("Content-Type", "application/json")
             .DELETE()
+            .build()
+        client.send(request, HttpResponse.BodyHandlers.ofString())
+    }
+
+    /* Methods related to labels endpoint */
+    fun getLabels(): List<Label> {
+        val labelsResponse = URL("${serviceEndpoint}labels").readText()
+        return Json.decodeFromString(labelsResponse)
+    }
+
+    fun createLabel(label: Label) {
+        val string = Json.encodeToString(label)
+
+        val request = HttpRequest.newBuilder()
+            .uri(URI.create("${serviceEndpoint}labels"))
+            .header("Content-Type", "application/json")
+            .POST(HttpRequest.BodyPublishers.ofString(string))
             .build()
         client.send(request, HttpResponse.BodyHandlers.ofString())
     }
