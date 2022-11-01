@@ -2,17 +2,14 @@ package views
 
 import controllers.GroupViewController
 import javafx.beans.value.ChangeListener
-import javafx.collections.FXCollections
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
 import javafx.scene.control.*
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
 import javafx.scene.layout.BorderPane
-import javafx.scene.layout.HBox
 import javafx.scene.text.Text
 import models.Item
-import models.Label
 
 class ItemView(private val controller: GroupViewController): ListCell<Item>() {
         private val root = BorderPane()
