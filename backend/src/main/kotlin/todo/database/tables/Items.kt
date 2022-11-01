@@ -1,6 +1,7 @@
 package todo.database.tables
 
 import org.jetbrains.exposed.dao.id.IntIdTable
+import org.jetbrains.exposed.sql.javatime.datetime
 
 /**
  *  Items database table.
@@ -8,4 +9,5 @@ import org.jetbrains.exposed.dao.id.IntIdTable
 object Items : IntIdTable() {
     val title = varchar("title", 50)
     val isCompleted = bool("is_completed")
+    val dueDate = datetime(name = "dueDate").nullable()
 }
