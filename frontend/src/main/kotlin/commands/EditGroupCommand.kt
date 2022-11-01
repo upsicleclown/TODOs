@@ -3,7 +3,7 @@ package commands
 import client.TODOClient
 import models.Group
 
-class EditGroupCommand(var newGroup: Group, var originalGroup: Group) : Command {
+class EditGroupCommand(private val newGroup: Group, private val originalGroup: Group) : Command {
     private val todoClient = TODOClient()
 
     override fun execute() {

@@ -3,7 +3,7 @@ package commands
 import client.TODOClient
 import models.Item
 
-class EditItemCommand(var newItem: Item, var originalItem: Item) : Command {
+class EditItemCommand(private var newItem: Item, private var originalItem: Item) : Command {
     private val todoClient = TODOClient()
 
     override fun execute() {

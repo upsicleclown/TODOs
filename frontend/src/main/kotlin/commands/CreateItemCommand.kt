@@ -3,9 +3,8 @@ package commands
 import client.TODOClient
 import models.Item
 
-class CreateItemCommand(newItem: Item) : Command {
+class CreateItemCommand(private val item: Item) : Command {
     private val todoClient = TODOClient()
-    var item: Item = newItem
 
     override fun execute() {
         todoClient.createItem(item)
