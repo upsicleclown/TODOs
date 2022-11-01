@@ -32,6 +32,15 @@ class ItemView(private val controller: GroupViewController): ListCell<Item>() {
         val root = BorderPane()
         val labelText = Text(label.name)
         val deleteButton = Button("x")
+        deleteButton.setOnAction {
+            val originalItem = item.copy()
+            val newItem = item.copy()
+            newItem.labelIds.remove(label.id)
+
+            if (newItem != null && originalItem != null) {
+                controller.editItem(newItem, originalItem)
+            }
+        }
         root.top = null
         root.center = labelText
         root.right = deleteButton
