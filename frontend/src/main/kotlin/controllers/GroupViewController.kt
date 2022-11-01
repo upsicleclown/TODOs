@@ -33,7 +33,7 @@ class GroupViewController(todoApp: TODOApplication) {
         view?.refreshWithItems(currentGroup!!, items)
     }
 
-    fun invalidateLabels() {
+    fun refreshLabels() {
         labels = todoClient.getLabels()
     }
 
@@ -65,7 +65,7 @@ class GroupViewController(todoApp: TODOApplication) {
 
     fun createLabel(label: Label) {
         todoClient.createLabel(label)
-        invalidateLabels()
+        refreshLabels()
     }
 
     // view management
