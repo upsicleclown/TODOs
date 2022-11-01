@@ -69,7 +69,7 @@ open class SQLiteDB(connectionString: String = "jdbc:sqlite:todo.db") {
                 title = item.title
                 isComplete = item.isCompleted
                 labels = SizedCollection(labelsToSave)
-                dueDate = item.dueDate?.toJavaLocalDateTime()
+                edtDueDate = item.edtDueDate?.toJavaLocalDateTime() // assume local time is EDT
             }
         }
     }
@@ -114,7 +114,7 @@ open class SQLiteDB(connectionString: String = "jdbc:sqlite:todo.db") {
                 oldItem.title = newItem.title
                 oldItem.isComplete = newItem.isCompleted
                 oldItem.labels = SizedCollection(labelsToSave)
-                oldItem.dueDate = newItem.dueDate?.toJavaLocalDateTime()
+                oldItem.edtDueDate = newItem.edtDueDate?.toJavaLocalDateTime() // assume local time is EDT
             }
         } catch (noSuchElementException: NoSuchElementException) {
             throw IllegalArgumentException("Could not edit item with id $itemId since no such item in database.")
@@ -131,7 +131,7 @@ open class SQLiteDB(connectionString: String = "jdbc:sqlite:todo.db") {
                     it.title,
                     it.isComplete,
                     it.labels.map { label -> label.id.value } as MutableList<Int>,
-                    it.dueDate?.toKotlinLocalDateTime(),
+                    it.edtDueDate?.toKotlinLocalDateTime(), // assume local time is EDT
                     it.id.value
                 )
             }

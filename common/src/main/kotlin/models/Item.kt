@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 /**
  *  Individual TO-DO item. An item can have multiple labels.
  *
- *  Value passed for dueDate must be in ISO-8601 format:
+ *  Value passed for edtDueDate must be in ISO-8601 format:
  *      (https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html#ISO_LOCAL_DATE_TIME)
  *  Value passed for item's id will be ignored. This property is managed by the database.
  */
@@ -15,7 +15,7 @@ data class Item(
     var title: String,
     var isCompleted: Boolean,
     var labelIds: MutableList<Int> = mutableListOf(),
-    var dueDate: LocalDateTime? = null,
+    var edtDueDate: LocalDateTime? = null,
     var id: Int = 0
 ) {
     /*

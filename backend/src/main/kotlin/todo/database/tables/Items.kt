@@ -9,5 +9,5 @@ import org.jetbrains.exposed.sql.javatime.datetime
 object Items : IntIdTable() {
     val title = varchar("title", 50)
     val isCompleted = bool("is_completed")
-    val dueDate = datetime(name = "dueDate").nullable()
+    val edtDueDate = datetime(name = "edtDueDate").nullable()
 }
