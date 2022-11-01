@@ -12,10 +12,10 @@ internal class ItemTest {
         val expectedIsCompleted = false
         val expectDate = "2010-06-01T22:19:44".toLocalDateTime()
 
-        val item = Item(expectedTitle, expectedIsCompleted, dueDate = expectDate)
+        val item = Item(expectedTitle, expectedIsCompleted, edtDueDate = expectDate)
         assertEquals(item.title, expectedTitle)
         assertEquals(item.isCompleted, expectedIsCompleted)
         assertEquals(item.labelIds, listOf<Int>())
-        assertEquals(item.dueDate, expectDate)
+        assertEquals(item.edtDueDate, expectDate)
     }
 }
