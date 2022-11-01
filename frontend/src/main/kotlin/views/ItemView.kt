@@ -4,12 +4,14 @@ import controllers.GroupViewController
 import javafx.beans.value.ChangeListener
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
+import javafx.event.EventType
 import javafx.scene.control.*
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
 import javafx.scene.layout.BorderPane
 import javafx.scene.text.Text
 import models.Item
+import models.Label;
 
 class ItemView(private val controller: GroupViewController): ListCell<Item>() {
         private val root = BorderPane()
@@ -24,7 +26,6 @@ class ItemView(private val controller: GroupViewController): ListCell<Item>() {
             root.bottom = labelViewContainer
 
             graphic = root
-
 
             /* region textField setup */
             // hide delete button while textField is focused
@@ -56,30 +57,67 @@ class ItemView(private val controller: GroupViewController): ListCell<Item>() {
             labelViewContainer.prefHeight = 24.0
             labelViewContainer.content = labelView
 
-            val labels: List<BorderPane>  = controller.labels().filter {
-                    label -> label.id in item.labelIds
-            }.map {
-                val root = BorderPane()
-                val labelText = Text(it.name)
-                val deleteButton = Button("x")
+            var itemLabels: List<Label>
+            var labelChips = listOf<BorderPane>()
 
-                root.center = labelText
-                root.right = deleteButton
-
-                root
+            if (item != null) {
+                itemLabels = controller.labels().filter {
+                        label -> label.id in item.labelIds
+                }
+                if (itemLabels.isNotEmpty()) {
+                    labelChips = itemLabels.map{
+                        labelToLabelChip(it)
+                    }
+                }
             }
 
             val addLabelChip = BorderPane()
             val addLabelButton = Button("+")
-            addLabelChip.center = addLabelButton
-            addLabelButton.setOnAction {
-                addLabelChip.center = TextField()
+            val addLabelComboBox = ComboBox<String>()
+            addLabelComboBox.isEditable = true
+            addLabelComboBox.items.addAll(controller.labels().map{label -> label.name})
+            addLabelComboBox.addEventFilter(
+                KeyEvent.KEY_RELEASED
+            ) {
+                e : KeyEvent ->
+                    if (e.code != KeyCode.ENTER) return@addEventFilter
+                    val newLabelName = addLabelComboBox.editor.text.trim()
+                    if (newLabelName.isBlank()) return@addEventFilter
+                    val existingLabel = controller.labels().any { label -> label.name == newLabelName }
+
+                    // if label didn't already exist, then create it
+                    if (!existingLabel) controller.createLabel(Label(newLabelName))
+
+                    // add new label to item
+                    val refreshedLabels = controller.labels()
+                    val newLabel = refreshedLabels.first { label -> label.name == newLabelName }
+
+                    val originalItem = item.copy()
+                    val newItem = item.copy()
+                    newItem.labelIds.add(newLabel.id)
+                    controller.editItem(newItem, originalItem) // should cause a refresh of the item
             }
 
-            labelView.items.addAll(labels)
+            addLabelChip.center = addLabelButton
+            addLabelButton.setOnAction {
+                addLabelChip.center = addLabelComboBox
+            }
+
+            if (labelChips.isNotEmpty()) {
+                labelView.items.addAll(labelChips)
+            }
             labelView.items.add(addLabelChip)
             /* end region labelView setup */
         }
+
+    private fun labelToLabelChip(label: Label): BorderPane {
+        val root = BorderPane()
+        val labelText = Text(label.name)
+        val deleteButton = Button("x")
+        root.center = labelText
+        root.right = deleteButton
+        return root
+    }
 
     fun focusItem() {
        root.left = null

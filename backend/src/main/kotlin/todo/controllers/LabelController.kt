@@ -17,6 +17,7 @@ internal class LabelController(private val service: Service) {
         return service.getLabels()
     }
 
+    // would be nice if this returned the new label ID
     @PostMapping("/labels")
     fun newLabel(@RequestBody newLabel: Label?) {
         newLabel?.let { service.addLabel(it) }

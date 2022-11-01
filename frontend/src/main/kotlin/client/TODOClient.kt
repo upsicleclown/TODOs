@@ -61,6 +61,17 @@ class TODOClient {
         return Json.decodeFromString(labelsResponse)
     }
 
+    fun createLabel(label: Label) {
+        val string = Json.encodeToString(label)
+
+        val request = HttpRequest.newBuilder()
+            .uri(URI.create("${serviceEndpoint}labels"))
+            .header("Content-Type", "application/json")
+            .POST(HttpRequest.BodyPublishers.ofString(string))
+            .build()
+        client.send(request, HttpResponse.BodyHandlers.ofString())
+    }
+
     /* Methods related to group endpoint */
     fun getGroups(): List<Group> {
         val groupsResponse = URL("${serviceEndpoint}groups").readText()

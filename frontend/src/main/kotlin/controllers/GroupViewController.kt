@@ -29,7 +29,12 @@ class GroupViewController(todoApp: TODOApplication) {
 
     private fun reloadGroupView() {
         items = todoClient.getItems()
+        labels = todoClient.getLabels()
         view?.refreshWithItems(currentGroup!!, items)
+    }
+
+    fun invalidateLabels() {
+        labels = todoClient.getLabels()
     }
 
     fun loadGroup(group: Group?) {
@@ -57,6 +62,11 @@ class GroupViewController(todoApp: TODOApplication) {
     }
 
     fun labels(): List<Label> { return labels }
+
+    fun createLabel(label: Label) {
+        todoClient.createLabel(label)
+        invalidateLabels()
+    }
 
     // view management
     fun addView(groupView: GroupView) {
