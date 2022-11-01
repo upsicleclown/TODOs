@@ -7,6 +7,7 @@ import commands.DeleteItemCommand
 import commands.EditItemCommand
 import models.Group
 import models.Item
+import models.Label
 import views.GroupView
 
 /**
@@ -15,6 +16,7 @@ import views.GroupView
 class GroupViewController(todoApp: TODOApplication) {
     private var app: TODOApplication? = null
     private var items = listOf<Item>()
+    private var labels = listOf<Label>()
     private var view: GroupView? = null
     private val todoClient = TODOClient()
     private var currentGroup: Group? = null
@@ -22,11 +24,17 @@ class GroupViewController(todoApp: TODOApplication) {
     init {
         app = todoApp
         items = todoClient.getItems()
+        labels = todoClient.getLabels()
     }
 
     private fun reloadGroupView() {
         items = todoClient.getItems()
+        labels = todoClient.getLabels()
         view?.refreshWithItems(currentGroup!!, items)
+    }
+
+    fun refreshLabels() {
+        labels = todoClient.getLabels()
     }
 
     fun loadGroup(group: Group?) {
@@ -51,6 +59,13 @@ class GroupViewController(todoApp: TODOApplication) {
         val deleteItemCommand = DeleteItemCommand(item)
         app?.commandHandler?.execute(deleteItemCommand)
         reloadGroupView()
+    }
+
+    fun labels(): List<Label> { return labels }
+
+    fun createLabel(label: Label) {
+        todoClient.createLabel(label)
+        refreshLabels()
     }
 
     // view management
