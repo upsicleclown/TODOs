@@ -4,7 +4,7 @@ import controllers.GroupViewController
 import controllers.SidepaneController
 import javafx.application.Application
 import javafx.scene.Scene
-import javafx.scene.layout.*
+import javafx.scene.layout.BorderPane
 import javafx.stage.Stage
 import models.WindowSettings
 import views.GroupView
