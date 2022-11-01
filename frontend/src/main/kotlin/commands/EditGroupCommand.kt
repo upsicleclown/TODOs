@@ -3,15 +3,8 @@ package commands
 import client.TODOClient
 import models.Group
 
-class EditGroupCommand : Command {
+class EditGroupCommand(private val newGroup: Group, private val originalGroup: Group) : Command {
     private val todoClient = TODOClient()
-    var newGroup = Group("default")
-    var originalGroup = Group("default")
-
-    constructor(newGroup: Group, originalGroup: Group) {
-        this.newGroup = newGroup
-        this.originalGroup = originalGroup
-    }
 
     override fun execute() {
         todoClient.editGroup(originalGroup.id, newGroup)

@@ -12,7 +12,7 @@ class CommandHandler {
     }
 
     fun undo() {
-        var command = executedCommandsStack.removeLastOrNull()
+        val command = executedCommandsStack.removeLastOrNull()
         if (command != null) {
             command.undo()
             undoneCommandsStack.addLast(command)
@@ -20,7 +20,7 @@ class CommandHandler {
     }
 
     fun redo() {
-        var command = undoneCommandsStack.removeLastOrNull()
+        val command = undoneCommandsStack.removeLastOrNull()
         command?.redo()
     }
 }

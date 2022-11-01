@@ -3,13 +3,8 @@ package commands
 import client.TODOClient
 import models.Group
 
-class CreateGroupCommand : Command {
+class CreateGroupCommand(private val group: Group) : Command {
     private val todoClient = TODOClient()
-    var group = Group("default")
-
-    constructor(newGroup: Group) {
-        this.group = newGroup
-    }
 
     override fun execute() {
         todoClient.createGroup(group)

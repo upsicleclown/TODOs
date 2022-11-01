@@ -3,13 +3,8 @@ package commands
 import client.TODOClient
 import models.Group
 
-class DeleteGroupCommand : Command {
+class DeleteGroupCommand(private val group: Group) : Command {
     private val todoClient = TODOClient()
-    var group = Group("default")
-
-    constructor(group: Group) {
-        this.group = group
-    }
 
     override fun execute() {
         todoClient.deleteGroup(group)
