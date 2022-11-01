@@ -33,7 +33,7 @@ class GroupView(controller: GroupViewController) : VBox() {
         listView.isEditable = true
 
         // from https://stackoverflow.com/questions/35963888/how-to-create-a-listview-of-complex-objects-and-allow-editing-a-field-on-the-obj
-        listView.setCellFactory { _: ListView<Item?>? -> ItemView(controller)}
+        listView.setCellFactory { _: ListView<Item?>? -> ItemView(controller) }
 
         children.add(listView)
     }

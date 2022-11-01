@@ -5,28 +5,33 @@ import javafx.beans.value.ChangeListener
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
 import javafx.geometry.Orientation
-import javafx.scene.control.*
+import javafx.scene.control.Button
+import javafx.scene.control.ComboBox
+import javafx.scene.control.ListCell
+import javafx.scene.control.ListView
+import javafx.scene.control.ScrollPane
+import javafx.scene.control.TextField
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
 import javafx.scene.layout.BorderPane
 import javafx.scene.text.Text
 import models.Item
-import models.Label;
+import models.Label
 
-class ItemView(private val controller: GroupViewController): ListCell<Item>() {
-        private val root = BorderPane()
-        private val textField = TextField()
-        private val deleteButton = Button("x")
-        private val labelViewContainer = ScrollPane()
-        private val labelView = ListView<BorderPane>()
+class ItemView(private val controller: GroupViewController) : ListCell<Item>() {
+    private val root = BorderPane()
+    private val textField = TextField()
+    private val deleteButton = Button("x")
+    private val labelViewContainer = ScrollPane()
+    private val labelView = ListView<BorderPane>()
 
-        init {
-            root.left = deleteButton
-            root.center = textField
-            root.bottom = labelViewContainer
+    init {
+        root.left = deleteButton
+        root.center = textField
+        root.bottom = labelViewContainer
 
-            graphic = root
-        }
+        graphic = root
+    }
 
     private fun labelToLabelChip(label: Label): BorderPane {
         val root = BorderPane()
@@ -49,7 +54,7 @@ class ItemView(private val controller: GroupViewController): ListCell<Item>() {
     }
 
     fun focusItem() {
-       root.left = null
+        root.left = null
     }
 
     fun unfocusItem() {
@@ -65,24 +70,24 @@ class ItemView(private val controller: GroupViewController): ListCell<Item>() {
 
         var labelChips = listOf<BorderPane>()
         var itemLabels: List<Label> = controller.labels().filter {
-                    label -> label.id in item.labelIds
+                label ->
+            label.id in item.labelIds
         }
         if (itemLabels.isNotEmpty()) {
-            labelChips = itemLabels.map{
+            labelChips = itemLabels.map {
                 labelToLabelChip(it)
             }
         }
-
 
         val addLabelChip = BorderPane()
         val addLabelButton = Button("+")
         val addLabelComboBox = ComboBox<String>()
         addLabelComboBox.isEditable = true
-        addLabelComboBox.items.addAll(controller.labels().map{label -> label.name})
+        addLabelComboBox.items.addAll(controller.labels().map { label -> label.name })
         addLabelComboBox.addEventFilter(
             KeyEvent.KEY_RELEASED
         ) {
-                e : KeyEvent ->
+                e: KeyEvent ->
             if (e.code != KeyCode.ENTER) return@addEventFilter
             val newLabelName = addLabelComboBox.editor.text.trim()
             if (newLabelName.isBlank()) return@addEventFilter
@@ -118,12 +123,14 @@ class ItemView(private val controller: GroupViewController): ListCell<Item>() {
 
     private fun setupTextField() {
         // hide delete button while textField is focused
-        textField.focusedProperty().addListener(ChangeListener { _, _, newValue ->
-            when (newValue) {
-                true -> focusItem()
-                false -> unfocusItem()
+        textField.focusedProperty().addListener(
+            ChangeListener { _, _, newValue ->
+                when (newValue) {
+                    true -> focusItem()
+                    false -> unfocusItem()
+                }
             }
-        })
+        )
 
         // when unfocusing a textField, save changes
         textField.onAction = EventHandler { _: ActionEvent? ->
@@ -153,7 +160,6 @@ class ItemView(private val controller: GroupViewController): ListCell<Item>() {
         graphic = root
         if (isEditing) {
             textField.text = item?.title
-
         } else {
             if (item != null) {
                 textField.text = item.title
