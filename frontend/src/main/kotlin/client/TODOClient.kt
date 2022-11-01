@@ -5,6 +5,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import models.Group
 import models.Item
+import models.Label
 import java.net.URI
 import java.net.URL
 import java.net.http.HttpClient
@@ -52,6 +53,12 @@ class TODOClient {
             .DELETE()
             .build()
         client.send(request, HttpResponse.BodyHandlers.ofString())
+    }
+
+    /* Methods related to labels endpoint */
+    fun getLabels(): List<Label> {
+        val labelsResponse = URL("${serviceEndpoint}labels").readText()
+        return Json.decodeFromString(labelsResponse)
     }
 
     /* Methods related to group endpoint */
