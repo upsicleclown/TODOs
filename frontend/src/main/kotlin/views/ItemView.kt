@@ -51,22 +51,18 @@ class ItemView(private val controller: GroupViewController): ListCell<Item>() {
         labelViewContainer.isFitToHeight = true
         labelViewContainer.prefHeight = 24.0
         labelViewContainer.content = labelView
-
         labelView.orientation = Orientation.HORIZONTAL
 
-        var itemLabels: List<Label>
         var labelChips = listOf<BorderPane>()
-
-        if (item != null) {
-            itemLabels = controller.labels().filter {
+        var itemLabels: List<Label> = controller.labels().filter {
                     label -> label.id in item.labelIds
-            }
-            if (itemLabels.isNotEmpty()) {
-                labelChips = itemLabels.map{
-                    labelToLabelChip(it)
-                }
+        }
+        if (itemLabels.isNotEmpty()) {
+            labelChips = itemLabels.map{
+                labelToLabelChip(it)
             }
         }
+
 
         val addLabelChip = BorderPane()
         val addLabelButton = Button("+")
@@ -103,6 +99,7 @@ class ItemView(private val controller: GroupViewController): ListCell<Item>() {
             addLabelChip.center = addLabelComboBox
         }
 
+        labelView.items.clear()
         if (labelChips.isNotEmpty()) {
             labelView.items.addAll(labelChips)
         }
