@@ -1,7 +1,6 @@
 package views
 
 import controllers.SidepaneController
-import javafx.collections.FXCollections
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
 import javafx.scene.control.Button
@@ -16,7 +15,6 @@ import models.Group
 
 class SidepaneView(sidepaneController: SidepaneController) : VBox() {
 
-    var groupsSource = FXCollections.observableArrayList<Group>()
     private var listView = ListView<Group>()
     val controller = sidepaneController
 
