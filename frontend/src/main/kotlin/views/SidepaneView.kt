@@ -1,7 +1,6 @@
 package views
 
 import controllers.SidepaneController
-import javafx.collections.FXCollections
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
 import javafx.scene.control.Button
@@ -16,7 +15,6 @@ import models.Group
 
 class SidepaneView(sidepaneController: SidepaneController) : VBox() {
 
-    var groupsSource = FXCollections.observableArrayList<Group>()
     private var listView = ListView<Group>()
     val controller = sidepaneController
 
@@ -98,16 +96,15 @@ class SidepaneView(sidepaneController: SidepaneController) : VBox() {
         listView.items.addAll(controller.groups())
         children.add(listView)
 
-        // field to create groups
-        val groupCreationField = TextField()
-        groupCreationField.promptText = "Create a new group..."
-
-        groupCreationField.setOnAction {
-            controller.createGroup(Group(groupCreationField.text))
-            groupCreationField.text = ""
+        val button = Button("+ group")
+        val groupCreationDialog = GroupCreationView()
+        button.onAction = EventHandler {
+            val optionalCreatedGroup = groupCreationDialog.showAndWait()
+            if (optionalCreatedGroup.isPresent) {
+                controller.createGroup(optionalCreatedGroup.get())
+            }
         }
-
-        children.add(groupCreationField)
+        children.add(button)
     }
 
     fun refreshGroups() {
