@@ -26,9 +26,15 @@ import models.Priority as PriorityEnum
 
 /*
    SQLite Database.
+   Used to interface between database layer and Service layer
 
-   Connection string could be a secret.
-   Used to interface between database later
+   Notes:
+   - Connection string could be a secret.
+   - Dates in models are stored as Kotlin `LocalDateTime` because they need to be serializable and Java
+     `LocalDateTime` is not, whereas Dates in the database models package are stored as Java `LocalDateTime`
+     since this is the type `Exposed` uses to create `DATE` columns.
+     Hence, they are converted to and from one another in this class.
+
  */
 open class SQLiteDB(connectionString: String = "jdbc:sqlite:todo.db") {
     /**
