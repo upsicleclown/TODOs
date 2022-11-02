@@ -179,6 +179,7 @@ open class SQLiteDB(connectionString: String = "jdbc:sqlite:todo.db") {
         transaction {
             Label.new {
                 name = label.name
+                color = label.color
             }
         }
     }
@@ -222,6 +223,7 @@ open class SQLiteDB(connectionString: String = "jdbc:sqlite:todo.db") {
             transaction {
                 val oldLabel: Label = Label.find { Labels.id eq labelId }.first()
                 oldLabel.name = newLabel.name
+                oldLabel.color = newLabel.color
             }
         } catch (noSuchElementException: NoSuchElementException) {
             throw IllegalArgumentException("Could not edit label with id $labelId since no such label in database.")
@@ -232,7 +234,7 @@ open class SQLiteDB(connectionString: String = "jdbc:sqlite:todo.db") {
      * Returns all label in the database.
      */
     fun getLabels(): List<models.Label> {
-        return getDbLabels().map { models.Label(it.name, it.id.value) }
+        return getDbLabels().map { models.Label(it.name, it.color, it.id.value) }
     }
 
     //

@@ -10,6 +10,8 @@ import todo.database.models.Label
  * Mock class of `SQLiteDB` to pre-populate the database with sample data so the class functionalities can be tested.
  */
 class MockSQLiteDB : SQLiteDB("jdbc:sqlite:src/test/kotlin/todo/database/test.db") {
+    val TEST_LABEL_COLOR = "#000000"
+
     /**
      * Load database with mock data.
      */
@@ -18,12 +20,15 @@ class MockSQLiteDB : SQLiteDB("jdbc:sqlite:src/test/kotlin/todo/database/test.db
             // Label data
             val label1 = Label.new {
                 name = "label1"
+                color = TEST_LABEL_COLOR
             }
             Label.new {
                 name = "label2"
+                color = TEST_LABEL_COLOR
             }
             Label.new {
                 name = "label3"
+                color = TEST_LABEL_COLOR
             }
 
             // Item data
