@@ -5,16 +5,16 @@ import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import todo.database.tables.FilterLabels
 import todo.database.tables.FilterPriorities
-import todo.database.tables.GroupFilters
+import todo.database.tables.Filters
 
 /**
- *  Entity instance or row created in the GroupFilters table.
+ *  Entity instance or row created in the Filters table.
  */
 class Filter(id: EntityID<Int>) : IntEntity(id) {
-    companion object : IntEntityClass<Filter>(GroupFilters)
-    var edtStartDateRange by GroupFilters.edtStartDateRange
-    var edtEndDateRange by GroupFilters.edtEndDateRange
-    var isComplete by GroupFilters.isCompleted
+    companion object : IntEntityClass<Filter>(Filters)
+    var edtStartDateRange by Filters.edtStartDateRange
+    var edtEndDateRange by Filters.edtEndDateRange
+    var isComplete by Filters.isCompleted
     var priorities by Priority via FilterPriorities
     var labels by Label via FilterLabels
 }

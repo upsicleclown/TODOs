@@ -16,7 +16,7 @@ import todo.database.models.Label
 import todo.database.models.Priority
 import todo.database.tables.FilterLabels
 import todo.database.tables.FilterPriorities
-import todo.database.tables.GroupFilters
+import todo.database.tables.Filters
 import todo.database.tables.Groups
 import todo.database.tables.ItemLabels
 import todo.database.tables.Items
@@ -28,6 +28,7 @@ import models.Priority as PriorityEnum
    SQLite Database.
 
    Connection string could be a secret.
+   Used to interface between database later
  */
 open class SQLiteDB(connectionString: String = "jdbc:sqlite:todo.db") {
     /**
@@ -46,7 +47,7 @@ open class SQLiteDB(connectionString: String = "jdbc:sqlite:todo.db") {
             SchemaUtils.create(Labels)
             SchemaUtils.create(ItemLabels)
             SchemaUtils.create(Priorities)
-            SchemaUtils.create(GroupFilters)
+            SchemaUtils.create(Filters)
             SchemaUtils.create(FilterLabels)
             SchemaUtils.create(FilterPriorities)
 
