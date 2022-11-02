@@ -6,18 +6,14 @@ import kotlin.test.assertNull
 
 class CommandTest {
 
-    var commandHandler = CommandHandler()
+    private var commandHandler = CommandHandler()
 
     /*
        Tests related to commands.
      */
 
-    class TestCommand : Command {
-        var value = 0
-
-        constructor(newValue: Int) {
-            this.value = newValue
-        }
+    class TestCommand(newValue: Int) : Command {
+        var value = newValue
 
         override fun execute() {
             this.value++

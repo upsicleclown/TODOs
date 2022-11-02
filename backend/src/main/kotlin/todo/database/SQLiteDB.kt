@@ -7,20 +7,34 @@ import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.SizedCollection
 import org.jetbrains.exposed.sql.StdOutSqlLogger
 import org.jetbrains.exposed.sql.addLogger
+import org.jetbrains.exposed.sql.insertIgnore
 import org.jetbrains.exposed.sql.transactions.transaction
+import todo.database.models.Filter
 import todo.database.models.Group
 import todo.database.models.Item
 import todo.database.models.Label
-import todo.database.tables.GroupLabels
+import todo.database.models.Priority
+import todo.database.tables.FilterLabels
+import todo.database.tables.FilterPriorities
+import todo.database.tables.Filters
 import todo.database.tables.Groups
 import todo.database.tables.ItemLabels
 import todo.database.tables.Items
 import todo.database.tables.Labels
+import todo.database.tables.Priorities
+import models.Priority as PriorityEnum
 
 /*
    SQLite Database.
+   Used to interface between database layer and Service layer
 
-   Connection string could be a secret.
+   Notes:
+   - Connection string could be a secret.
+   - Dates in models are stored as Kotlin `LocalDateTime` because they need to be serializable and Java
+     `LocalDateTime` is not, whereas Dates in the database models package are stored as Java `LocalDateTime`
+     since this is the type `Exposed` uses to create `DATE` columns.
+     Hence, they are converted to and from one another in this class.
+
  */
 open class SQLiteDB(connectionString: String = "jdbc:sqlite:todo.db") {
     /**
@@ -38,7 +52,12 @@ open class SQLiteDB(connectionString: String = "jdbc:sqlite:todo.db") {
             SchemaUtils.create(Groups)
             SchemaUtils.create(Labels)
             SchemaUtils.create(ItemLabels)
-            SchemaUtils.create(GroupLabels)
+            SchemaUtils.create(Priorities)
+            SchemaUtils.create(Filters)
+            SchemaUtils.create(FilterLabels)
+            SchemaUtils.create(FilterPriorities)
+
+            addPriorityEnum()
         }
     }
 
@@ -64,13 +83,14 @@ open class SQLiteDB(connectionString: String = "jdbc:sqlite:todo.db") {
 
         // Save item.
         val labelsToSave: List<Label> = labelsInDB.filter { label: Label -> item.labelIds.contains(label.id.value) }
+
         transaction {
             Item.new {
                 title = item.title
                 isComplete = item.isCompleted
                 labels = SizedCollection(labelsToSave)
                 edtDueDate = item.edtDueDate?.toJavaLocalDateTime() // assume local time is EDT
-                priority = item.priority?.name
+                priority = item.priority?.let { Priority[it.name].id }
             }
         }
     }
@@ -116,7 +136,7 @@ open class SQLiteDB(connectionString: String = "jdbc:sqlite:todo.db") {
                 oldItem.isComplete = newItem.isCompleted
                 oldItem.labels = SizedCollection(labelsToSave)
                 oldItem.edtDueDate = newItem.edtDueDate?.toJavaLocalDateTime() // assume local time is EDT
-                oldItem.priority = newItem.priority?.name
+                oldItem.priority = newItem.priority?.let { Priority[it.name].id }
             }
         } catch (noSuchElementException: NoSuchElementException) {
             throw IllegalArgumentException("Could not edit item with id $itemId since no such item in database.")
@@ -134,9 +154,24 @@ open class SQLiteDB(connectionString: String = "jdbc:sqlite:todo.db") {
                     it.isComplete,
                     it.labels.map { label -> label.id.value } as MutableList<Int>,
                     it.edtDueDate?.toKotlinLocalDateTime(), // assume local time is EDT
-                    it.priority?.let { itemPriority -> models.Priority.valueOf(itemPriority) },
+                    it.priority?.let { priority -> PriorityEnum.valueOf(priority.value) },
                     it.id.value
                 )
+            }
+        }
+    }
+
+    //
+    // Private helpers related to priorities.
+    //
+
+    /**
+     * Inserts PriorityEnum values into Priority table
+     */
+    private fun addPriorityEnum() {
+        PriorityEnum.values().forEach { enum ->
+            Priorities.insertIgnore {
+                it[this.name] = enum.name
             }
         }
     }
@@ -198,10 +233,10 @@ open class SQLiteDB(connectionString: String = "jdbc:sqlite:todo.db") {
                     item.labels = SizedCollection(item.labels.filter { it.id.value != labelId })
                 }
 
-                // Remove label from groups with this label
-                val groupsWithLabel: List<Group> = Group.all().filter { it.labels.map { label -> label.id.value }.contains(labelId) }
-                for (group in groupsWithLabel) {
-                    group.labels = SizedCollection(group.labels.filter { it.id.value != labelId })
+                // Remove label from filters with this label
+                val filtersWithLabel: List<Filter> = Filter.all().filter { it.labels.map { label -> label.id.value }.contains(labelId) }
+                for (filter in filtersWithLabel) {
+                    filter.labels = SizedCollection(filter.labels.filter { it.id.value != labelId })
                 }
 
                 // Remove label.
@@ -245,22 +280,29 @@ open class SQLiteDB(connectionString: String = "jdbc:sqlite:todo.db") {
      * Adds the provided group.
      */
     fun addGroup(group: models.Group) {
+        val groupFilter: models.Filter = group.filter
         // Ensure labels in group exist.
         val labelsInDB: List<Label> = getDbLabels()
-        val labelIdsNotInDb: List<Int> = getLabelIdsNotInDb(group.labelIds, labelsInDB.map { label: Label -> label.id.value })
+        val labelIdsNotInDb: List<Int> = getLabelIdsNotInDb(groupFilter.labelIds, labelsInDB.map { label: Label -> label.id.value })
         if (labelIdsNotInDb.isNotEmpty()) {
             throw IllegalArgumentException(
-                "Cannot add group with label ids $labelIdsNotInDb " +
+                "Cannot add group that filters by label ids $labelIdsNotInDb " +
                     "since these label ids do not exist in the database."
             )
         }
 
-        // Save group.
-        val labelsToSave: List<Label> = labelsInDB.filter { label: Label -> group.labelIds.contains(label.id.value) }
+        // Save group with filter
+        val labelsToSave: List<Label> = labelsInDB.filter { label: Label -> groupFilter.labelIds.contains(label.id.value) }
         transaction {
             Group.new {
                 name = group.name
-                labels = SizedCollection(labelsToSave)
+                filter = Filter.new {
+                    edtStartDateRange = groupFilter.edtStartDateRange?.toJavaLocalDateTime()
+                    edtEndDateRange = groupFilter.edtEndDateRange?.toJavaLocalDateTime()
+                    isComplete = groupFilter.isCompleted
+                    priorities = SizedCollection(groupFilter.priorities.map { Priority[it.name] })
+                    labels = SizedCollection(labelsToSave)
+                }
             }
         }
     }
@@ -274,6 +316,7 @@ open class SQLiteDB(connectionString: String = "jdbc:sqlite:todo.db") {
         try {
             transaction {
                 val oldGroup: Group = Group.find { Groups.id eq groupId }.first()
+                oldGroup.filter.delete()
                 oldGroup.delete()
             }
         } catch (noSuchElementException: NoSuchElementException) {
@@ -287,9 +330,10 @@ open class SQLiteDB(connectionString: String = "jdbc:sqlite:todo.db") {
      * @throws IllegalArgumentException if no such group with provided id or if any of the labels in group do not exist.
      */
     fun editGroup(groupId: Int, newGroup: models.Group) {
-        // Ensure labels in group exist.
+        val newFilter: models.Filter = newGroup.filter
+        // Ensure labels in filter exist.
         val labelsInDB: List<Label> = getDbLabels()
-        val labelIdsNotInDb: List<Int> = getLabelIdsNotInDb(newGroup.labelIds, labelsInDB.map { label: Label -> label.id.value })
+        val labelIdsNotInDb: List<Int> = getLabelIdsNotInDb(newFilter.labelIds, labelsInDB.map { label: Label -> label.id.value })
         if (labelIdsNotInDb.isNotEmpty()) {
             throw IllegalArgumentException(
                 "Cannot edit group with label ids $labelIdsNotInDb " +
@@ -298,12 +342,19 @@ open class SQLiteDB(connectionString: String = "jdbc:sqlite:todo.db") {
         }
 
         // Edit group.
-        val labelsToSave: List<Label> = labelsInDB.filter { label: Label -> newGroup.labelIds.contains(label.id.value) }
+        val labelsToSave: List<Label> = labelsInDB.filter { label: Label -> newFilter.labelIds.contains(label.id.value) }
         try {
             transaction {
                 val oldGroup: Group = Group.find { Groups.id eq groupId }.first()
+                val oldFilter: Filter = oldGroup.filter
+
+                oldFilter.edtStartDateRange = newFilter.edtStartDateRange?.toJavaLocalDateTime()
+                oldFilter.edtEndDateRange = newFilter.edtEndDateRange?.toJavaLocalDateTime()
+                oldFilter.isComplete = newFilter.isCompleted
+                oldFilter.labels = SizedCollection(labelsToSave)
+                oldFilter.priorities = SizedCollection(newFilter.priorities.map { Priority[it.name] })
+
                 oldGroup.name = newGroup.name
-                oldGroup.labels = SizedCollection(labelsToSave)
             }
         } catch (noSuchElementException: NoSuchElementException) {
             throw IllegalArgumentException("Could not edit group with id $groupId since no such group in database.")
@@ -316,9 +367,17 @@ open class SQLiteDB(connectionString: String = "jdbc:sqlite:todo.db") {
     fun getGroups(): List<models.Group> {
         return transaction {
             Group.all().toList().map {
+                val filter = it.filter
+
                 models.Group(
                     it.name,
-                    it.labels.map { label -> label.id.value } as MutableList<Int>,
+                    models.Filter(
+                        filter.edtStartDateRange?.toKotlinLocalDateTime(),
+                        filter.edtEndDateRange?.toKotlinLocalDateTime(),
+                        filter.isComplete,
+                        filter.priorities.map { priority -> PriorityEnum.valueOf(priority.id.toString()) } as MutableList<models.Priority>,
+                        filter.labels.map { label -> label.id.value } as MutableList<Int>
+                    ),
                     it.id.value
                 )
             }

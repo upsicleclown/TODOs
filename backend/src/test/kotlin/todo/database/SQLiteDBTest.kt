@@ -1,8 +1,11 @@
 package todo.database
 
+import kotlinx.datetime.toLocalDateTime
+import models.Filter
 import models.Group
 import models.Item
 import models.Label
+import models.Priority
 import java.io.File
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -147,9 +150,16 @@ internal class SQLiteDBTest {
     fun testAddGroup() {
         val expectedGroupId = 4
         val expectedGroupTitle = "group4"
+        val expectedGroupFilter = Filter(
+            "2010-06-01T22:19:44".toLocalDateTime(),
+            "2016-06-01T22:19:44".toLocalDateTime(),
+            false,
+            mutableListOf<Priority>(Priority.MEDIUM, Priority.LOW),
+            mutableListOf<Int>()
+        )
 
-        db.addGroup(Group(expectedGroupTitle))
-        assert(db.getGroups().contains(Group(expectedGroupTitle, id = expectedGroupId)))
+        db.addGroup(Group(expectedGroupTitle, expectedGroupFilter))
+        assert(db.getGroups().contains(Group(expectedGroupTitle, expectedGroupFilter, id = expectedGroupId)))
     }
 
     @Test
@@ -164,16 +174,25 @@ internal class SQLiteDBTest {
     fun testEditGroup() {
         val expectedGroupId = 1
         val newName = "newGroup1"
+        val newGroupFilter = Filter(
+            "2010-06-01T22:19:44".toLocalDateTime(),
+            "2016-06-01T22:19:44".toLocalDateTime(),
+            false,
+            mutableListOf<Priority>(Priority.MEDIUM, Priority.LOW),
+            mutableListOf<Int>()
+        )
 
-        db.editGroup(expectedGroupId, Group(newName))
-        assert(db.getGroups().first { group: Group -> group.id == expectedGroupId }.name == newName)
+        db.editGroup(expectedGroupId, Group(newName, newGroupFilter))
+
+        val editedGroup = db.getGroups().first { group: Group -> group.id == expectedGroupId }
+        assert(editedGroup.name == newName && editedGroup.filter == newGroupFilter)
     }
 
     @Test
     fun testGetGroups() {
         val expectedGroupIds = listOf(1, 2, 3, 4)
 
-        db.addGroup(Group("group4"))
+        db.addGroup(Group("group4", Filter()))
         assertEquals(db.getGroups().map { group: Group -> group.id }, expectedGroupIds)
     }
 
@@ -196,7 +215,7 @@ internal class SQLiteDBTest {
 
         db.removeLabel(expectedLabelId)
         assert(db.getItems().first { item: Item -> item.id == itemIdWithLabel }.labelIds.isEmpty())
-        assert(db.getGroups().first { group: Group -> group.id == groupIdWithLabel }.labelIds.isEmpty())
+        assert(db.getGroups().first { group: Group -> group.id == groupIdWithLabel }.filter.labelIds.isEmpty())
         assertFalse(db.getLabels().map { label: Label -> label.id }.contains(expectedLabelId))
     }
 }

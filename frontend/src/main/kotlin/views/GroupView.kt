@@ -1,7 +1,6 @@
 package views
 
 import controllers.GroupViewController
-import javafx.collections.FXCollections
 import javafx.scene.control.Label
 import javafx.scene.control.ListView
 import javafx.scene.control.TextField
@@ -12,8 +11,7 @@ import models.Item
 
 class GroupView(controller: GroupViewController) : VBox() {
 
-    val focusedGroupItemsSource = FXCollections.observableArrayList<Item>()
-    var currentGroupName = Label("")
+    private var currentGroupName = Label("")
     private val listView = ListView<Item>()
 
     init {
@@ -43,7 +41,6 @@ class GroupView(controller: GroupViewController) : VBox() {
     fun refreshWithItems(group: Group, items: List<Item>) {
         listView.items.clear()
         children[0] = Label(group.name)
-        focusedGroupItemsSource.setAll(items)
         listView.items.addAll(items)
     }
 }
