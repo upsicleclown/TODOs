@@ -1,5 +1,6 @@
 package todo.service
 
+import models.Filter
 import models.Group
 import models.Item
 import kotlin.test.Test
@@ -37,7 +38,7 @@ class ServiceTest {
         val nonExistingLabelIds = mutableListOf(10000)
 
         assertFailsWith<IllegalArgumentException> {
-            service.addGroup(Group("test", nonExistingLabelIds))
+            service.addGroup(Group("test", Filter(labelIds = nonExistingLabelIds)))
         }
     }
 
@@ -47,7 +48,7 @@ class ServiceTest {
         val nonExistingLabelIds = mutableListOf(10000)
 
         assertFailsWith<IllegalArgumentException> {
-            service.editGroup(existingGroupId, Group("test", nonExistingLabelIds))
+            service.editGroup(existingGroupId, Group("test", Filter(labelIds = nonExistingLabelIds)))
         }
     }
 }

@@ -8,9 +8,10 @@ internal class GroupTest {
     @Test
     fun testConstructor() {
         val expectedName = "testGroup"
+        val expectedFilter = Filter()
 
-        val group = Group(expectedName)
+        val group = Group(expectedName, expectedFilter)
         assertEquals(group.name, expectedName)
-        assertEquals(group.labelIds, listOf<Int>())
+        assertEquals(group.filter, Filter())
     }
 }
