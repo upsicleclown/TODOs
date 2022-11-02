@@ -32,7 +32,7 @@ class ItemView(private val controller: GroupViewController) : ListCell<Item>() {
         root.right = deleteButton
         root.center = textField
         root.bottom = labelViewContainer
-
+        labelViewContainer.isFitToWidth = true
         graphic = root
     }
 
