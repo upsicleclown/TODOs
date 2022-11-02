@@ -124,7 +124,7 @@ class ApplicationTest {
 
         // Test creating new Label
         val newLabelResponse: ResponseEntity<Any> = testRestTemplate
-            .postForEntity("/labels", HttpEntity("{\"name\":\"label4\"}", headers))
+            .postForEntity("/labels", HttpEntity("{\"name\":\"label4\", \"color\":\"#FFC0CB\"}", headers))
         assertEquals(HttpStatus.OK, newLabelResponse.statusCode)
 
         // Test retrieving existing Labels

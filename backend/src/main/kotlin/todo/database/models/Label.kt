@@ -8,7 +8,9 @@ import todo.database.tables.Labels
 /**
  *  Entity instance or row created in the Labels table.
  */
+
 class Label(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<Label>(Labels)
     var name by Labels.name
+    var color by Labels.color
 }

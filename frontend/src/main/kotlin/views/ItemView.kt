@@ -27,6 +27,8 @@ class ItemView(private val controller: GroupViewController) : ListCell<Item>() {
     private val labelViewContainer = ScrollPane()
     private val labelView = ListView<BorderPane>()
 
+    private val DEFAULT_LABEL_COLOR = "#89CFF0"
+
     init {
         root.left = completionButton
         root.right = deleteButton
@@ -99,7 +101,7 @@ class ItemView(private val controller: GroupViewController) : ListCell<Item>() {
             val existingLabel = controller.labels().any { label -> label.name == newLabelName }
 
             // if label didn't already exist, then create it
-            if (!existingLabel) controller.createLabel(Label(newLabelName))
+            if (!existingLabel) controller.createLabel(Label(newLabelName, DEFAULT_LABEL_COLOR))
 
             // add new label to item
             val refreshedLabels = controller.labels()

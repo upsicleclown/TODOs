@@ -97,9 +97,10 @@ internal class SQLiteDBTest {
     fun testAddLabel() {
         val expectedLabelId = 4
         val expectedLabelName = "label4"
+        val expectedLabelColor = "#FFFFFF"
 
-        db.addLabel(Label(expectedLabelName))
-        assert(db.getLabels().contains(Label(expectedLabelName, id = expectedLabelId)))
+        db.addLabel(Label(expectedLabelName, expectedLabelColor))
+        assert(db.getLabels().contains(Label(expectedLabelName, expectedLabelColor, id = expectedLabelId)))
     }
 
     @Test
@@ -114,16 +115,20 @@ internal class SQLiteDBTest {
     fun testEditLabel() {
         val expectedLabelId = 1
         val newName = "newLabel1"
+        val newLabelColor = "#000000"
 
-        db.editLabel(expectedLabelId, Label(newName))
-        assert(db.getLabels().first { label: Label -> label.id == expectedLabelId }.name == newName)
+        db.editLabel(expectedLabelId, Label(newName, newLabelColor))
+
+        val newLabel = db.getLabels().first { label: Label -> label.id == expectedLabelId }
+
+        assert(newLabel.name == newName && newLabel.color == newLabelColor)
     }
 
     @Test
     fun testGetLabels() {
         val expectedLabelIds = listOf(1, 2, 3, 4)
 
-        db.addLabel(Label("test4"))
+        db.addLabel(Label("test4", "#000000"))
         assertEquals(db.getLabels().map { label: Label -> label.id }, expectedLabelIds)
     }
 
