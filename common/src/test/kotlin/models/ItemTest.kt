@@ -11,11 +11,13 @@ internal class ItemTest {
         val expectedTitle = "testTitle"
         val expectedIsCompleted = false
         val expectDate = "2010-06-01T22:19:44".toLocalDateTime()
+        val expectedIsHighPriority = Priority.HIGH
 
-        val item = Item(expectedTitle, expectedIsCompleted, edtDueDate = expectDate)
+        val item = Item(expectedTitle, expectedIsCompleted, edtDueDate = expectDate, priority = expectedIsHighPriority)
         assertEquals(item.title, expectedTitle)
         assertEquals(item.isCompleted, expectedIsCompleted)
         assertEquals(item.labelIds, listOf<Int>())
         assertEquals(item.edtDueDate, expectDate)
+        assertEquals(item.priority, expectedIsHighPriority)
     }
 }

@@ -16,6 +16,7 @@ data class Item(
     var isCompleted: Boolean,
     var labelIds: MutableList<Int> = mutableListOf(),
     var edtDueDate: LocalDateTime? = null,
+    var priority: Priority? = null,
     var id: Int = 0
 ) {
     /*

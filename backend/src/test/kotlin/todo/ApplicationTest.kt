@@ -95,7 +95,7 @@ class ApplicationTest {
         val newItem = newItems[0]
 
         // Test updating previously created Item
-        testRestTemplate.put("/items/" + newItem.get("id"), HttpEntity("{\"title\":\"item4.1\", \"isCompleted\": true, \"edtDueDate\":\"2010-06-01T22:19:44\"}", headers))
+        testRestTemplate.put("/items/" + newItem.get("id"), HttpEntity("{\"title\":\"item4.1\", \"isCompleted\": true, \"edtDueDate\":\"2010-06-01T22:19:44\", \"priority\":\"LOW\"}", headers))
 
         getItemsResponse = testRestTemplate.getForEntity("/items", String::class.java)
         assertEquals(HttpStatus.OK, getItemsResponse?.statusCode)

@@ -15,4 +15,5 @@ class Item(id: EntityID<Int>) : IntEntity(id) {
     var isComplete by Items.isCompleted
     var labels by Label via ItemLabels
     var edtDueDate by Items.edtDueDate
+    var priority by Items.priority
 }
