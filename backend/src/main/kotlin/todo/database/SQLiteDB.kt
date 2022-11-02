@@ -1,5 +1,7 @@
 package todo.database
 
+import kotlinx.datetime.toJavaLocalDateTime
+import kotlinx.datetime.toKotlinLocalDateTime
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.SizedCollection
@@ -67,6 +69,8 @@ open class SQLiteDB(connectionString: String = "jdbc:sqlite:todo.db") {
                 title = item.title
                 isComplete = item.isCompleted
                 labels = SizedCollection(labelsToSave)
+                edtDueDate = item.edtDueDate?.toJavaLocalDateTime() // assume local time is EDT
+                priority = item.priority?.name
             }
         }
     }
@@ -111,6 +115,8 @@ open class SQLiteDB(connectionString: String = "jdbc:sqlite:todo.db") {
                 oldItem.title = newItem.title
                 oldItem.isComplete = newItem.isCompleted
                 oldItem.labels = SizedCollection(labelsToSave)
+                oldItem.edtDueDate = newItem.edtDueDate?.toJavaLocalDateTime() // assume local time is EDT
+                oldItem.priority = newItem.priority?.name
             }
         } catch (noSuchElementException: NoSuchElementException) {
             throw IllegalArgumentException("Could not edit item with id $itemId since no such item in database.")
@@ -127,6 +133,8 @@ open class SQLiteDB(connectionString: String = "jdbc:sqlite:todo.db") {
                     it.title,
                     it.isComplete,
                     it.labels.map { label -> label.id.value } as MutableList<Int>,
+                    it.edtDueDate?.toKotlinLocalDateTime(), // assume local time is EDT
+                    it.priority?.let { itemPriority -> models.Priority.valueOf(itemPriority) },
                     it.id.value
                 )
             }

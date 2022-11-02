@@ -1,7 +1,6 @@
 package views
 
 import controllers.GroupViewController
-import javafx.beans.value.ChangeListener
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
 import javafx.geometry.Orientation
@@ -11,6 +10,8 @@ import javafx.scene.control.ListCell
 import javafx.scene.control.ListView
 import javafx.scene.control.ScrollPane
 import javafx.scene.control.TextField
+import javafx.scene.image.Image
+import javafx.scene.image.ImageView
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
 import javafx.scene.layout.BorderPane
@@ -21,12 +22,14 @@ import models.Label
 class ItemView(private val controller: GroupViewController) : ListCell<Item>() {
     private val root = BorderPane()
     private val textField = TextField()
+    private val completionButton = Button()
     private val deleteButton = Button("x")
     private val labelViewContainer = ScrollPane()
     private val labelView = ListView<BorderPane>()
 
     init {
-        root.left = deleteButton
+        root.left = completionButton
+        root.right = deleteButton
         root.center = textField
         root.bottom = labelViewContainer
 
@@ -55,10 +58,12 @@ class ItemView(private val controller: GroupViewController) : ListCell<Item>() {
 
     fun focusItem() {
         root.left = null
+        root.right = null
     }
 
     fun unfocusItem() {
-        root.left = deleteButton
+        root.left = completionButton
+        root.right = deleteButton
     }
 
     private fun setupLabelView() {
@@ -69,7 +74,7 @@ class ItemView(private val controller: GroupViewController) : ListCell<Item>() {
         labelView.orientation = Orientation.HORIZONTAL
 
         var labelChips = listOf<BorderPane>()
-        var itemLabels: List<Label> = controller.labels().filter {
+        val itemLabels: List<Label> = controller.labels().filter {
                 label ->
             label.id in item.labelIds
         }
@@ -122,15 +127,13 @@ class ItemView(private val controller: GroupViewController) : ListCell<Item>() {
     }
 
     private fun setupTextField() {
-        // hide delete button while textField is focused
-        textField.focusedProperty().addListener(
-            ChangeListener { _, _, newValue ->
-                when (newValue) {
-                    true -> focusItem()
-                    false -> unfocusItem()
-                }
+        // hide buttons while textField is focused
+        textField.focusedProperty().addListener { _, _, newValue ->
+            when (newValue) {
+                true -> focusItem()
+                false -> unfocusItem()
             }
-        )
+        }
 
         // when unfocusing a textField, save changes
         textField.onAction = EventHandler { _: ActionEvent? ->
@@ -163,9 +166,9 @@ class ItemView(private val controller: GroupViewController) : ListCell<Item>() {
         } else {
             if (item != null) {
                 textField.text = item.title
-                deleteButton.setOnAction {
-                    controller.deleteItem(item)
-                }
+
+                configDeleteButton(item)
+                configCompletionButton(item)
             }
         }
     }
@@ -191,6 +194,26 @@ class ItemView(private val controller: GroupViewController) : ListCell<Item>() {
             val originalItem = item.copy()
             item.title = textField.text
             controller.editItem(item, originalItem)
+        }
+    }
+
+    private fun configDeleteButton(item: Item) {
+        deleteButton.setOnAction {
+            controller.deleteItem(item)
+        }
+    }
+
+    private fun configCompletionButton(item: Item) {
+        val imageUrl = if (item.isCompleted) "completed_item_48.png" else "uncompleted_item_48.png"
+        val image = Image(imageUrl)
+        val view = ImageView(image)
+        view.fitHeight = 18.0
+        view.isPreserveRatio = true
+        completionButton.graphic = view
+        completionButton.setOnAction {
+            val newItem = item.copy()
+            newItem.isCompleted = !item.isCompleted
+            controller.editItem(newItem, item)
         }
     }
 }
