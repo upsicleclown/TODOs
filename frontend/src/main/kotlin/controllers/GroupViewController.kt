@@ -33,7 +33,7 @@ class GroupViewController(todoApp: TODOApplication) {
         view?.refreshWithItems(currentGroup!!, items)
     }
 
-    fun refreshLabels() {
+    private fun refreshLabels() {
         labels = todoClient.getLabels()
     }
 

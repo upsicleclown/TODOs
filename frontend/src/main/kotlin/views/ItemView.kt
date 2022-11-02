@@ -47,9 +47,7 @@ class ItemView(private val controller: GroupViewController) : ListCell<Item>() {
             val newItem = item.copy()
             newItem.labelIds.remove(label.id)
 
-            if (newItem != null && originalItem != null) {
-                controller.editItem(newItem, originalItem)
-            }
+            controller.editItem(newItem, originalItem)
         }
         root.top = null
         root.center = labelText
@@ -58,12 +56,12 @@ class ItemView(private val controller: GroupViewController) : ListCell<Item>() {
         return root
     }
 
-    fun focusItem() {
+    private fun focusItem() {
         root.left = null
         root.right = null
     }
 
-    fun unfocusItem() {
+    private fun unfocusItem() {
         root.left = completionButton
         root.right = deleteButton
     }
