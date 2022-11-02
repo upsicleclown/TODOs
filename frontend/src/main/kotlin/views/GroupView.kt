@@ -5,6 +5,7 @@ import javafx.collections.FXCollections
 import javafx.scene.control.Label
 import javafx.scene.control.ListView
 import javafx.scene.control.TextField
+import javafx.scene.layout.Priority
 import javafx.scene.layout.VBox
 import models.Group
 import models.Item
@@ -16,6 +17,7 @@ class GroupView(controller: GroupViewController) : VBox() {
     private val listView = ListView<Item>()
 
     init {
+        setVgrow(listView, Priority.ALWAYS)
         children.add(currentGroupName)
 
         // create a text-field

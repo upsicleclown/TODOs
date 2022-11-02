@@ -4,7 +4,7 @@ import controllers.GroupViewController
 import controllers.SidepaneController
 import javafx.application.Application
 import javafx.scene.Scene
-import javafx.scene.layout.GridPane
+import javafx.scene.layout.BorderPane
 import javafx.stage.Stage
 import models.WindowSettings
 import views.GroupView
@@ -27,10 +27,10 @@ class TODOApplication : Application() {
         sidepaneController.addView(sidepaneView)
         groupViewController.addView(groupView)
     }
-    class MainView(sidepaneView: SidepaneView, groupView: GroupView) : GridPane() {
+    class MainView(sidepaneView: SidepaneView, groupView: GroupView) : BorderPane() {
         init {
-            this.add(sidepaneView, 0, 0)
-            this.add(groupView, 1, 0)
+            this.left = sidepaneView
+            this.center = groupView
         }
     }
 
