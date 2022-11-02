@@ -96,15 +96,15 @@ class SidepaneView(sidepaneController: SidepaneController) : VBox() {
         listView.items.addAll(controller.groups())
         children.add(listView)
 
-        val button = Button("+ group")
+        val openGroupCreationDialogButton = Button("+ group")
         val groupCreationDialog = GroupCreationView()
-        button.onAction = EventHandler {
+        openGroupCreationDialogButton.onAction = EventHandler {
             val optionalCreatedGroup = groupCreationDialog.showAndWait()
             if (optionalCreatedGroup.isPresent) {
                 controller.createGroup(optionalCreatedGroup.get())
             }
         }
-        children.add(button)
+        children.add(openGroupCreationDialogButton)
     }
 
     fun refreshGroups() {

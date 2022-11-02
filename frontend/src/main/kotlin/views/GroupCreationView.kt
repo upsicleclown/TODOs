@@ -8,7 +8,7 @@ import models.Group
 
 class GroupCreationView : Dialog<Group?>() {
     init {
-        title = "Create a Dialog"
+        title = "Create a Group"
 
         val createButtonType = ButtonType("Create", ButtonBar.ButtonData.YES)
         val cancelButtonType = ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE)
