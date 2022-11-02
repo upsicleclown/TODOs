@@ -7,15 +7,19 @@ import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.SizedCollection
 import org.jetbrains.exposed.sql.StdOutSqlLogger
 import org.jetbrains.exposed.sql.addLogger
+import org.jetbrains.exposed.sql.insertIgnore
 import org.jetbrains.exposed.sql.transactions.transaction
 import todo.database.models.Group
 import todo.database.models.Item
 import todo.database.models.Label
+import todo.database.models.Priority
 import todo.database.tables.GroupLabels
 import todo.database.tables.Groups
 import todo.database.tables.ItemLabels
 import todo.database.tables.Items
 import todo.database.tables.Labels
+import todo.database.tables.Priorities
+import models.Priority as PriorityEnum
 
 /*
    SQLite Database.
@@ -39,6 +43,9 @@ open class SQLiteDB(connectionString: String = "jdbc:sqlite:todo.db") {
             SchemaUtils.create(Labels)
             SchemaUtils.create(ItemLabels)
             SchemaUtils.create(GroupLabels)
+            SchemaUtils.create(Priorities)
+
+            addPriorityEnum()
         }
     }
 
@@ -70,7 +77,7 @@ open class SQLiteDB(connectionString: String = "jdbc:sqlite:todo.db") {
                 isComplete = item.isCompleted
                 labels = SizedCollection(labelsToSave)
                 edtDueDate = item.edtDueDate?.toJavaLocalDateTime() // assume local time is EDT
-                priority = item.priority?.name
+                priority = item.priority?.let { Priority[it.name].id }
             }
         }
     }
@@ -116,7 +123,7 @@ open class SQLiteDB(connectionString: String = "jdbc:sqlite:todo.db") {
                 oldItem.isComplete = newItem.isCompleted
                 oldItem.labels = SizedCollection(labelsToSave)
                 oldItem.edtDueDate = newItem.edtDueDate?.toJavaLocalDateTime() // assume local time is EDT
-                oldItem.priority = newItem.priority?.name
+                oldItem.priority = newItem.priority?.let { Priority[it.name].id }
             }
         } catch (noSuchElementException: NoSuchElementException) {
             throw IllegalArgumentException("Could not edit item with id $itemId since no such item in database.")
@@ -134,9 +141,24 @@ open class SQLiteDB(connectionString: String = "jdbc:sqlite:todo.db") {
                     it.isComplete,
                     it.labels.map { label -> label.id.value } as MutableList<Int>,
                     it.edtDueDate?.toKotlinLocalDateTime(), // assume local time is EDT
-                    it.priority?.let { itemPriority -> models.Priority.valueOf(itemPriority) },
+                    it.priority?.let { priority -> PriorityEnum.valueOf(priority.value) },
                     it.id.value
                 )
+            }
+        }
+    }
+
+    //
+    // Private helpers related to priorities.
+    //
+
+    /**
+     * Inserts PriorityEnum values into Priority table
+     */
+    private fun addPriorityEnum() {
+        PriorityEnum.values().forEach { enum ->
+            Priorities.insertIgnore {
+                it[this.name] = enum.name
             }
         }
     }
