@@ -11,7 +11,6 @@ import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
 import javafx.scene.layout.Priority
 import javafx.scene.layout.VBox
-import models.Filter
 import models.Group
 
 class SidepaneView(sidepaneController: SidepaneController) : VBox() {
@@ -97,16 +96,15 @@ class SidepaneView(sidepaneController: SidepaneController) : VBox() {
         listView.items.addAll(controller.groups())
         children.add(listView)
 
-        // field to create groups
-        val groupCreationField = TextField()
-        groupCreationField.promptText = "Create a new group..."
-
-        groupCreationField.setOnAction {
-            controller.createGroup(Group(groupCreationField.text, Filter()))
-            groupCreationField.text = ""
+        val openGroupCreationDialogButton = Button("+ group")
+        val groupCreationDialog = GroupCreationView()
+        openGroupCreationDialogButton.onAction = EventHandler {
+            val optionalCreatedGroup = groupCreationDialog.showAndWait()
+            if (optionalCreatedGroup.isPresent) {
+                controller.createGroup(optionalCreatedGroup.get())
+            }
         }
-
-        children.add(groupCreationField)
+        children.add(openGroupCreationDialogButton)
     }
 
     fun refreshGroups() {
