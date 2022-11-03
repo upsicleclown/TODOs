@@ -15,21 +15,25 @@ internal class ItemController(private val service: Service) {
 
     @GetMapping("/items")
     fun all(): List<Item> {
+        service.authenticate()
         return service.getItems()
     }
 
     @PostMapping("/items")
     fun newItem(@RequestBody newItem: Item?) {
+        service.authenticate()
         newItem?.let { service.addItem(it) }
     }
 
     @DeleteMapping("/items/{id}")
     fun deleteItem(@PathVariable id: Int?) {
+        service.authenticate()
         id?.let { service.removeItem(it) }
     }
 
     @PutMapping("/items/{id}")
     fun editItem(@RequestBody newItem: Item?, @PathVariable id: Int?) {
+        service.authenticate()
         newItem?.let {
             id?.let {
                 service.editItem(id, newItem)

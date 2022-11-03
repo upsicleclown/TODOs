@@ -36,6 +36,16 @@ class ApplicationTest {
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
 
+        // Create new user for this test
+        val newUserResponse: ResponseEntity<Any> = testRestTemplate
+            .postForEntity("/register", HttpEntity("{\"username\":\"test\",\"password\":\"test\"}", headers))
+        assertEquals(HttpStatus.OK, newUserResponse.statusCode)
+
+        // Login user
+        val loginResponse: ResponseEntity<Any> = testRestTemplate
+            .postForEntity("/user", HttpEntity("{\"username\":\"test\",\"password\":\"test\"}", headers))
+        assertEquals(HttpStatus.OK, loginResponse.statusCode)
+
         // Test creating new Group
         val newGroupResponse: ResponseEntity<Any> = testRestTemplate
             .postForEntity("/groups", HttpEntity("{\"name\":\"group4\", \"filter\":{}}", headers))
@@ -72,12 +82,25 @@ class ApplicationTest {
             .filter { i -> getGroupsResponseBody.getJSONObject(i).get("name") == "group4.1" }
             .map { i -> getGroupsResponseBody.getJSONObject(i) }
         assertEquals(0, deletedGroups.size)
+
+        // Delete user
+        testRestTemplate.delete("/user/test")
     }
 
     @Test
     fun testCRUDItem() {
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
+
+        // Create new user for this test
+        val newUserResponse: ResponseEntity<Any> = testRestTemplate
+            .postForEntity("/register", HttpEntity("{\"username\":\"test\",\"password\":\"test\"}", headers))
+        assertEquals(HttpStatus.OK, newUserResponse.statusCode)
+
+        // Login user
+        val loginResponse: ResponseEntity<Any> = testRestTemplate
+            .postForEntity("/user", HttpEntity("{\"username\":\"test\",\"password\":\"test\"}", headers))
+        assertEquals(HttpStatus.OK, loginResponse.statusCode)
 
         // Test creating new Item
         val newItemResponse: ResponseEntity<Any> = testRestTemplate
@@ -115,12 +138,25 @@ class ApplicationTest {
             .filter { i -> getItemsResponseBody.getJSONObject(i).get("title") == "item4.1" }
             .map { i -> getItemsResponseBody.getJSONObject(i) }
         assertEquals(0, deletedItems.size)
+
+        // Delete user
+        testRestTemplate.delete("/user/test")
     }
 
     @Test
     fun testCRDLabels() {
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
+
+        // Create new user for this test
+        val newUserResponse: ResponseEntity<Any> = testRestTemplate
+            .postForEntity("/register", HttpEntity("{\"username\":\"test\",\"password\":\"test\"}", headers))
+        assertEquals(HttpStatus.OK, newUserResponse.statusCode)
+
+        // Login user
+        val loginResponse: ResponseEntity<Any> = testRestTemplate
+            .postForEntity("/user", HttpEntity("{\"username\":\"test\",\"password\":\"test\"}", headers))
+        assertEquals(HttpStatus.OK, loginResponse.statusCode)
 
         // Test creating new Label
         val newLabelResponse: ResponseEntity<Any> = testRestTemplate
@@ -147,5 +183,8 @@ class ApplicationTest {
             .filter { i -> getLabelsResponseBody.getJSONObject(i).get("name") == "label4.1" }
             .map { i -> getLabelsResponseBody.getJSONObject(i) }
         assertEquals(0, deletedLabels.size)
+
+        // Delete user
+        testRestTemplate.delete("/user/test")
     }
 }

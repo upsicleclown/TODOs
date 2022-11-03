@@ -14,16 +14,19 @@ internal class LabelController(private val service: Service) {
 
     @GetMapping("/labels")
     fun all(): List<Label> {
+        service.authenticate()
         return service.getLabels()
     }
 
     @PostMapping("/labels")
     fun newLabel(@RequestBody newLabel: Label?) {
+        service.authenticate()
         newLabel?.let { service.addLabel(it) }
     }
 
     @DeleteMapping("/labels/{id}")
     fun deleteLabel(@PathVariable id: Int?) {
+        service.authenticate()
         id?.let { service.removeLabel(it) }
     }
 }

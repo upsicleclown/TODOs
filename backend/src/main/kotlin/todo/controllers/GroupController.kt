@@ -15,21 +15,25 @@ internal class GroupController(private val service: Service) {
 
     @GetMapping("/groups")
     fun all(): List<Group> {
+        service.authenticate()
         return service.getGroups()
     }
 
     @PostMapping("/groups")
     fun newGroup(@RequestBody newGroup: Group?) {
+        service.authenticate()
         newGroup?.let { service.addGroup(it) }
     }
 
     @DeleteMapping("/groups/{id}")
     fun deleteGroup(@PathVariable id: Int?) {
+        service.authenticate()
         id?.let { service.removeGroup(it) }
     }
 
     @PutMapping("/groups/{id}")
     fun editGroup(@RequestBody newGroup: Group?, @PathVariable id: Int?) {
+        service.authenticate()
         newGroup?.let {
             id?.let {
                 service.editGroup(id, newGroup)

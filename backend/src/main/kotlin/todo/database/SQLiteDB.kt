@@ -7,6 +7,7 @@ import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.SizedCollection
 import org.jetbrains.exposed.sql.StdOutSqlLogger
 import org.jetbrains.exposed.sql.addLogger
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.insertIgnore
 import org.jetbrains.exposed.sql.transactions.transaction
 import todo.database.models.Filter
@@ -14,6 +15,7 @@ import todo.database.models.Group
 import todo.database.models.Item
 import todo.database.models.Label
 import todo.database.models.Priority
+import todo.database.models.User
 import todo.database.tables.FilterLabels
 import todo.database.tables.FilterPriorities
 import todo.database.tables.Filters
@@ -22,6 +24,7 @@ import todo.database.tables.ItemLabels
 import todo.database.tables.Items
 import todo.database.tables.Labels
 import todo.database.tables.Priorities
+import todo.database.tables.Users
 import models.Priority as PriorityEnum
 
 /*
@@ -48,6 +51,7 @@ open class SQLiteDB(connectionString: String = "jdbc:sqlite:todo.db") {
             addLogger(StdOutSqlLogger)
 
             // create tables.
+            SchemaUtils.create(Users)
             SchemaUtils.create(Items)
             SchemaUtils.create(Groups)
             SchemaUtils.create(Labels)
@@ -58,6 +62,60 @@ open class SQLiteDB(connectionString: String = "jdbc:sqlite:todo.db") {
             SchemaUtils.create(FilterPriorities)
 
             addPriorityEnum()
+        }
+    }
+
+    //
+    // Methods related to users.
+    //
+
+    /**
+     * Adds the provided user.
+     *
+     * @throws IllegalArgumentException if username already exists.
+     */
+    fun addUser(newUser: models.User, newPasswordHash: String) {
+        transaction {
+            val usersWithSameUsername: List<User> = User.find { (Users.username eq newUser.username) }.toList()
+            if (usersWithSameUsername.isNotEmpty()) {
+                throw IllegalArgumentException("Username ${newUser.username} already exists.")
+            }
+            User.new {
+                username = newUser.username
+                passwordHash = newPasswordHash
+            }
+        }
+    }
+
+    /**
+     * Gets the provided user.
+     *
+     * @throws IllegalArgumentException if username does not exist or password does not match.
+     */
+    fun getUser(userWithoutToken: models.User, passwordHash: String): models.User {
+        return transaction {
+            try {
+                val userWithToken: User = User.find { (Users.username eq userWithoutToken.username) and (Users.passwordHash eq passwordHash) }.first()
+                models.User(userWithToken.username, userWithoutToken.password)
+            } catch (noSuchElementException: NoSuchElementException) {
+                throw IllegalArgumentException("No such user with username ${userWithoutToken.username} and password hash $passwordHash.")
+            }
+        }
+    }
+
+    /**
+     * Deletes the user with the provided username.
+     *
+     * @throws IllegalArgumentException if no such user with provided id.
+     */
+    fun removeUser(username: String) {
+        try {
+            transaction {
+                val oldUser: User = User.find { Users.username eq username }.first()
+                oldUser.delete()
+            }
+        } catch (noSuchElementException: NoSuchElementException) {
+            throw IllegalArgumentException("Could not remove user $username since no such user in database.")
         }
     }
 
@@ -316,7 +374,6 @@ open class SQLiteDB(connectionString: String = "jdbc:sqlite:todo.db") {
         try {
             transaction {
                 val oldGroup: Group = Group.find { Groups.id eq groupId }.first()
-                oldGroup.filter.delete()
                 oldGroup.delete()
             }
         } catch (noSuchElementException: NoSuchElementException) {

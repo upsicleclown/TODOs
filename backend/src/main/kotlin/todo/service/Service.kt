@@ -1,11 +1,63 @@
 package todo.service
 
+import models.User
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
+import org.springframework.web.server.ResponseStatusException
 import todo.database.SQLiteDB
 
 @Service
 class Service {
+    private val authentication = Authentication()
     private val sqliteDB = SQLiteDB()
+    private var isUserLoggedIn = false
+    private var userLoggedIn: User? = null
+
+    //
+    // User endpoints.
+    //
+
+    /**
+     * Ensures user is authenticated.
+     *
+     * @throws IllegalArgumentException
+     */
+    fun authenticate() {
+        if (!isUserLoggedIn) {
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, "User not authenticated")
+        }
+    }
+
+    /**
+     * Logs in a user.
+     *
+     * @throws IllegalArgumentException if username does not exist or password does not match.
+     */
+    fun logInUser(user: User) {
+        userLoggedIn = sqliteDB.getUser(user, authentication.computePasswordHash(user.password))
+        isUserLoggedIn = true
+    }
+
+    /**
+     * Registers a user and returns user with their newly generated token.
+     *
+     * @throws IllegalArgumentException if username already exists or password is empty.
+     */
+    fun registerUser(user: User) {
+        if (user.password.isEmpty() || user.password.isBlank()) {
+            throw IllegalArgumentException("Password for user ${user.username} cannot be empty.")
+        }
+        sqliteDB.addUser(user, authentication.computePasswordHash(user.password))
+    }
+
+    /**
+     * Deletes the user with the provided username.
+     *
+     * @throws IllegalArgumentException if no such user with provided id.
+     */
+    fun removeUser(username: String) {
+        sqliteDB.removeUser(username)
+    }
 
     //
     // Item endpoints.
