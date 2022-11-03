@@ -4,6 +4,7 @@ import javafx.scene.control.ButtonBar
 import javafx.scene.control.ButtonType
 import javafx.scene.control.Dialog
 import javafx.scene.control.TextField
+import models.Filter
 import models.Group
 
 class GroupCreationView : Dialog<Group?>() {
@@ -21,7 +22,7 @@ class GroupCreationView : Dialog<Group?>() {
         setResultConverter { dialogButton ->
             var returnGroup: Group? = null
             if (dialogButton === createButtonType) {
-                returnGroup = Group(groupCreationField.text)
+                returnGroup = Group(groupCreationField.text, Filter())
             }
             groupCreationField.text = ""
             return@setResultConverter returnGroup
