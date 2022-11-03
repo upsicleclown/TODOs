@@ -1,5 +1,6 @@
 package views
 
+import javafx.event.EventHandler
 import javafx.scene.control.ButtonBar
 import javafx.scene.control.ButtonType
 import javafx.scene.control.Dialog
@@ -11,23 +12,26 @@ class GroupCreationView : Dialog<Group?>() {
     init {
         title = "Create a Group"
 
-        val createButtonType = ButtonType("Create", ButtonBar.ButtonData.YES)
-        val cancelButtonType = ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE)
-        dialogPane.buttonTypes.addAll(createButtonType, cancelButtonType)
-
         // field to create groups
         val groupCreationField = TextField()
         groupCreationField.promptText = "Create a new group..."
+        dialogPane.content = groupCreationField
 
-        setResultConverter { dialogButton ->
-            var returnGroup: Group? = null
-            if (dialogButton === createButtonType) {
-                returnGroup = Group(groupCreationField.text, Filter())
-            }
+        // buttons
+        val createButtonType = ButtonType("Create", ButtonBar.ButtonData.YES)
+        dialogPane.buttonTypes.addAll(createButtonType, ButtonType.CANCEL)
+
+        // ensure initial state is clear
+        onShowing = EventHandler {
+            result = null
             groupCreationField.text = ""
-            return@setResultConverter returnGroup
         }
 
-        dialogPane.content = groupCreationField
+        setResultConverter { dialogButton ->
+            if (dialogButton === createButtonType) {
+                result = Group(groupCreationField.text, Filter())
+            }
+            return@setResultConverter result
+        }
     }
 }

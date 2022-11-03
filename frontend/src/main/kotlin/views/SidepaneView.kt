@@ -11,7 +11,6 @@ import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
 import javafx.scene.layout.Priority
 import javafx.scene.layout.VBox
-import models.Filter
 import models.Group
 
 class SidepaneView(sidepaneController: SidepaneController) : VBox() {
