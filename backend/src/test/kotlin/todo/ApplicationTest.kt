@@ -32,6 +32,22 @@ class ApplicationTest {
     lateinit var testRestTemplate: TestRestTemplate
 
     @Test
+    fun testFailedLogin() {
+        val headers = HttpHeaders()
+        headers.contentType = MediaType.APPLICATION_JSON
+
+        val loginResponse: ResponseEntity<Any> = testRestTemplate
+            .postForEntity("/user", HttpEntity("{\"username\":\"test\",\"password\":\"test\"}", headers))
+        assertEquals(HttpStatus.NOT_FOUND, loginResponse.statusCode)
+    }
+
+    @Test
+    fun testNotAuthenticated() {
+        val getGroupsResponse = testRestTemplate.getForEntity("/groups", String::class.java)
+        assertEquals(HttpStatus.FORBIDDEN, getGroupsResponse?.statusCode)
+    }
+
+    @Test
     fun testCRUDGroup() {
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
