@@ -40,6 +40,8 @@ import models.Priority as PriorityEnum
 
  */
 open class SQLiteDB(connectionString: String = "jdbc:sqlite:todo.db") {
+    private var userLoggedIn: User? = null
+
     /**
      * Constructor.
      *
@@ -70,6 +72,15 @@ open class SQLiteDB(connectionString: String = "jdbc:sqlite:todo.db") {
     //
 
     /**
+     * Sets the current user logged in.
+     */
+    fun setUserLoggedIn(user: models.User) {
+        transaction {
+            userLoggedIn = User.find { Users.username eq user.username }.first()
+        }
+    }
+
+    /**
      * Adds the provided user.
      *
      * @throws IllegalArgumentException if username already exists.
@@ -92,13 +103,13 @@ open class SQLiteDB(connectionString: String = "jdbc:sqlite:todo.db") {
      *
      * @throws IllegalArgumentException if username does not exist or password does not match.
      */
-    fun getUser(userWithoutToken: models.User, passwordHash: String): models.User {
+    fun getUser(user: models.User, passwordHash: String): models.User {
         return transaction {
             try {
-                val userWithToken: User = User.find { (Users.username eq userWithoutToken.username) and (Users.passwordHash eq passwordHash) }.first()
-                models.User(userWithToken.username, userWithoutToken.password)
+                val userWithToken: User = User.find { (Users.username eq user.username) and (Users.passwordHash eq passwordHash) }.first()
+                models.User(userWithToken.username, user.password)
             } catch (noSuchElementException: NoSuchElementException) {
-                throw IllegalArgumentException("No such user with username ${userWithoutToken.username} and password hash $passwordHash.")
+                throw IllegalArgumentException("No such user with username ${user.username} and password hash $passwordHash.")
             }
         }
     }
@@ -124,7 +135,7 @@ open class SQLiteDB(connectionString: String = "jdbc:sqlite:todo.db") {
     //
 
     /**
-     * Adds the provided item.
+     * Adds the provided item for the logged-in user.
      *
      * @throws IllegalArgumentException if any of the labels in item do not exist.
      */
@@ -135,7 +146,7 @@ open class SQLiteDB(connectionString: String = "jdbc:sqlite:todo.db") {
         if (labelIdsNotInDb.isNotEmpty()) {
             throw IllegalArgumentException(
                 "Cannot add item with label ids $labelIdsNotInDb " +
-                    "since these label ids do not exist in the database."
+                    "since these label ids do not exist in the database for logged-in user ${userLoggedIn!!.username}."
             )
         }
 
@@ -149,30 +160,32 @@ open class SQLiteDB(connectionString: String = "jdbc:sqlite:todo.db") {
                 labels = SizedCollection(labelsToSave)
                 edtDueDate = item.edtDueDate?.toJavaLocalDateTime() // assume local time is EDT
                 priority = item.priority?.let { Priority[it.name].id }
+                user = userLoggedIn!!
             }
         }
     }
 
     /**
-     * Deletes the item with the provided id.
+     * Deletes the item with the provided id for the logged-in user.
      *
-     * @throws IllegalArgumentException if no such item with provided id.
+     * @throws IllegalArgumentException if no such item with provided id for the logged-in user.
      */
     fun removeItem(itemId: Int) {
         try {
             transaction {
-                val oldItem: Item = Item.find { Items.id eq itemId }.first()
+                val oldItem: Item = Item.find { Items.id eq itemId }
+                    .first { item: Item -> item.user.username == userLoggedIn!!.username }
                 oldItem.delete()
             }
         } catch (noSuchElementException: NoSuchElementException) {
-            throw IllegalArgumentException("Could not remove item with id $itemId since no such item in database.")
+            throw IllegalArgumentException("Could not remove item with id $itemId since no such item in database for logged-in user ${userLoggedIn!!.username}.")
         }
     }
 
     /**
      * Item with provided id will now become new item. Hence, ensure new item has all fields it needs to have.
      *
-     * @throws IllegalArgumentException if no such item with provided id or if any of the labels in item do not exist.
+     * @throws IllegalArgumentException if no such item with provided id for the logged-in user or if any of the labels in item do not exist.
      */
     fun editItem(itemId: Int, newItem: models.Item) {
         // Ensure labels in item exist.
@@ -181,7 +194,7 @@ open class SQLiteDB(connectionString: String = "jdbc:sqlite:todo.db") {
         if (labelIdsNotInDb.isNotEmpty()) {
             throw IllegalArgumentException(
                 "Cannot edit item with label ids $labelIdsNotInDb " +
-                    "since these label ids do not exist in the database."
+                    "since these label ids do not exist in the database for logged-in user ${userLoggedIn!!.username}."
             )
         }
 
@@ -189,24 +202,26 @@ open class SQLiteDB(connectionString: String = "jdbc:sqlite:todo.db") {
         val labelsToSave: List<Label> = labelsInDB.filter { label: Label -> newItem.labelIds.contains(label.id.value) }
         try {
             transaction {
-                val oldItem: Item = Item.find { Items.id eq itemId }.first()
+                val oldItem: Item = Item.find { Items.id eq itemId }
+                    .first { item: Item -> item.user.username == userLoggedIn!!.username }
                 oldItem.title = newItem.title
                 oldItem.isComplete = newItem.isCompleted
                 oldItem.labels = SizedCollection(labelsToSave)
                 oldItem.edtDueDate = newItem.edtDueDate?.toJavaLocalDateTime() // assume local time is EDT
                 oldItem.priority = newItem.priority?.let { Priority[it.name].id }
+                oldItem.user = userLoggedIn!!
             }
         } catch (noSuchElementException: NoSuchElementException) {
-            throw IllegalArgumentException("Could not edit item with id $itemId since no such item in database.")
+            throw IllegalArgumentException("Could not edit item with id $itemId since no such item in database for logged-in user ${userLoggedIn!!.username}")
         }
     }
 
     /**
-     * Returns all items in the database.
+     * Returns all items in the database for the logged-in user.
      */
     fun getItems(): List<models.Item> {
         return transaction {
-            Item.all().toList().map {
+            Item.all().filter { item: Item -> item.user.username == userLoggedIn!!.username }.map {
                 models.Item(
                     it.title,
                     it.isComplete,
@@ -253,11 +268,11 @@ open class SQLiteDB(connectionString: String = "jdbc:sqlite:todo.db") {
     }
 
     /**
-     * Returns all label in the database.
+     * Returns all label in the database for the logged-in user.
      */
     private fun getDbLabels(): List<Label> {
         return transaction {
-            Label.all().toList()
+            Label.all().filter { label: Label -> label.user.username == userLoggedIn!!.username }
         }
     }
 
@@ -266,25 +281,29 @@ open class SQLiteDB(connectionString: String = "jdbc:sqlite:todo.db") {
     //
 
     /**
-     * Adds the provided label.
+     * Adds the provided label for the logged-in user.
      */
     fun addLabel(label: models.Label) {
         transaction {
             Label.new {
                 name = label.name
                 color = label.color
+                user = userLoggedIn!!
             }
         }
     }
 
     /**
-     * Deletes the label with the provided id.
+     * Deletes the label with the provided id for the logged-in user.
      *
-     * @throws IllegalArgumentException if no such label with provided id.
+     * @throws IllegalArgumentException if no such label with provided id for the logged-in user.
      */
     fun removeLabel(labelId: Int) {
         try {
             transaction {
+                // Fetch label
+                val oldLabel: Label = Label.find { Labels.id eq labelId }.first { label: Label -> label.user.username == userLoggedIn!!.username }
+
                 // Remove label from items with this label
                 val itemsWithLabel: List<Item> = Item.all().filter { it.labels.map { label -> label.id.value }.contains(labelId) }
                 for (item in itemsWithLabel) {
@@ -298,33 +317,32 @@ open class SQLiteDB(connectionString: String = "jdbc:sqlite:todo.db") {
                 }
 
                 // Remove label.
-                val oldLabel: Label = Label.find { Labels.id eq labelId }.first()
                 oldLabel.delete()
             }
         } catch (noSuchElementException: NoSuchElementException) {
-            throw IllegalArgumentException("Could not edit label with id $labelId since no such label in database.")
+            throw IllegalArgumentException("Could not edit label with id $labelId since no such label in database for logged-in user ${userLoggedIn!!.username}")
         }
     }
 
     /**
      * Label with provided id will now become new label. Hence, ensure new label has all fields it needs to have.
      *
-     * @throws IllegalArgumentException if no such label with provided id.
+     * @throws IllegalArgumentException if no such label with provided id for the logged-in user.
      */
     fun editLabel(labelId: Int, newLabel: models.Label) {
         try {
             transaction {
-                val oldLabel: Label = Label.find { Labels.id eq labelId }.first()
+                val oldLabel: Label = Label.find { Labels.id eq labelId }.first { label: Label -> label.user.username == userLoggedIn!!.username }
                 oldLabel.name = newLabel.name
                 oldLabel.color = newLabel.color
             }
         } catch (noSuchElementException: NoSuchElementException) {
-            throw IllegalArgumentException("Could not edit label with id $labelId since no such label in database.")
+            throw IllegalArgumentException("Could not edit label with id $labelId since no such label in database for logged-in user ${userLoggedIn!!.username}")
         }
     }
 
     /**
-     * Returns all label in the database.
+     * Returns all label in the database for logged-in user.
      */
     fun getLabels(): List<models.Label> {
         return getDbLabels().map { models.Label(it.name, it.color, it.id.value) }
@@ -335,7 +353,7 @@ open class SQLiteDB(connectionString: String = "jdbc:sqlite:todo.db") {
     //
 
     /**
-     * Adds the provided group.
+     * Adds the provided group for logged-in user.
      */
     fun addGroup(group: models.Group) {
         val groupFilter: models.Filter = group.filter
@@ -345,7 +363,7 @@ open class SQLiteDB(connectionString: String = "jdbc:sqlite:todo.db") {
         if (labelIdsNotInDb.isNotEmpty()) {
             throw IllegalArgumentException(
                 "Cannot add group that filters by label ids $labelIdsNotInDb " +
-                    "since these label ids do not exist in the database."
+                    "since these label ids do not exist in the database for logged-in user ${userLoggedIn!!.username}"
             )
         }
 
@@ -360,31 +378,32 @@ open class SQLiteDB(connectionString: String = "jdbc:sqlite:todo.db") {
                     isComplete = groupFilter.isCompleted
                     priorities = SizedCollection(groupFilter.priorities.map { Priority[it.name] })
                     labels = SizedCollection(labelsToSave)
+                    user = userLoggedIn!!
                 }
             }
         }
     }
 
     /**
-     * Deletes the group with the provided id.
+     * Deletes the group with the provided id for logged-in user.
      *
-     * @throws IllegalArgumentException if no such group with provided id.
+     * @throws IllegalArgumentException if no such group with provided id for logged-in user.
      */
     fun removeGroup(groupId: Int) {
         try {
             transaction {
-                val oldGroup: Group = Group.find { Groups.id eq groupId }.first()
+                val oldGroup: Group = Group.find { Groups.id eq groupId }.first { group: Group -> group.user.username == userLoggedIn!!.username }
                 oldGroup.delete()
             }
         } catch (noSuchElementException: NoSuchElementException) {
-            throw IllegalArgumentException("Could not remove group with id $groupId since no such group in database.")
+            throw IllegalArgumentException("Could not remove group with id $groupId since no such group in database for logged-in user ${userLoggedIn!!.username}")
         }
     }
 
     /**
      * Group with provided id will now become new group. Hence, ensure new group has all fields it needs to have.
      *
-     * @throws IllegalArgumentException if no such group with provided id or if any of the labels in group do not exist.
+     * @throws IllegalArgumentException if no such group with provided id for the logged-in user or if any of the labels in group do not exist.
      */
     fun editGroup(groupId: Int, newGroup: models.Group) {
         val newFilter: models.Filter = newGroup.filter
@@ -394,7 +413,7 @@ open class SQLiteDB(connectionString: String = "jdbc:sqlite:todo.db") {
         if (labelIdsNotInDb.isNotEmpty()) {
             throw IllegalArgumentException(
                 "Cannot edit group with label ids $labelIdsNotInDb " +
-                    "since these label ids do not exist in the database."
+                    "since these label ids do not exist in the database for logged-in user ${userLoggedIn!!.username}"
             )
         }
 
@@ -402,7 +421,7 @@ open class SQLiteDB(connectionString: String = "jdbc:sqlite:todo.db") {
         val labelsToSave: List<Label> = labelsInDB.filter { label: Label -> newFilter.labelIds.contains(label.id.value) }
         try {
             transaction {
-                val oldGroup: Group = Group.find { Groups.id eq groupId }.first()
+                val oldGroup: Group = Group.find { Groups.id eq groupId }.first { group: Group -> group.user.username == userLoggedIn!!.username }
                 val oldFilter: Filter = oldGroup.filter
 
                 oldFilter.edtStartDateRange = newFilter.edtStartDateRange?.toJavaLocalDateTime()
@@ -412,18 +431,19 @@ open class SQLiteDB(connectionString: String = "jdbc:sqlite:todo.db") {
                 oldFilter.priorities = SizedCollection(newFilter.priorities.map { Priority[it.name] })
 
                 oldGroup.name = newGroup.name
+                oldGroup.user = userLoggedIn!!
             }
         } catch (noSuchElementException: NoSuchElementException) {
-            throw IllegalArgumentException("Could not edit group with id $groupId since no such group in database.")
+            throw IllegalArgumentException("Could not edit group with id $groupId since no such group in database for logged-in user ${userLoggedIn!!.username}")
         }
     }
 
     /**
-     * Returns all groups in the database.
+     * Returns all groups in the database for logged-in user.
      */
     fun getGroups(): List<models.Group> {
         return transaction {
-            Group.all().toList().map {
+            Group.all().filter { group: Group -> group.user.username == userLoggedIn!!.username }.map {
                 val filter = it.filter
 
                 models.Group(

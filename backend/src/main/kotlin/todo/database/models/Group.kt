@@ -12,4 +12,5 @@ class Group(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<Group>(Groups)
     var name by Groups.name
     var filter by Filter referencedOn Groups.filter
+    var user by User referencedOn Groups.user
 }

@@ -16,4 +16,5 @@ class Item(id: EntityID<Int>) : IntEntity(id) {
     var labels by Label via ItemLabels
     var edtDueDate by Items.edtDueDate
     var priority by Items.priority
+    var user by User referencedOn Items.user
 }

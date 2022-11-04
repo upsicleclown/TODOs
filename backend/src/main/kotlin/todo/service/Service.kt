@@ -36,6 +36,7 @@ class Service {
     fun logInUser(user: User) {
         userLoggedIn = sqliteDB.getUser(user, authentication.computePasswordHash(user.password))
         isUserLoggedIn = true
+        sqliteDB.setUserLoggedIn(userLoggedIn!!)
     }
 
     /**

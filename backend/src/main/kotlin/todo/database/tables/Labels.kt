@@ -8,4 +8,5 @@ import org.jetbrains.exposed.dao.id.IntIdTable
 object Labels : IntIdTable() {
     val name = varchar("name", 50)
     val color = char("color", 7)
+    val user = reference("user", Users)
 }

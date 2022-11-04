@@ -6,6 +6,7 @@ import models.Group
 import models.Item
 import models.Label
 import models.Priority
+import models.User
 import java.io.File
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -48,6 +49,18 @@ internal class SQLiteDBTest {
     }
 
     /**
+     *  Tests related to users.
+     */
+    @Test
+    fun testAddUser() {
+        val expectedUser = User("user3", "test")
+        val expectedPasswordHash = "VgEyqh5ghWaqHU0v7xOJtN0eG2zqSO59K4TbFoFf6uM="
+
+        db.addUser(expectedUser, expectedPasswordHash)
+        assertEquals(db.getUser(expectedUser, expectedPasswordHash), expectedUser)
+    }
+
+    /**
      *  Tests related to items.
      */
     @Test
@@ -79,7 +92,7 @@ internal class SQLiteDBTest {
 
     @Test
     fun testGetItems() {
-        val expectedItemIds = listOf(1, 2, 3, 4)
+        val expectedItemIds = listOf(1, 2, 3, 5)
 
         db.addItem(Item("test4", false))
         assertEquals(db.getItems().map { item: Item -> item.id }, expectedItemIds)
@@ -98,7 +111,7 @@ internal class SQLiteDBTest {
      */
     @Test
     fun testAddLabel() {
-        val expectedLabelId = 4
+        val expectedLabelId = 5
         val expectedLabelName = "label4"
         val expectedLabelColor = "#FFFFFF"
 
@@ -129,7 +142,7 @@ internal class SQLiteDBTest {
 
     @Test
     fun testGetLabels() {
-        val expectedLabelIds = listOf(1, 2, 3, 4)
+        val expectedLabelIds = listOf(1, 2, 3, 5)
 
         db.addLabel(Label("test4", "#000000"))
         assertEquals(db.getLabels().map { label: Label -> label.id }, expectedLabelIds)
@@ -148,7 +161,7 @@ internal class SQLiteDBTest {
      */
     @Test
     fun testAddGroup() {
-        val expectedGroupId = 4
+        val expectedGroupId = 5
         val expectedGroupTitle = "group4"
         val expectedGroupFilter = Filter(
             "2010-06-01T22:19:44".toLocalDateTime(),
@@ -190,7 +203,7 @@ internal class SQLiteDBTest {
 
     @Test
     fun testGetGroups() {
-        val expectedGroupIds = listOf(1, 2, 3, 4)
+        val expectedGroupIds = listOf(1, 2, 3, 5)
 
         db.addGroup(Group("group4", Filter()))
         assertEquals(db.getGroups().map { group: Group -> group.id }, expectedGroupIds)
