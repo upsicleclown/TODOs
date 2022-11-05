@@ -106,8 +106,8 @@ open class SQLiteDB(connectionString: String = "jdbc:sqlite:todo.db") {
     fun getUser(user: models.User, passwordHash: String): models.User {
         return transaction {
             try {
-                val userWithToken: User = User.find { (Users.username eq user.username) and (Users.passwordHash eq passwordHash) }.first()
-                models.User(userWithToken.username, user.password)
+                val loadedUser: User = User.find { (Users.username eq user.username) and (Users.passwordHash eq passwordHash) }.first()
+                models.User(loadedUser.username, user.password)
             } catch (noSuchElementException: NoSuchElementException) {
                 throw IllegalArgumentException("No such user with username ${user.username} and password hash $passwordHash.")
             }

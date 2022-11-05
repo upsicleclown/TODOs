@@ -16,7 +16,6 @@ class SidepaneController(todoApp: TODOApplication) {
 
     init {
         app = todoApp
-        groups = todoClient.getGroups()
     }
     private var focusedGroup: Group? = null
 
