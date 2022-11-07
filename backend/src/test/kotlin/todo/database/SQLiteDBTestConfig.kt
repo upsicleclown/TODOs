@@ -3,6 +3,7 @@ package todo.database
 import org.jetbrains.exposed.sql.SizedCollection
 import org.jetbrains.exposed.sql.or
 import org.jetbrains.exposed.sql.transactions.transaction
+import todo.database.config.ISQLiteConfig
 import todo.database.models.Filter
 import todo.database.models.Group
 import todo.database.models.Item
@@ -13,15 +14,18 @@ import todo.database.tables.Priorities
 import java.time.LocalDateTime
 
 /**
- * Mock class of `SQLiteDB` to pre-populate the database with sample data so the class functionalities can be tested.
+ * Test configuration.
+ *
+ * Pre-populates the database with sample data so the `SQLiteDB` class functionalities can be tested.
  */
-class MockSQLiteDB : SQLiteDB("jdbc:sqlite:src/test/kotlin/todo/database/test.db") {
+class SQLiteDBTestConfig(override val connectionString: String = "jdbc:sqlite:src/test/kotlin/todo/database/test.db") : ISQLiteConfig {
     private val TEST_LABEL_COLOR = "#000000"
 
     /**
      * Load database with mock data.
      */
-    fun loadData() {
+    override fun initialize() {
+        super.initialize()
         transaction {
             // User data
             val user1 = User.new {
@@ -34,7 +38,7 @@ class MockSQLiteDB : SQLiteDB("jdbc:sqlite:src/test/kotlin/todo/database/test.db
                 // hash for "test"
                 passwordHash = "VgEyqh5ghWaqHU0v7xOJtN0eG2zqSO59K4TbFoFf6uM="
             }
-            super.setUserLoggedIn(models.User(user1.username, "test"))
+            SQLiteDB.setUserLoggedIn(models.User(user1.username, "test"))
 
             // Label data
             val label1 = Label.new {

@@ -2,6 +2,7 @@ package todo
 
 import org.json.JSONArray
 import org.json.JSONTokener
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.test.context.junit4.SpringRunner
+import todo.database.config.SQLiteDBConfig
 import kotlin.test.assertEquals
 
 /**
@@ -30,6 +32,17 @@ class ApplicationTest {
 
     @Autowired
     lateinit var testRestTemplate: TestRestTemplate
+
+    /**
+     * Before all tests, initialize db configs.
+     */
+    companion object {
+        @JvmStatic
+        @BeforeAll
+        fun initialize() {
+            SQLiteDBConfig().initialize()
+        }
+    }
 
     @Test
     fun testFailedLogin() {

@@ -8,25 +8,26 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import todo.service.Service
+import todo.service.authentication.AuthenticationService
 
 @RestController
-internal class LabelController(private val service: Service) {
+internal class LabelController(private val service: Service, private val authenticationService: AuthenticationService) {
 
     @GetMapping("/labels")
     fun all(): List<Label> {
-        service.authenticate()
+        authenticationService.authenticate()
         return service.getLabels()
     }
 
     @PostMapping("/labels")
     fun newLabel(@RequestBody newLabel: Label?) {
-        service.authenticate()
+        authenticationService.authenticate()
         newLabel?.let { service.addLabel(it) }
     }
 
     @DeleteMapping("/labels/{id}")
     fun deleteLabel(@PathVariable id: Int?) {
-        service.authenticate()
+        authenticationService.authenticate()
         id?.let { service.removeLabel(it) }
     }
 }

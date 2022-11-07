@@ -27,6 +27,10 @@ class SidepaneController(todoApp: TODOApplication) {
         groups = todoClient.getGroups()
     }
 
+    fun refreshGroups() {
+        view?.refreshGroups()
+    }
+
     fun focusedGroup(): Group? { return focusedGroup }
 
     fun focusGroup(focus: Group?) {

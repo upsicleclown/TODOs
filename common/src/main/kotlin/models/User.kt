@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class User(var username: String, var password: String) {
     /*
-        Two user are said to be equal if they have the same username.
+        Two users are said to be equal if they have the same username.
      */
     override fun equals(other: Any?): Boolean {
         return other is User && other.username == this.username

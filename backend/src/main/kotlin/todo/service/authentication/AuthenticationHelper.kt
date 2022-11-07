@@ -1,9 +1,9 @@
-package todo.service
+package todo.service.authentication
 
 import java.security.MessageDigest
 import java.util.Base64
 
-class Authentication {
+class AuthenticationHelper {
     private val salt = "08387290"
 
     fun computePasswordHash(password: String): String {

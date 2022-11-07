@@ -9,31 +9,32 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import todo.service.Service
+import todo.service.authentication.AuthenticationService
 
 @RestController
-internal class ItemController(private val service: Service) {
+internal class ItemController(private val service: Service, private val authenticationService: AuthenticationService) {
 
     @GetMapping("/items")
     fun all(): List<Item> {
-        service.authenticate()
+        authenticationService.authenticate()
         return service.getItems()
     }
 
     @PostMapping("/items")
     fun newItem(@RequestBody newItem: Item?) {
-        service.authenticate()
+        authenticationService.authenticate()
         newItem?.let { service.addItem(it) }
     }
 
     @DeleteMapping("/items/{id}")
     fun deleteItem(@PathVariable id: Int?) {
-        service.authenticate()
+        authenticationService.authenticate()
         id?.let { service.removeItem(it) }
     }
 
     @PutMapping("/items/{id}")
     fun editItem(@RequestBody newItem: Item?, @PathVariable id: Int?) {
-        service.authenticate()
+        authenticationService.authenticate()
         newItem?.let {
             id?.let {
                 service.editItem(id, newItem)

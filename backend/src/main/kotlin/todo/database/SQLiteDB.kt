@@ -2,13 +2,8 @@ package todo.database
 
 import kotlinx.datetime.toJavaLocalDateTime
 import kotlinx.datetime.toKotlinLocalDateTime
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.SizedCollection
-import org.jetbrains.exposed.sql.StdOutSqlLogger
-import org.jetbrains.exposed.sql.addLogger
 import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.insertIgnore
 import org.jetbrains.exposed.sql.transactions.transaction
 import todo.database.models.Filter
 import todo.database.models.Group
@@ -16,56 +11,26 @@ import todo.database.models.Item
 import todo.database.models.Label
 import todo.database.models.Priority
 import todo.database.models.User
-import todo.database.tables.FilterLabels
-import todo.database.tables.FilterPriorities
-import todo.database.tables.Filters
 import todo.database.tables.Groups
-import todo.database.tables.ItemLabels
 import todo.database.tables.Items
 import todo.database.tables.Labels
-import todo.database.tables.Priorities
 import todo.database.tables.Users
 import models.Priority as PriorityEnum
 
 /*
    SQLite Database.
-   Used to interface between database layer and Service layer
+   Used to interface between database layer and Service layer.
+   Using singleton pattern so all services can share the same database state.
 
    Notes:
-   - Connection string could be a secret.
    - Dates in models are stored as Kotlin `LocalDateTime` because they need to be serializable and Java
      `LocalDateTime` is not, whereas Dates in the database models package are stored as Java `LocalDateTime`
      since this is the type `Exposed` uses to create `DATE` columns.
      Hence, they are converted to and from one another in this class.
 
  */
-open class SQLiteDB(connectionString: String = "jdbc:sqlite:todo.db") {
+object SQLiteDB {
     private var userLoggedIn: User? = null
-
-    /**
-     * Constructor.
-     *
-     * Creates db tables if they do not exist.
-     */
-    init {
-        Database.connect(connectionString)
-        transaction {
-            addLogger(StdOutSqlLogger)
-
-            // create tables.
-            SchemaUtils.create(Users)
-            SchemaUtils.create(Items)
-            SchemaUtils.create(Groups)
-            SchemaUtils.create(Labels)
-            SchemaUtils.create(ItemLabels)
-            SchemaUtils.create(Priorities)
-            SchemaUtils.create(Filters)
-            SchemaUtils.create(FilterLabels)
-            SchemaUtils.create(FilterPriorities)
-
-            addPriorityEnum()
-        }
-    }
 
     //
     // Methods related to users.
@@ -235,21 +200,6 @@ open class SQLiteDB(connectionString: String = "jdbc:sqlite:todo.db") {
     }
 
     //
-    // Private helpers related to priorities.
-    //
-
-    /**
-     * Inserts PriorityEnum values into Priority table
-     */
-    private fun addPriorityEnum() {
-        PriorityEnum.values().forEach { enum ->
-            Priorities.insertIgnore {
-                it[this.name] = enum.name
-            }
-        }
-    }
-
-    //
     // Private helpers related to labels.
     //
 
@@ -393,6 +343,7 @@ open class SQLiteDB(connectionString: String = "jdbc:sqlite:todo.db") {
         try {
             transaction {
                 val oldGroup: Group = Group.find { Groups.id eq groupId }.first { group: Group -> group.user.username == userLoggedIn!!.username }
+                oldGroup.filter.delete()
                 oldGroup.delete()
             }
         } catch (noSuchElementException: NoSuchElementException) {

@@ -34,10 +34,10 @@ class TODOApplication : Application() {
     }
 
     /**
-     * Changes the scene to be the main view and refreshed both the side pane and group view.
+     * Changes the scene to be the main view and refreshes both the side pane and group view.
      */
     fun setMainView() {
-        sidepaneView.refreshGroups()
+        sidepaneController.refreshGroups()
         groupViewController.reloadGroupView()
         val root = MainView(sidepaneView, groupView)
         val scene = Scene(root)
