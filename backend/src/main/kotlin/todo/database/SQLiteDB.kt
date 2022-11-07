@@ -30,6 +30,7 @@ import models.Priority as PriorityEnum
 
  */
 object SQLiteDB {
+    // Service currently supports multi-user data but does not support  multiple users using the service simultaneously
     private var userLoggedIn: User? = null
 
     //

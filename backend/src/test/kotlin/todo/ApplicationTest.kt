@@ -61,6 +61,25 @@ class ApplicationTest {
     }
 
     @Test
+    fun testCRDUser() {
+        val headers = HttpHeaders()
+        headers.contentType = MediaType.APPLICATION_JSON
+
+        // Create new user for this test
+        val newUserResponse: ResponseEntity<Any> = testRestTemplate
+            .postForEntity("/register", HttpEntity("{\"username\":\"test\",\"password\":\"test\"}", headers))
+        assertEquals(HttpStatus.OK, newUserResponse.statusCode)
+
+        // Login user
+        val loginResponse: ResponseEntity<Any> = testRestTemplate
+            .postForEntity("/user", HttpEntity("{\"username\":\"test\",\"password\":\"test\"}", headers))
+        assertEquals(HttpStatus.OK, loginResponse.statusCode)
+
+        // Delete user
+        testRestTemplate.delete("/user/test")
+    }
+
+    @Test
     fun testCRUDGroup() {
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
