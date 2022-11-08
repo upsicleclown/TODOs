@@ -43,4 +43,11 @@ class GroupView(controller: GroupViewController) : VBox() {
         children[0] = Label(group?.name)
         listView.items.addAll(items)
     }
+
+    /**
+     * Returns the focused item in the list view if any.
+     */
+    fun getFocusedItem(): Item? {
+        return listView.selectionModel.selectedItem
+    }
 }

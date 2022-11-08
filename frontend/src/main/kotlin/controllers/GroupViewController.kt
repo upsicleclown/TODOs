@@ -70,4 +70,11 @@ class GroupViewController(todoApp: TODOApplication) {
     fun addView(groupView: GroupView) {
         view = groupView
     }
+
+    /**
+     * Returns the focused item in the list view if any.
+     */
+    fun getFocusedItem(): Item? {
+        return view?.getFocusedItem()
+    }
 }
