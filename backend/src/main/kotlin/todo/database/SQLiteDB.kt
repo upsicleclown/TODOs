@@ -105,7 +105,7 @@ object SQLiteDB {
      *
      * @throws IllegalArgumentException if any of the labels in item do not exist.
      */
-    fun addItem(item: models.Item) {
+    fun addItem(item: models.Item): models.Item {
         // Ensure labels in item exist.
         val labelsInDB: List<Label> = getDbLabels()
         val labelIdsNotInDb: List<Int> = getLabelIdsNotInDb(item.labelIds, labelsInDB.map { label: Label -> label.id.value })
@@ -119,7 +119,7 @@ object SQLiteDB {
         // Save item.
         val labelsToSave: List<Label> = labelsInDB.filter { label: Label -> item.labelIds.contains(label.id.value) }
 
-        transaction {
+        val insertedItem = transaction {
             Item.new {
                 title = item.title
                 isComplete = item.isCompleted
@@ -129,6 +129,8 @@ object SQLiteDB {
                 user = userLoggedIn!!
             }
         }
+        item.id = insertedItem.id.value
+        return item
     }
 
     /**
@@ -234,14 +236,16 @@ object SQLiteDB {
     /**
      * Adds the provided label for the logged-in user.
      */
-    fun addLabel(label: models.Label) {
-        transaction {
+    fun addLabel(label: models.Label): models.Label {
+        val insertedLabel = transaction {
             Label.new {
                 name = label.name
                 color = label.color
                 user = userLoggedIn!!
             }
         }
+        label.id = insertedLabel.id.value
+        return label
     }
 
     /**
@@ -306,7 +310,7 @@ object SQLiteDB {
     /**
      * Adds the provided group for logged-in user.
      */
-    fun addGroup(group: models.Group) {
+    fun addGroup(group: models.Group): models.Group {
         val groupFilter: models.Filter = group.filter
         // Ensure labels in group exist.
         val labelsInDB: List<Label> = getDbLabels()
@@ -320,7 +324,7 @@ object SQLiteDB {
 
         // Save group with filter
         val labelsToSave: List<Label> = labelsInDB.filter { label: Label -> groupFilter.labelIds.contains(label.id.value) }
-        transaction {
+        val insertedGroup = transaction {
             Group.new {
                 name = group.name
                 filter = Filter.new {
@@ -333,6 +337,8 @@ object SQLiteDB {
                 }
             }
         }
+        group.id = insertedGroup.id.value
+        return group
     }
 
     /**

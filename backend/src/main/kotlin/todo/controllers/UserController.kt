@@ -33,7 +33,7 @@ internal class UserController(private val authenticationService: AuthenticationS
         try {
             authenticationService.registerUser(user)
         } catch (illegalArgumentException: IllegalArgumentException) {
-            throw ResponseStatusException(HttpStatus.NOT_FOUND, "Could not create user with username ${user.username} and password ${user.password}", illegalArgumentException)
+            throw ResponseStatusException(HttpStatus.NOT_FOUND, "Could not find user with username ${user.username} and password ${user.password}", illegalArgumentException)
         }
     }
 }

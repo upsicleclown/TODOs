@@ -42,19 +42,19 @@ class GroupViewController(todoApp: TODOApplication) {
     }
 
     fun createItem(item: Item) {
-        val createItemCommand = CreateItemCommand(item)
+        val createItemCommand = CreateItemCommand(item, this)
         app?.commandHandler?.execute(createItemCommand)
         reloadGroupView()
     }
 
     fun editItem(newItem: Item, originalItem: Item) {
-        val editItemCommand = EditItemCommand(newItem, originalItem)
+        val editItemCommand = EditItemCommand(newItem, originalItem, this)
         app?.commandHandler?.execute(editItemCommand)
         reloadGroupView()
     }
 
     fun deleteItem(item: Item) {
-        val deleteItemCommand = DeleteItemCommand(item)
+        val deleteItemCommand = DeleteItemCommand(item, this)
         app?.commandHandler?.execute(deleteItemCommand)
         reloadGroupView()
     }
@@ -69,5 +69,12 @@ class GroupViewController(todoApp: TODOApplication) {
     // view management
     fun addView(groupView: GroupView) {
         view = groupView
+    }
+
+    /**
+     * Returns the focused item in the list view if any.
+     */
+    fun getFocusedItem(): Item? {
+        return view?.getFocusedItem()
     }
 }

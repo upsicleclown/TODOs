@@ -40,19 +40,19 @@ class SidepaneController(todoApp: TODOApplication) {
     }
 
     fun createGroup(group: Group) {
-        val createGroupCommand = CreateGroupCommand(group)
+        val createGroupCommand = CreateGroupCommand(group, this)
         app?.commandHandler?.execute(createGroupCommand)
         view?.refreshGroups()
     }
 
     fun deleteGroup(group: Group) {
-        val deleteGroupCommand = DeleteGroupCommand(group)
+        val deleteGroupCommand = DeleteGroupCommand(group, this)
         app?.commandHandler?.execute(deleteGroupCommand)
         view?.refreshGroups()
     }
 
     fun editGroup(newGroup: Group, originalGroup: Group) {
-        val editGroupCommand = EditGroupCommand(newGroup, originalGroup)
+        val editGroupCommand = EditGroupCommand(newGroup, originalGroup, this)
         app?.commandHandler?.execute(editGroupCommand)
         view?.refreshGroups()
     }

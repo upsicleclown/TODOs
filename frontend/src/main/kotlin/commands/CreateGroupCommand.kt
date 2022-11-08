@@ -1,20 +1,24 @@
 package commands
 
 import client.TODOClient
+import controllers.SidepaneController
 import models.Group
 
-class CreateGroupCommand(private val group: Group) : Command {
+class CreateGroupCommand(private var group: Group, private val sidepaneController: SidepaneController) : Command {
     private val todoClient = TODOClient()
 
     override fun execute() {
-        todoClient.createGroup(group)
+        group = todoClient.createGroup(group)
+        sidepaneController.refreshGroups()
     }
 
     override fun undo() {
         todoClient.deleteGroup(group)
+        sidepaneController.refreshGroups()
     }
 
     override fun redo() {
-        todoClient.createGroup(group)
+        group = todoClient.createGroup(group)
+        sidepaneController.refreshGroups()
     }
 }

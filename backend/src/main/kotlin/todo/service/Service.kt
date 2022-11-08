@@ -15,8 +15,8 @@ class Service {
      *
      * @throws IllegalArgumentException if any of the labels in item do not exist.
      */
-    fun addItem(item: models.Item) {
-        SQLiteDB.addItem(item)
+    fun addItem(item: models.Item): models.Item {
+        return SQLiteDB.addItem(item)
     }
 
     /**
@@ -51,8 +51,8 @@ class Service {
     /**
      * Adds the provided label.
      */
-    fun addLabel(label: models.Label) {
-        SQLiteDB.addLabel(label)
+    fun addLabel(label: models.Label): models.Label {
+        return SQLiteDB.addLabel(label)
     }
 
     /**
@@ -89,8 +89,8 @@ class Service {
      *
      * @throws IllegalArgumentException if any of the labels in group do not exist.
      */
-    fun addGroup(group: models.Group) {
-        SQLiteDB.addGroup(group)
+    fun addGroup(group: models.Group): models.Group {
+        return SQLiteDB.addGroup(group)
     }
 
     /**
