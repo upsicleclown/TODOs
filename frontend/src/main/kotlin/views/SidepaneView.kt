@@ -1,115 +1,58 @@
 package views
 
 import controllers.SidepaneController
-import javafx.event.ActionEvent
 import javafx.event.EventHandler
 import javafx.scene.control.Button
-import javafx.scene.control.ListCell
-import javafx.scene.control.ListView
-import javafx.scene.control.TextField
-import javafx.scene.input.KeyCode
-import javafx.scene.input.KeyEvent
+import javafx.scene.input.MouseEvent
 import javafx.scene.layout.Priority
 import javafx.scene.layout.VBox
-import models.Group
 
-class SidepaneView(sidepaneController: SidepaneController) : VBox() {
+class SidepaneView(private val controller: SidepaneController) : VBox() {
 
-    private var listView = ListView<Group>()
-    val controller = sidepaneController
+    // TODO: At some point, this should be wrapped in a ScrollContainer.
+    //  But I have PTSD so I'm not going to do this now.
+    private var groupListContainer = VBox(24.0)
+    private val openGroupCreationDialogButton = Button("+ group")
+    private val groupCreationDialog = GroupCreationView()
+    private val SIDEPANE_WIDTH = 200.0
 
     init {
-        setVgrow(listView, Priority.ALWAYS)
-        listView.isEditable = true
+        /* region styling */
+        styleClass.add("sidepane")
+        setVgrow(groupListContainer, Priority.ALWAYS)
+        prefWidth = SIDEPANE_WIDTH
+        groupListContainer.styleClass.add("sidepane__list")
+        openGroupCreationDialogButton.styleClass.addAll("body", "sidepane__add-group")
+        /* end region */
 
-        listView.setCellFactory { _: ListView<Group?>? ->
-            object : ListCell<Group?>() {
-                private val textField = TextField()
+        refreshGroups()
 
-                init {
-                    this.onMousePressed = EventHandler { sidepaneController.focusGroup(item) }
-                    textField.onAction = EventHandler { _: ActionEvent? ->
-                        commitEdit(
-                            item
-                        )
-                    }
+        /* region event filters */
+        // When clicking outside the group, remove focus from the group
+        addEventHandler(
+            MouseEvent.MOUSE_CLICKED,
+            EventHandler<MouseEvent> { requestFocus() }
+        )
+        /* end region */
 
-                    textField.addEventFilter(
-                        KeyEvent.KEY_RELEASED
-                    ) { e: KeyEvent ->
-                        if (e.code == KeyCode.ESCAPE) {
-                            cancelEdit()
-                        }
-                    }
-                }
-
-                private val deleteButton = Button("x")
-
-                override fun updateItem(group: Group?, empty: Boolean) {
-                    super.updateItem(group, empty)
-                    if (empty) {
-                        text = null
-                        graphic = null
-                    } else if (isEditing) {
-                        textField.text = group?.name
-                        text = null
-                        graphic = textField
-                    } else {
-                        if (group != null) {
-                            text = group.name
-                            graphic = deleteButton
-                            deleteButton.setOnAction {
-                                controller.deleteGroup(group)
-                            }
-                        }
-                    }
-                }
-
-                override fun startEdit() {
-                    super.startEdit()
-                    textField.text = item?.name
-                    text = null
-                    graphic = textField
-                    textField.selectAll()
-                    textField.requestFocus()
-                }
-
-                override fun cancelEdit() {
-                    super.cancelEdit()
-                    text = item?.name
-                    graphic = deleteButton
-                }
-
-                override fun commitEdit(group: Group?) {
-                    super.commitEdit(group)
-                    if (group != null) {
-                        val originalGroup = group.copy()
-                        group.name = textField.text
-                        text = textField.text
-                        graphic = null
-                        controller.editGroup(group, originalGroup)
-                    }
-                }
-            }
-        }
-
-        listView.items.addAll(controller.groups())
-        children.add(listView)
-
-        val openGroupCreationDialogButton = Button("+ group")
-        val groupCreationDialog = GroupCreationView()
+        // Field to create groups
         openGroupCreationDialogButton.onAction = EventHandler {
             val optionalCreatedGroup = groupCreationDialog.showAndWait()
             if (optionalCreatedGroup.isPresent) {
                 controller.createGroup(optionalCreatedGroup.get())
             }
         }
-        children.add(openGroupCreationDialogButton)
+        children.addAll(groupListContainer, openGroupCreationDialogButton)
     }
 
     fun refreshGroups() {
-        listView.items.clear()
+        groupListContainer.children.clear()
         controller.loadGroups()
-        listView.items.addAll(controller.groups())
+        groupListContainer.children.addAll(
+            controller.groups().map {
+                    group ->
+                SidepaneGroup(sidepaneController = controller, group = group)
+            }
+        )
     }
 }

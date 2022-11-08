@@ -1,0 +1,29 @@
+@import "config.css";
+
+.group {
+    -fx-background-color: -background-white;
+    -fx-padding: 32px;
+}
+
+.group__item-list__container .viewport{
+    -fx-background-color: -background-white
+}
+
+.group__item-list {
+    -fx-background-insets: 0px;
+}
+
+.group__title {
+    -fx-text-fill: -primary-black;
+}
+
+.group__create-item {
+    -fx-text-fill: -background-grey;
+    -fx-alignment: center;
+    -fx-background-color: -background-white;
+    -fx-border-width: 1px;
+    -fx-border-style: solid;
+    -fx-border-color: -primary-black;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+}

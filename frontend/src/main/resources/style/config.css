@@ -1,0 +1,75 @@
+/* region modifications to modena.css */
+.scroll-pane {
+    -fx-background-color: transparent;
+}
+/* end region */
+
+/* region color variables */
+* {
+    -background-grey: #585252;
+    -background-white: #FFFFFF;
+    -primary-black: #171717;
+    -secondary-beige: #FFBD80;
+    -error-red: #FF0000;
+    -selection-blue: #0029FF;
+    -accent-purple: #8000FF;
+}
+/* end region color variables */
+
+/* region font installation */
+@font-face {
+    src: url("/type/cydnel.ttf");
+}
+@font-face {
+    src: url("/type/inter-variable.ttf");
+}
+@font-face {
+    src: url("/type/sourcecodepro-variable.ttf");
+}
+@font-face {
+    src: url("/type/sourcecodepro-italic-variable.ttf");
+}
+/* end region */
+
+/* region typography */
+.title-min {
+    -fx-font-family: "Cydnel";
+    -fx-font-size: 42;
+}
+
+.title-max {
+    -fx-font-family: "Cydnel";
+    -fx-font-size: 128;
+}
+
+.subtitle {
+    -fx-font-family: "Inter";
+    -fx-font-size: 24;
+}
+
+.h1 {
+    -fx-font-family: "Inter";
+    -fx-font-size: 36;
+    -fx-font-weight: bold;
+}
+
+.h2 {
+    -fx-font-family: "Source Code Pro";
+    -fx-font-size: 36;
+}
+
+.body {
+    -fx-font-family: "Source Code Pro";
+    -fx-font-size: 25;
+}
+
+.label-min {
+    -fx-font-family: "Source Code Pro";
+    -fx-font-size: 12;
+}
+
+.label-max {
+    -fx-font-family: "Source Code Pro";
+    -fx-font-size: 16;
+}
+/* end region */
