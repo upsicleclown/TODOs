@@ -1,6 +1,7 @@
 package views
 
 import controllers.GroupViewController
+import javafx.beans.value.ChangeListener
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
 import javafx.geometry.Orientation
@@ -15,9 +16,11 @@ import javafx.scene.image.ImageView
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
 import javafx.scene.layout.BorderPane
+import javafx.scene.layout.HBox
 import javafx.scene.text.Text
 import models.Item
 import models.Label
+import models.Priority
 
 class ItemView(private val controller: GroupViewController) : ListCell<Item>() {
     private val root = BorderPane()
@@ -26,6 +29,7 @@ class ItemView(private val controller: GroupViewController) : ListCell<Item>() {
     private val deleteButton = Button("x")
     private val labelViewContainer = ScrollPane()
     private val labelView = ListView<BorderPane>()
+    private val priorityPicker = ComboBox<Priority>()
 
     private val DEFAULT_LABEL_COLOR = "#89CFF0"
 
@@ -33,9 +37,16 @@ class ItemView(private val controller: GroupViewController) : ListCell<Item>() {
         root.left = completionButton
         root.right = deleteButton
         root.center = textField
-        root.bottom = labelViewContainer
+        root.bottom = HBox(labelViewContainer, priorityPicker)
+        initPicker()
         labelViewContainer.isFitToWidth = true
         graphic = root
+    }
+
+    private fun initPicker() {
+        priorityPicker.items.add(null)
+        priorityPicker.items.addAll(Priority.values())
+        priorityPicker.itemsProperty()
     }
 
     private fun labelToLabelChip(label: Label): BorderPane {
@@ -150,6 +161,20 @@ class ItemView(private val controller: GroupViewController) : ListCell<Item>() {
         }
     }
 
+    private fun setupPriorityPicker() {
+        priorityPicker.value = item.priority
+
+        priorityPicker.valueProperty().addListener(
+            ChangeListener { _, oldValue, newValue ->
+                if (oldValue != newValue) {
+                    val originalItem = item.copy()
+                    item.priority = priorityPicker.value
+                    controller.editItem(item, originalItem)
+                }
+            }
+        )
+    }
+
     override fun updateItem(item: Item?, empty: Boolean) {
         super.updateItem(item, empty)
         if (empty) {
@@ -159,6 +184,7 @@ class ItemView(private val controller: GroupViewController) : ListCell<Item>() {
 
         setupTextField()
         setupLabelView()
+        setupPriorityPicker()
 
         graphic = root
         if (isEditing) {
