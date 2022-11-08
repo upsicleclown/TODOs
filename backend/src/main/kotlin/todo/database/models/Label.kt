@@ -13,4 +13,5 @@ class Label(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<Label>(Labels)
     var name by Labels.name
     var color by Labels.color
+    var user by User referencedOn Labels.user
 }

@@ -11,4 +11,5 @@ object Items : IntIdTable() {
     val isCompleted = bool("is_completed")
     val priority = reference("priority", Priorities).nullable()
     val edtDueDate = datetime(name = "edtDueDate").nullable()
+    val user = reference("user", Users)
 }

@@ -38,9 +38,9 @@ class GroupView(controller: GroupViewController) : VBox() {
         children.add(listView)
     }
 
-    fun refreshWithItems(group: Group, items: List<Item>) {
+    fun refreshWithItems(group: Group?, items: List<Item>) {
         listView.items.clear()
-        children[0] = Label(group.name)
+        children[0] = Label(group?.name)
         listView.items.addAll(items)
     }
 }

@@ -6,6 +6,7 @@ import models.Group
 import models.Item
 import models.Label
 import models.Priority
+import models.User
 import java.io.File
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -14,14 +15,14 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 
 internal class SQLiteDBTest {
-    private val db = MockSQLiteDB()
+    private val dbConfig = SQLiteDBTestConfig()
 
     /**
      * Before each test we lock the mock data.
      */
     @BeforeTest
     fun setup() {
-        db.loadData()
+        dbConfig.initialize()
     }
 
     /**
@@ -42,9 +43,21 @@ internal class SQLiteDBTest {
         val expectedLabelIds = listOf(1, 2, 3)
         val expectedGroupIds = listOf(1, 2, 3)
 
-        assertEquals(db.getItems().map { item: Item -> item.id }, expectedItemIds)
-        assertEquals(db.getLabels().map { label: Label -> label.id }, expectedLabelIds)
-        assertEquals(db.getGroups().map { group: Group -> group.id }, expectedGroupIds)
+        assertEquals(SQLiteDB.getItems().map { item: Item -> item.id }, expectedItemIds)
+        assertEquals(SQLiteDB.getLabels().map { label: Label -> label.id }, expectedLabelIds)
+        assertEquals(SQLiteDB.getGroups().map { group: Group -> group.id }, expectedGroupIds)
+    }
+
+    /**
+     *  Tests related to users.
+     */
+    @Test
+    fun testAddUser() {
+        val expectedUser = User("user3", "test")
+        val expectedPasswordHash = "VgEyqh5ghWaqHU0v7xOJtN0eG2zqSO59K4TbFoFf6uM="
+
+        SQLiteDB.addUser(expectedUser, expectedPasswordHash)
+        assertEquals(SQLiteDB.getUser(expectedUser, expectedPasswordHash), expectedUser)
     }
 
     /**
@@ -56,16 +69,16 @@ internal class SQLiteDBTest {
         val expectedItemTitle = "item4"
         val expectedItemIsCompleted = true
 
-        db.addItem(Item(expectedItemTitle, expectedItemIsCompleted))
-        assert(db.getItems().contains(Item(expectedItemTitle, expectedItemIsCompleted, id = expectedItemId)))
+        SQLiteDB.addItem(Item(expectedItemTitle, expectedItemIsCompleted))
+        assert(SQLiteDB.getItems().contains(Item(expectedItemTitle, expectedItemIsCompleted, id = expectedItemId)))
     }
 
     @Test
     fun testRemoveItem() {
         val expectedItemId = 1
 
-        db.removeItem(expectedItemId)
-        assertFalse(db.getItems().map { item: Item -> item.id }.contains(expectedItemId))
+        SQLiteDB.removeItem(expectedItemId)
+        assertFalse(SQLiteDB.getItems().map { item: Item -> item.id }.contains(expectedItemId))
     }
 
     @Test
@@ -73,16 +86,16 @@ internal class SQLiteDBTest {
         val expectedItemId = 1
         val newTitle = "newTest1"
 
-        db.editItem(expectedItemId, Item(newTitle, false))
-        assert(db.getItems().first { item: Item -> item.id == expectedItemId }.title == newTitle)
+        SQLiteDB.editItem(expectedItemId, Item(newTitle, false))
+        assert(SQLiteDB.getItems().first { item: Item -> item.id == expectedItemId }.title == newTitle)
     }
 
     @Test
     fun testGetItems() {
-        val expectedItemIds = listOf(1, 2, 3, 4)
+        val expectedItemIds = listOf(1, 2, 3, 5)
 
-        db.addItem(Item("test4", false))
-        assertEquals(db.getItems().map { item: Item -> item.id }, expectedItemIds)
+        SQLiteDB.addItem(Item("test4", false))
+        assertEquals(SQLiteDB.getItems().map { item: Item -> item.id }, expectedItemIds)
     }
 
     @Test
@@ -90,7 +103,7 @@ internal class SQLiteDBTest {
         val expectedItemIds = listOf(1, 2, 3)
 
         // load is already done in @BeforeTest
-        assertEquals(db.getItems().map { item: Item -> item.id }, expectedItemIds)
+        assertEquals(SQLiteDB.getItems().map { item: Item -> item.id }, expectedItemIds)
     }
 
     /**
@@ -98,20 +111,20 @@ internal class SQLiteDBTest {
      */
     @Test
     fun testAddLabel() {
-        val expectedLabelId = 4
+        val expectedLabelId = 5
         val expectedLabelName = "label4"
         val expectedLabelColor = "#FFFFFF"
 
-        db.addLabel(Label(expectedLabelName, expectedLabelColor))
-        assert(db.getLabels().contains(Label(expectedLabelName, expectedLabelColor, id = expectedLabelId)))
+        SQLiteDB.addLabel(Label(expectedLabelName, expectedLabelColor))
+        assert(SQLiteDB.getLabels().contains(Label(expectedLabelName, expectedLabelColor, id = expectedLabelId)))
     }
 
     @Test
     fun testRemoveLabel() {
         val expectedLabelId = 1
 
-        db.removeLabel(expectedLabelId)
-        assertFalse(db.getLabels().map { label: Label -> label.id }.contains(expectedLabelId))
+        SQLiteDB.removeLabel(expectedLabelId)
+        assertFalse(SQLiteDB.getLabels().map { label: Label -> label.id }.contains(expectedLabelId))
     }
 
     @Test
@@ -120,19 +133,19 @@ internal class SQLiteDBTest {
         val newName = "newLabel1"
         val newLabelColor = "#000000"
 
-        db.editLabel(expectedLabelId, Label(newName, newLabelColor))
+        SQLiteDB.editLabel(expectedLabelId, Label(newName, newLabelColor))
 
-        val newLabel = db.getLabels().first { label: Label -> label.id == expectedLabelId }
+        val newLabel = SQLiteDB.getLabels().first { label: Label -> label.id == expectedLabelId }
 
         assert(newLabel.name == newName && newLabel.color == newLabelColor)
     }
 
     @Test
     fun testGetLabels() {
-        val expectedLabelIds = listOf(1, 2, 3, 4)
+        val expectedLabelIds = listOf(1, 2, 3, 5)
 
-        db.addLabel(Label("test4", "#000000"))
-        assertEquals(db.getLabels().map { label: Label -> label.id }, expectedLabelIds)
+        SQLiteDB.addLabel(Label("test4", "#000000"))
+        assertEquals(SQLiteDB.getLabels().map { label: Label -> label.id }, expectedLabelIds)
     }
 
     @Test
@@ -140,7 +153,7 @@ internal class SQLiteDBTest {
         val expectedLabelIds = listOf(1, 2, 3)
 
         // load is already done in @BeforeTest
-        assertEquals(db.getLabels().map { label: Label -> label.id }, expectedLabelIds)
+        assertEquals(SQLiteDB.getLabels().map { label: Label -> label.id }, expectedLabelIds)
     }
 
     /**
@@ -148,26 +161,26 @@ internal class SQLiteDBTest {
      */
     @Test
     fun testAddGroup() {
-        val expectedGroupId = 4
+        val expectedGroupId = 5
         val expectedGroupTitle = "group4"
         val expectedGroupFilter = Filter(
             "2010-06-01T22:19:44".toLocalDateTime(),
             "2016-06-01T22:19:44".toLocalDateTime(),
             false,
-            mutableListOf<Priority>(Priority.MEDIUM, Priority.LOW),
-            mutableListOf<Int>()
+            mutableListOf(Priority.MEDIUM, Priority.LOW),
+            mutableListOf()
         )
 
-        db.addGroup(Group(expectedGroupTitle, expectedGroupFilter))
-        assert(db.getGroups().contains(Group(expectedGroupTitle, expectedGroupFilter, id = expectedGroupId)))
+        SQLiteDB.addGroup(Group(expectedGroupTitle, expectedGroupFilter))
+        assert(SQLiteDB.getGroups().contains(Group(expectedGroupTitle, expectedGroupFilter, id = expectedGroupId)))
     }
 
     @Test
     fun testRemoveGroup() {
         val expectedGroupId = 1
 
-        db.removeGroup(expectedGroupId)
-        assertFalse(db.getGroups().map { group: Group -> group.id }.contains(expectedGroupId))
+        SQLiteDB.removeGroup(expectedGroupId)
+        assertFalse(SQLiteDB.getGroups().map { group: Group -> group.id }.contains(expectedGroupId))
     }
 
     @Test
@@ -178,22 +191,22 @@ internal class SQLiteDBTest {
             "2010-06-01T22:19:44".toLocalDateTime(),
             "2016-06-01T22:19:44".toLocalDateTime(),
             false,
-            mutableListOf<Priority>(Priority.MEDIUM, Priority.LOW),
-            mutableListOf<Int>()
+            mutableListOf(Priority.MEDIUM, Priority.LOW),
+            mutableListOf()
         )
 
-        db.editGroup(expectedGroupId, Group(newName, newGroupFilter))
+        SQLiteDB.editGroup(expectedGroupId, Group(newName, newGroupFilter))
 
-        val editedGroup = db.getGroups().first { group: Group -> group.id == expectedGroupId }
+        val editedGroup = SQLiteDB.getGroups().first { group: Group -> group.id == expectedGroupId }
         assert(editedGroup.name == newName && editedGroup.filter == newGroupFilter)
     }
 
     @Test
     fun testGetGroups() {
-        val expectedGroupIds = listOf(1, 2, 3, 4)
+        val expectedGroupIds = listOf(1, 2, 3, 5)
 
-        db.addGroup(Group("group4", Filter()))
-        assertEquals(db.getGroups().map { group: Group -> group.id }, expectedGroupIds)
+        SQLiteDB.addGroup(Group("group4", Filter()))
+        assertEquals(SQLiteDB.getGroups().map { group: Group -> group.id }, expectedGroupIds)
     }
 
     @Test
@@ -201,7 +214,7 @@ internal class SQLiteDBTest {
         val expectedGroupIds = listOf(1, 2, 3)
 
         // load is already done in @BeforeTest
-        assertEquals(db.getGroups().map { group: Group -> group.id }, expectedGroupIds)
+        assertEquals(SQLiteDB.getGroups().map { group: Group -> group.id }, expectedGroupIds)
     }
 
     /**
@@ -213,9 +226,9 @@ internal class SQLiteDBTest {
         val itemIdWithLabel = 3
         val groupIdWithLabel = 3
 
-        db.removeLabel(expectedLabelId)
-        assert(db.getItems().first { item: Item -> item.id == itemIdWithLabel }.labelIds.isEmpty())
-        assert(db.getGroups().first { group: Group -> group.id == groupIdWithLabel }.filter.labelIds.isEmpty())
-        assertFalse(db.getLabels().map { label: Label -> label.id }.contains(expectedLabelId))
+        SQLiteDB.removeLabel(expectedLabelId)
+        assert(SQLiteDB.getItems().first { item: Item -> item.id == itemIdWithLabel }.labelIds.isEmpty())
+        assert(SQLiteDB.getGroups().first { group: Group -> group.id == groupIdWithLabel }.filter.labelIds.isEmpty())
+        assertFalse(SQLiteDB.getLabels().map { label: Label -> label.id }.contains(expectedLabelId))
     }
 }

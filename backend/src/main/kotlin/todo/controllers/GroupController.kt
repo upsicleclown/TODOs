@@ -9,27 +9,32 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import todo.service.Service
+import todo.service.authentication.AuthenticationService
 
 @RestController
-internal class GroupController(private val service: Service) {
+internal class GroupController(private val service: Service, private val authenticationService: AuthenticationService) {
 
     @GetMapping("/groups")
     fun all(): List<Group> {
+        authenticationService.authenticate()
         return service.getGroups()
     }
 
     @PostMapping("/groups")
     fun newGroup(@RequestBody newGroup: Group?) {
+        authenticationService.authenticate()
         newGroup?.let { service.addGroup(it) }
     }
 
     @DeleteMapping("/groups/{id}")
     fun deleteGroup(@PathVariable id: Int?) {
+        authenticationService.authenticate()
         id?.let { service.removeGroup(it) }
     }
 
     @PutMapping("/groups/{id}")
     fun editGroup(@RequestBody newGroup: Group?, @PathVariable id: Int?) {
+        authenticationService.authenticate()
         newGroup?.let {
             id?.let {
                 service.editGroup(id, newGroup)

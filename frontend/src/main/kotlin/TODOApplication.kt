@@ -8,10 +8,10 @@ import javafx.scene.layout.BorderPane
 import javafx.stage.Stage
 import models.WindowSettings
 import views.GroupView
+import views.LogInView
 import views.SidepaneView
 
 class TODOApplication : Application() {
-
     private var primaryStage = Stage()
     private val sidepaneController = SidepaneController(this)
     val groupViewController = GroupViewController(this)
@@ -19,7 +19,6 @@ class TODOApplication : Application() {
     private val groupView = GroupView(groupViewController)
 
     val commandHandler = CommandHandler()
-
     private val cache = Cache()
     private val minSize = 500.0
 
@@ -34,9 +33,20 @@ class TODOApplication : Application() {
         }
     }
 
+    /**
+     * Changes the scene to be the main view and refreshes both the side pane and group view.
+     */
+    fun setMainView() {
+        sidepaneController.refreshGroups()
+        groupViewController.reloadGroupView()
+        val root = MainView(sidepaneView, groupView)
+        val scene = Scene(root)
+        primaryStage.scene = scene
+    }
+
     override fun start(stage: Stage) {
         primaryStage = stage
-        val root = MainView(sidepaneView, groupView)
+        val root = LogInView(this)
 
         val scene = Scene(root)
 

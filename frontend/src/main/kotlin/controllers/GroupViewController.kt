@@ -23,14 +23,12 @@ class GroupViewController(todoApp: TODOApplication) {
 
     init {
         app = todoApp
-        items = todoClient.getItems()
-        labels = todoClient.getLabels()
     }
 
-    private fun reloadGroupView() {
+    fun reloadGroupView() {
         items = todoClient.getItems()
         labels = todoClient.getLabels()
-        view?.refreshWithItems(currentGroup!!, items)
+        view?.refreshWithItems(currentGroup, items)
     }
 
     private fun refreshLabels() {

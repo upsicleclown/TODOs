@@ -5,7 +5,6 @@ import todo.database.SQLiteDB
 
 @Service
 class Service {
-    private val sqliteDB = SQLiteDB()
 
     //
     // Item endpoints.
@@ -17,7 +16,7 @@ class Service {
      * @throws IllegalArgumentException if any of the labels in item do not exist.
      */
     fun addItem(item: models.Item) {
-        sqliteDB.addItem(item)
+        SQLiteDB.addItem(item)
     }
 
     /**
@@ -26,7 +25,7 @@ class Service {
      * @throws IllegalArgumentException if no such item with provided id or if any of the labels in item do not exist.
      */
     fun editItem(itemId: Int, newItem: models.Item) {
-        sqliteDB.editItem(itemId, newItem)
+        SQLiteDB.editItem(itemId, newItem)
     }
 
     /**
@@ -35,14 +34,14 @@ class Service {
      * @throws NoSuchElementException if no such item with provided id.
      */
     fun removeItem(itemId: Int) {
-        sqliteDB.removeItem(itemId)
+        SQLiteDB.removeItem(itemId)
     }
 
     /**
      * Returns all items in the database.
      */
     fun getItems(): List<models.Item> {
-        return sqliteDB.getItems()
+        return SQLiteDB.getItems()
     }
 
     //
@@ -53,7 +52,7 @@ class Service {
      * Adds the provided label.
      */
     fun addLabel(label: models.Label) {
-        sqliteDB.addLabel(label)
+        SQLiteDB.addLabel(label)
     }
 
     /**
@@ -62,7 +61,7 @@ class Service {
      * @throws NoSuchElementException if no such label with provided id.
      */
     fun editLabel(labelId: Int, newLabel: models.Label) {
-        sqliteDB.editLabel(labelId, newLabel)
+        SQLiteDB.editLabel(labelId, newLabel)
     }
 
     /**
@@ -71,14 +70,14 @@ class Service {
      * @throws IllegalArgumentException if no such label with provided id.
      */
     fun removeLabel(labelId: Int) {
-        sqliteDB.removeLabel(labelId)
+        SQLiteDB.removeLabel(labelId)
     }
 
     /**
      * Returns all label in the database.
      */
     fun getLabels(): List<models.Label> {
-        return sqliteDB.getLabels()
+        return SQLiteDB.getLabels()
     }
 
     //
@@ -91,7 +90,7 @@ class Service {
      * @throws IllegalArgumentException if any of the labels in group do not exist.
      */
     fun addGroup(group: models.Group) {
-        sqliteDB.addGroup(group)
+        SQLiteDB.addGroup(group)
     }
 
     /**
@@ -100,7 +99,7 @@ class Service {
      * @throws IllegalArgumentException if no such item with provided id or if any of the labels in item do not exist.
      */
     fun editGroup(groupId: Int, newGroup: models.Group) {
-        sqliteDB.editGroup(groupId, newGroup)
+        SQLiteDB.editGroup(groupId, newGroup)
     }
 
     /**
@@ -109,10 +108,10 @@ class Service {
      * @throws IllegalArgumentException if no such group with provided id.
      */
     fun removeGroup(groupId: Int) {
-        sqliteDB.removeGroup(groupId)
+        SQLiteDB.removeGroup(groupId)
     }
 
     fun getGroups(): List<models.Group> {
-        return sqliteDB.getGroups()
+        return SQLiteDB.getGroups()
     }
 }
