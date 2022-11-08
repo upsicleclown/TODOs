@@ -21,9 +21,12 @@ internal class ItemController(private val service: Service, private val authenti
     }
 
     @PostMapping("/items")
-    fun newItem(@RequestBody newItem: Item?) {
+    fun newItem(@RequestBody newItem: Item?): Item? {
         authenticationService.authenticate()
-        newItem?.let { service.addItem(it) }
+        if (newItem == null) {
+            return null
+        }
+        return service.addItem(newItem)
     }
 
     @DeleteMapping("/items/{id}")

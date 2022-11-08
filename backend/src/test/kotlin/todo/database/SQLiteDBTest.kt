@@ -65,12 +65,12 @@ internal class SQLiteDBTest {
      */
     @Test
     fun testAddItem() {
-        val expectedItemId = 1
+        val expectedItemId = 5
         val expectedItemTitle = "item4"
         val expectedItemIsCompleted = true
 
-        SQLiteDB.addItem(Item(expectedItemTitle, expectedItemIsCompleted))
-        assert(SQLiteDB.getItems().contains(Item(expectedItemTitle, expectedItemIsCompleted, id = expectedItemId)))
+        val insertedItem = SQLiteDB.addItem(Item(expectedItemTitle, expectedItemIsCompleted))
+        assertEquals(expectedItemId, insertedItem.id)
     }
 
     @Test
@@ -115,8 +115,8 @@ internal class SQLiteDBTest {
         val expectedLabelName = "label4"
         val expectedLabelColor = "#FFFFFF"
 
-        SQLiteDB.addLabel(Label(expectedLabelName, expectedLabelColor))
-        assert(SQLiteDB.getLabels().contains(Label(expectedLabelName, expectedLabelColor, id = expectedLabelId)))
+        val insertedLabel = SQLiteDB.addLabel(Label(expectedLabelName, expectedLabelColor))
+        assertEquals(expectedLabelId, insertedLabel.id)
     }
 
     @Test
@@ -171,8 +171,8 @@ internal class SQLiteDBTest {
             mutableListOf()
         )
 
-        SQLiteDB.addGroup(Group(expectedGroupTitle, expectedGroupFilter))
-        assert(SQLiteDB.getGroups().contains(Group(expectedGroupTitle, expectedGroupFilter, id = expectedGroupId)))
+        val insertedGroup = SQLiteDB.addGroup(Group(expectedGroupTitle, expectedGroupFilter))
+        assertEquals(expectedGroupId, insertedGroup.id)
     }
 
     @Test

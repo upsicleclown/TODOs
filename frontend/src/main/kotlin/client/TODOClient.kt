@@ -48,7 +48,7 @@ class TODOClient {
         return Json.decodeFromString(itemsResponse)
     }
 
-    fun createItem(item: Item) {
+    fun createItem(item: Item): Item {
         val string = Json.encodeToString(item)
 
         val request = HttpRequest.newBuilder()
@@ -56,7 +56,8 @@ class TODOClient {
             .header("Content-Type", "application/json")
             .POST(HttpRequest.BodyPublishers.ofString(string))
             .build()
-        client.send(request, HttpResponse.BodyHandlers.ofString())
+        val itemResponse = client.send(request, HttpResponse.BodyHandlers.ofString())
+        return Json.decodeFromString(itemResponse.body())
     }
 
     fun editItem(id: Int, newItem: Item) {
@@ -85,7 +86,7 @@ class TODOClient {
         return Json.decodeFromString(labelsResponse)
     }
 
-    fun createLabel(label: Label) {
+    fun createLabel(label: Label): Label {
         val string = Json.encodeToString(label)
 
         val request = HttpRequest.newBuilder()
@@ -93,7 +94,8 @@ class TODOClient {
             .header("Content-Type", "application/json")
             .POST(HttpRequest.BodyPublishers.ofString(string))
             .build()
-        client.send(request, HttpResponse.BodyHandlers.ofString())
+        val labelResponse = client.send(request, HttpResponse.BodyHandlers.ofString())
+        return Json.decodeFromString(labelResponse.body())
     }
 
     /* Methods related to group endpoint */
@@ -102,7 +104,7 @@ class TODOClient {
         return Json.decodeFromString(groupsResponse)
     }
 
-    fun createGroup(group: Group) {
+    fun createGroup(group: Group): Group {
         val string = Json.encodeToString(group)
 
         val request = HttpRequest.newBuilder()
@@ -110,7 +112,8 @@ class TODOClient {
             .header("Content-Type", "application/json")
             .POST(HttpRequest.BodyPublishers.ofString(string))
             .build()
-        client.send(request, HttpResponse.BodyHandlers.ofString())
+        val groupResponse = client.send(request, HttpResponse.BodyHandlers.ofString())
+        return Json.decodeFromString(groupResponse.body())
     }
 
     fun editGroup(id: Int, newGroup: Group) {

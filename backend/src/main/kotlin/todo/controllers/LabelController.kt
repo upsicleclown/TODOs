@@ -20,9 +20,12 @@ internal class LabelController(private val service: Service, private val authent
     }
 
     @PostMapping("/labels")
-    fun newLabel(@RequestBody newLabel: Label?) {
+    fun newLabel(@RequestBody newLabel: Label?): Label? {
         authenticationService.authenticate()
-        newLabel?.let { service.addLabel(it) }
+        if (newLabel == null) {
+            return null
+        }
+        return service.addLabel(newLabel)
     }
 
     @DeleteMapping("/labels/{id}")

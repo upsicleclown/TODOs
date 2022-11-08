@@ -128,10 +128,10 @@ class TODOApplication : Application() {
                         if (item != null) {
                             groupViewController.createItem(item)
                         }
-//                } else if (commandZ.match(event)) {
-//                    commandHandler.undo()
-//                } else if (commandY.match(event)) {
-//                    commandHandler.redo()
+                    } else if (commandZ.match(event)) {
+                        commandHandler.undo()
+                    } else if (commandY.match(event)) {
+                        commandHandler.redo()
                     }
                     event?.consume()
                 }

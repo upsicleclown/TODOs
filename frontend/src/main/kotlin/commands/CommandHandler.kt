@@ -21,6 +21,9 @@ class CommandHandler {
 
     fun redo() {
         val command = undoneCommandsStack.removeLastOrNull()
-        command?.redo()
+        if (command != null) {
+            command.redo()
+            executedCommandsStack.addLast(command)
+        }
     }
 }

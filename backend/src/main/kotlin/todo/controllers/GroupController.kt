@@ -21,9 +21,12 @@ internal class GroupController(private val service: Service, private val authent
     }
 
     @PostMapping("/groups")
-    fun newGroup(@RequestBody newGroup: Group?) {
+    fun newGroup(@RequestBody newGroup: Group?): Group? {
         authenticationService.authenticate()
-        newGroup?.let { service.addGroup(it) }
+        if (newGroup == null) {
+            return null
+        }
+        return service.addGroup(newGroup)
     }
 
     @DeleteMapping("/groups/{id}")
