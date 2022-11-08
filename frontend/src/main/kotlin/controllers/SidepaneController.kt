@@ -52,7 +52,7 @@ class SidepaneController(todoApp: TODOApplication) {
     }
 
     fun editGroup(newGroup: Group, originalGroup: Group) {
-        val editGroupCommand = EditGroupCommand(newGroup, originalGroup)
+        val editGroupCommand = EditGroupCommand(newGroup, originalGroup, this)
         app?.commandHandler?.execute(editGroupCommand)
         view?.refreshGroups()
     }

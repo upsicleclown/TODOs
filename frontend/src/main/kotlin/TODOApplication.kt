@@ -132,6 +132,9 @@ class TODOApplication : Application() {
                         commandHandler.undo()
                     } else if (commandY.match(event)) {
                         commandHandler.redo()
+                    } else {
+                        // Don't consume event if not one of the above.
+                        return
                     }
                     event?.consume()
                 }
