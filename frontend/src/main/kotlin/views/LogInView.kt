@@ -9,6 +9,7 @@ import javafx.scene.control.TextField
 import javafx.scene.layout.HBox
 import javafx.scene.layout.VBox
 import models.User
+import java.io.IOException
 
 class LogInView(private val todoApplication: TODOApplication) : VBox() {
     private val todoClient = TODOClient()
@@ -53,7 +54,7 @@ class LogInView(private val todoApplication: TODOApplication) : VBox() {
         }
         try {
             operation(user)
-        } catch (ignore: RuntimeException) {
+        } catch (ignore: IOException) {
             Alert(Alert.AlertType.ERROR, "Username and password invalid.").show()
             return
         }
