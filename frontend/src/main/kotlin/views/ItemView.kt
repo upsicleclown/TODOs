@@ -38,10 +38,15 @@ class ItemView(private val controller: GroupViewController) : ListCell<Item>() {
         root.right = deleteButton
         root.center = textField
         root.bottom = HBox(labelViewContainer, priorityPicker)
-        priorityPicker.items.addAll(Priority.values())
-        priorityPicker.itemsProperty()
+        initPicker()
         labelViewContainer.isFitToWidth = true
         graphic = root
+    }
+
+    private fun initPicker() {
+        priorityPicker.items.add(null)
+        priorityPicker.items.addAll(Priority.values())
+        priorityPicker.itemsProperty()
     }
 
     private fun labelToLabelChip(label: Label): BorderPane {
