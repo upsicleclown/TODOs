@@ -27,51 +27,16 @@
     -fx-background-radius: 0px 0px 12px 12px;
 }
 
-/* apply background-radius to scroll-pane.scroll-bar,
-    scroll-pane.viewport, and scroll-pane.corner */
-.item__label-container > * {
-    -fx-background-radius: 0px 0px 12px 12px;
-}
-
-/* apply background-radius to scroll-pane.scroll-bar.thumb,
-    scroll-pane.scroll-bar.decrement-button, and
-    scroll-pane.scroll-bar.increment-button */
-.item__label-container > * > * {
-    -fx-background-radius: 12px;
-}
-
-/* prevent scroll bar from clipping border with horizontal padding */
+/* prevent horizontal scroll bar from being clipped by scroll-pane viewport */
 .item__label-container .scroll-bar {
     -fx-padding: 0px 6px 2px 6px;
-    -fx-background-color: transparent;
 }
-
-/* set scroll bar thumb color and size */
-.item__label-container .scroll-bar .thumb {
-    -fx-background-insets: 1.5 0 0;
-    -fx-background-color: -background-grey;
-}
-
-/* region hide scroll bar arrows */
-/* explainer here: https://blog.ngopal.com.np/2012/07/11/customize-scrollbar-via-css/ */
-.item__label-container .scroll-bar .increment-button,
-.item__label-container .scroll-bar .decrement-button {
-    -fx-padding: 0px 0px 10px 0px;
-}
-
-.item__label-container .scroll-bar .increment-button .increment-arrow,
-.item__label-container .scroll-bar .decrement-button .decrement-arrow  {
-    -fx-shape: "";
-    -fx-padding: 0;
-}
-/* end region */
 
 .item__label-content {
     -fx-background-color: -background-white;
     -fx-background-radius: 0px 0px 12px 12px;
     -fx-padding: 8px;
 }
-
 
 .item__label-chip {
     -fx-padding: 0px 8px 0px 16px;

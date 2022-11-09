@@ -2,7 +2,38 @@
 .scroll-pane {
     -fx-background-color: transparent;
 }
-/* end region */
+/* apply background-radius to scroll-pane.scroll-bar,
+    scroll-pane.viewport, and scroll-pane.corner */
+.scroll-pane > * > * {
+    -fx-background-radius: 12px;
+}
+
+/* remove default scroll bar background */
+.scroll-bar {
+    -fx-background-color: transparent;
+}
+
+/* set scroll bar thumb color and size */
+.scroll-bar .thumb {
+    -fx-background-insets: 1.5 0 0;
+    -fx-background-color: -background-grey;
+}
+
+/* region hide scroll bar arrows */
+/* explainer here: https://blog.ngopal.com.np/2012/07/11/customize-scrollbar-via-css/ */
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-padding: 0px 0px 10px 0px;
+}
+
+.scroll-bar .increment-button .increment-arrow,
+.scroll-bar .decrement-button .decrement-arrow  {
+    -fx-shape: "";
+    -fx-padding: 0;
+}
+/* end region hide scroll bar arrows */
+
+/* end region modifications to modena.css*/
 
 /* region color variables */
 * {
@@ -29,7 +60,7 @@
 @font-face {
     src: url("/type/sourcecodepro-italic-variable.ttf");
 }
-/* end region */
+/* end region font installation */
 
 /* region typography */
 .title-min {
@@ -72,4 +103,4 @@
     -fx-font-family: "Source Code Pro";
     -fx-font-size: 16;
 }
-/* end region */
+/* end region typography */
