@@ -15,13 +15,11 @@ class SidepaneController(todoApp: TODOApplication) {
     private var view: SidepaneView? = null
     private var groups: List<Group> = listOf()
     private val todoClient = TODOClient()
+    private var focusedGroup: SimpleObjectProperty<Group> = SimpleObjectProperty<Group>()
 
     init {
         app = todoApp
     }
-
-    // Setting as a property so it can be listened to for changes by views
-    private var focusedGroup: SimpleObjectProperty<Group> = SimpleObjectProperty<Group>()
 
     fun groups(): List<Group> {
         return groups

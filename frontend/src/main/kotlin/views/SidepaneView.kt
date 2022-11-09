@@ -1,5 +1,6 @@
 package views
 
+import controllers.GroupViewController
 import controllers.SidepaneController
 import javafx.event.EventHandler
 import javafx.scene.control.Button
@@ -7,7 +8,10 @@ import javafx.scene.input.MouseEvent
 import javafx.scene.layout.Priority
 import javafx.scene.layout.VBox
 
-class SidepaneView(private val controller: SidepaneController) : VBox() {
+class SidepaneView(
+    private val sidepaneController: SidepaneController,
+    private val groupViewController: GroupViewController
+) : VBox() {
 
     // TODO: At some point, this should be wrapped in a ScrollContainer.
     //  But I have PTSD so I'm not going to do this now.
@@ -37,7 +41,7 @@ class SidepaneView(private val controller: SidepaneController) : VBox() {
         openGroupCreationDialogButton.onAction = EventHandler {
             val optionalCreatedGroup = groupCreationDialog.showAndWait()
             if (optionalCreatedGroup.isPresent) {
-                controller.createGroup(optionalCreatedGroup.get())
+                sidepaneController.createGroup(optionalCreatedGroup.get())
             }
         }
         children.addAll(groupListContainer, openGroupCreationDialogButton)
@@ -45,12 +49,15 @@ class SidepaneView(private val controller: SidepaneController) : VBox() {
 
     fun refreshGroups() {
         groupListContainer.children.clear()
-        controller.loadGroups()
+        sidepaneController.loadGroups()
         groupListContainer.children.addAll(
-            controller.groups().map {
+            sidepaneController.groups().map {
                     group ->
-                SidepaneGroup(sidepaneController = controller, group = group)
+                SidepaneGroup(sidepaneController = sidepaneController, group = group)
             }
         )
+
+        // After updating a SidepaneGroup, refresh the GroupView to reflect title
+        groupViewController.reloadGroupView()
     }
 }

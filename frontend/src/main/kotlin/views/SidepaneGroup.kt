@@ -30,7 +30,11 @@ class SidepaneGroup(private val sidepaneController: SidepaneController, private 
 
     init {
         /* region styling */
-        styleClass.addAll("sidepane__group")
+        if (sidepaneController.focusedGroup().value == group) {
+            styleClass.setAll("sidepane__group--selected")
+        } else {
+            styleClass.setAll("sidepane__group")
+        }
         // TODO: the font size for labels should be variable
         label.styleClass.addAll("sidepane__group__label", "body")
         deleteButton.styleClass.addAll("sidepane__group__delete-button", "body")

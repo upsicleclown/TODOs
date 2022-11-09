@@ -22,7 +22,7 @@ class TODOApplication : Application() {
     private var primaryStage = Stage()
     private val sidepaneController = SidepaneController(this)
     val groupViewController = GroupViewController(this)
-    private val sidepaneView = SidepaneView(sidepaneController)
+    private val sidepaneView = SidepaneView(sidepaneController, groupViewController)
     private val groupView = GroupView(groupViewController)
 
     val commandHandler = CommandHandler()
