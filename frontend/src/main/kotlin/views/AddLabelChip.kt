@@ -19,7 +19,7 @@ class AddLabelChip(private val controller: GroupViewController, private val item
         styleClass.add("item__add-label-chip")
         addLabelButton.styleClass.add("item__add-label-chip__button")
         addLabelComboBox.styleClass.add("item__add-label-chip__combo-box")
-        /* end region */
+        /* end region styling */
 
         /* region event filters */
         // When the combo box loses focus, cancel the edit
@@ -41,7 +41,7 @@ class AddLabelChip(private val controller: GroupViewController, private val item
             }
         }
 
-        /* end region */
+        /* end region event filters */
         center = addLabelButton
         addLabelComboBox.isEditable = true
         addLabelComboBox.items.addAll(controller.labels().map { label -> label.name })

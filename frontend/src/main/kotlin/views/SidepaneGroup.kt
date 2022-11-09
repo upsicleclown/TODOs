@@ -38,7 +38,7 @@ class SidepaneGroup(private val sidepaneController: SidepaneController, private 
         // TODO: the font size for labels should be variable
         label.styleClass.addAll("sidepane__group__label", "body")
         deleteButton.styleClass.addAll("sidepane__group__delete-button", "body")
-        /* end region */
+        /* end region styling */
 
         /* region event filters */
         // When our group is focused, change style class to reflect that
@@ -115,7 +115,7 @@ class SidepaneGroup(private val sidepaneController: SidepaneController, private 
                 false -> cancelEdit()
             }
         }
-        /* end region */
+        /* end region event filters */
 
         left = label
         label.alignment = Pos.BASELINE_CENTER

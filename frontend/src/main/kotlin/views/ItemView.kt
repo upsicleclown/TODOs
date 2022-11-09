@@ -37,7 +37,7 @@ class ItemView(private val controller: GroupViewController, private val item: It
         labelViewScrollContainer.styleClass.addAll("item__label-container")
         labelViewScrollContainer.isFitToWidth = true
         labelViewContainer.styleClass.add("item__label-content")
-        /* end region */
+        /* end region styling */
 
         /* region item setup */
         setupTextField()
@@ -46,7 +46,7 @@ class ItemView(private val controller: GroupViewController, private val item: It
         textField.text = item.title
         configDeleteButton(item)
         configCompletionButton(item)
-        /* end region */
+        /* end region item setup */
 
         left = completionButton
         right = deleteButton
@@ -90,7 +90,6 @@ class ItemView(private val controller: GroupViewController, private val item: It
             labelViewContainer.children.addAll(labelChips)
         }
         labelViewContainer.children.add(AddLabelChip(controller = controller, item = item))
-        /* end region */
     }
 
     private fun setupTextField() {
@@ -155,7 +154,7 @@ class ItemView(private val controller: GroupViewController, private val item: It
             controller.editItem(item, originalItem)
         }
     }
-    /* end region */
+    /* end region lifecycle methods */
 
     private fun configDeleteButton(item: Item) {
         deleteButton.setOnAction {

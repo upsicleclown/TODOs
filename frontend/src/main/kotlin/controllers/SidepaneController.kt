@@ -53,7 +53,6 @@ class SidepaneController(todoApp: TODOApplication) {
         view?.refreshGroups()
     }
 
-    // TODO: this should also refresh the currently loaded group view
     fun editGroup(newGroup: Group, originalGroup: Group) {
         val editGroupCommand = EditGroupCommand(newGroup, originalGroup, this)
         app?.commandHandler?.execute(editGroupCommand)

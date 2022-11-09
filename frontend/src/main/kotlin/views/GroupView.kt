@@ -25,7 +25,7 @@ class GroupView(private val controller: GroupViewController) : VBox(36.0) {
         itemCreationField.styleClass.addAll("h2", "group__create-item")
         itemListScrollContainer.styleClass.addAll("group__item-list__container")
         itemListContainer.styleClass.addAll("group__item-list")
-        /* end region */
+        /* end region styling */
 
         /* region event filters */
         // when enter is pressed
@@ -50,7 +50,7 @@ class GroupView(private val controller: GroupViewController) : VBox(36.0) {
                 controller.clearFocus()
             }
         )
-        /* end region */
+        /* end region event filters */
 
         /* region view setup */
         itemCreationField.promptText = "Create a new item..."
@@ -65,7 +65,7 @@ class GroupView(private val controller: GroupViewController) : VBox(36.0) {
         )
 
         children.addAll(currentGroupName, itemCreationField, itemListScrollContainer)
-        /* end region */
+        /* end region view setup */
     }
 
     fun refreshWithItems(group: Group?, items: List<Item>) {

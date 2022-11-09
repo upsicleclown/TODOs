@@ -21,7 +21,7 @@ class LabelView(private val groupController: GroupViewController, private val la
         labelText.minWidth = Region.USE_PREF_SIZE // do not crush text as we start to overflow the scroll pane
 
         deleteButton.styleClass.addAll("label-max", "item__label-chip__delete-button")
-        /* end region */
+        /* end region styling */
 
         /* region event filters */
         deleteButton.setOnAction {
@@ -31,7 +31,7 @@ class LabelView(private val groupController: GroupViewController, private val la
 
             groupController.editItem(newItem, originalItem)
         }
-        /* end region */
+        /* end region event filters */
 
         top = null
         center = labelText

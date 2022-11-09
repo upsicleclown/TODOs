@@ -27,7 +27,7 @@ class SidepaneView(
         prefWidth = SIDEPANE_WIDTH
         groupListContainer.styleClass.add("sidepane__list")
         openGroupCreationDialogButton.styleClass.addAll("body", "sidepane__add-group")
-        /* end region */
+        /* end region styling */
 
         /* region event filters */
         // When clicking outside the group, remove focus from the group
@@ -35,7 +35,7 @@ class SidepaneView(
             MouseEvent.MOUSE_CLICKED,
             EventHandler<MouseEvent> { requestFocus() }
         )
-        /* end region */
+        /* end region event filters */
 
         // Field to create groups
         openGroupCreationDialogButton.onAction = EventHandler {
