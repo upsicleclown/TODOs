@@ -51,13 +51,8 @@ class ItemView(private val controller: GroupViewController, private val item: It
         left = completionButton
         right = deleteButton
         center = textField
-        bottom = labelViewScrollContainer
+        bottom = HBox(priorityPicker, labelViewScrollContainer)
         labelViewScrollContainer.isFitToWidth = true
-    }
-    private fun initPicker() {
-        priorityPicker.items.add(null)
-        priorityPicker.items.addAll(Priority.values())
-        priorityPicker.itemsProperty()
     }
 
     private fun focusItem() {
@@ -102,8 +97,8 @@ class ItemView(private val controller: GroupViewController, private val item: It
         // hide buttons while textField is focused
         textField.focusedProperty().addListener { _, _, newValue ->
             when (newValue) {
-                true -> focusItem()
-                false -> unfocusItem()
+                true -> startEdit()
+                false -> cancelEdit()
             }
         }
 
@@ -123,6 +118,8 @@ class ItemView(private val controller: GroupViewController, private val item: It
     }
 
     private fun setupPriorityPicker() {
+        priorityPicker.items.add(null)
+        priorityPicker.items.addAll(Priority.values())
         priorityPicker.value = item.priority
 
         priorityPicker.valueProperty().addListener(
@@ -138,15 +135,16 @@ class ItemView(private val controller: GroupViewController, private val item: It
 
     /* region lifecycle methods */
     private fun startEdit() {
-        // hide delete button
-        left = null
+        // hide delete and completion button
+        focusItem()
 
         textField.text = item.title
-        textField.selectAll()
         textField.requestFocus()
     }
 
     private fun cancelEdit() {
+        // show completion and deletion button
+        unfocusItem()
         textField.text = item.title
     }
 
