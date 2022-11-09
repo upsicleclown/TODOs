@@ -58,6 +58,8 @@ class SidepaneGroup(private val sidepaneController: SidepaneController, private 
             EventHandler { event ->
                 when (event.eventType) {
                     MouseEvent.MOUSE_PRESSED -> {
+                        sidepaneController.focusGroup(group)
+
                         mouseReleased = false
                         longPressCounter = System.currentTimeMillis().toDouble()
 
@@ -74,14 +76,9 @@ class SidepaneGroup(private val sidepaneController: SidepaneController, private 
                         )
                         scheduler.play()
                     }
-                    MouseEvent.MOUSE_RELEASED -> {
-                        mouseReleased = true
-                        if (System.currentTimeMillis() - longPressCounter < LONG_PRESS_TIME_QUANTUM) {
-                            sidepaneController.focusGroup(group)
-                        }
-                    }
                     MouseEvent.MOUSE_CLICKED -> { // This case prevents SidepaneView from stealing focus
                         mouseReleased = true
+                        if (event.clickCount == 2) startEdit()
                         event.consume()
                     }
                 }
