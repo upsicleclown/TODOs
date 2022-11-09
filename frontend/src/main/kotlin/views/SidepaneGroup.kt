@@ -29,6 +29,14 @@ class SidepaneGroup(private val sidepaneController: SidepaneController, private 
         /* end region */
 
         /* region event filters */
+        // When our group is focused, change style class to reflect that
+        sidepaneController.focusedGroup().addListener { _, _, focusedGroup ->
+            when (focusedGroup) {
+                group -> styleClass.setAll("sidepane__group--selected")
+                else -> styleClass.setAll("sidepane__group")
+            }
+        }
+
         // Handling mouse click/long press
         addEventHandler(
             MouseEvent.ANY,
