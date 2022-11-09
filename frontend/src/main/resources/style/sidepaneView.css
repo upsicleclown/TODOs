@@ -14,6 +14,10 @@
     -fx-border-color: -primary-black;
 }
 
+.sidepane__list__container > * {
+    -fx-background-color: transparent;
+}
+
 .sidepane__group {
     -fx-background-color: -primary-black;
     -fx-padding: 8px 16px 8px 16px;
