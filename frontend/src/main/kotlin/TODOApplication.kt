@@ -52,9 +52,6 @@ class TODOApplication : Application() {
         val root = MainView(sidepaneView, groupView)
         primaryStage.scene.root = root
         addHotkeysToMainViewScene(primaryStage.scene)
-        primaryStage.scene.focusOwnerProperty().addListener { _, _, newOwner ->
-            println("focus owner is: $newOwner")
-        }
     }
 
     override fun start(stage: Stage) {
