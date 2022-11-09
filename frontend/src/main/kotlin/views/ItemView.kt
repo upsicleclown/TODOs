@@ -20,7 +20,6 @@ import models.Priority
 
 class ItemView(private val controller: GroupViewController, private val item: Item) : BorderPane() {
     private val LABEL_VIEW_GUTTER_LENGTH = 12.0
-    private val DEFAULT_LABEL_COLOR = "#89CFF0"
 
     private val textField = TextField()
     private val completionButton = Button()
@@ -91,54 +90,11 @@ class ItemView(private val controller: GroupViewController, private val item: It
             }
         }
 
-        /* region add label chip */
-        val addLabelChip = BorderPane()
-        addLabelChip.maxHeight = LabelView.LABEL_HEIGHT
-        val addLabelButton = Button("+")
-        val addLabelComboBox = ComboBox<String>()
-
-        /* region add label chip styling */
-        addLabelChip.styleClass.add("item__add-label-chip")
-        addLabelButton.styleClass.add("item__add-label-chip__button")
-        addLabelComboBox.styleClass.add("item__add-label-chip__combo-box")
-        /* end region */
-
-        addLabelComboBox.isEditable = true
-        addLabelComboBox.items.addAll(controller.labels().map { label -> label.name })
-        addLabelChip.addEventFilter(
-            KeyEvent.KEY_PRESSED
-        ) {
-                e: KeyEvent ->
-            if (e.code != KeyCode.ENTER) return@addEventFilter
-            val newLabelName = addLabelComboBox.editor.text.trim()
-            if (newLabelName.isBlank()) return@addEventFilter
-            val existingLabel = controller.labels().any { label -> label.name == newLabelName }
-
-            // if label didn't already exist, then create it
-            if (!existingLabel) controller.createLabel(Label(newLabelName, DEFAULT_LABEL_COLOR))
-
-            // add new label to item
-            val refreshedLabels = controller.labels()
-            val newLabel = refreshedLabels.first { label -> label.name == newLabelName }
-
-            val originalItem = item.copy()
-            val newItem = item.copy()
-            newItem.labelIds.add(newLabel.id)
-            controller.editItem(newItem, originalItem)
-
-            addLabelChip.center = addLabelButton
-        }
-
-        addLabelChip.center = addLabelButton
-        addLabelButton.setOnAction {
-            addLabelChip.center = addLabelComboBox
-        }
-
         labelViewContainer.children.clear()
         if (labelChips.isNotEmpty()) {
             labelViewContainer.children.addAll(labelChips)
         }
-        labelViewContainer.children.add(addLabelChip)
+        labelViewContainer.children.add(AddLabelChip(controller = controller, item = item))
         /* end region */
     }
 

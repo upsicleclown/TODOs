@@ -41,5 +41,6 @@ class LabelView(private val groupController: GroupViewController, private val la
 
     companion object {
         const val LABEL_HEIGHT = 32.0
+        const val DEFAULT_LABEL_COLOR = "#89CFF0"
     }
 }
