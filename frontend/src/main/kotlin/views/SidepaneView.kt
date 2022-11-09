@@ -25,8 +25,6 @@ class SidepaneView(private val controller: SidepaneController) : VBox() {
         openGroupCreationDialogButton.styleClass.addAll("body", "sidepane__add-group")
         /* end region */
 
-        refreshGroups()
-
         /* region event filters */
         // When clicking outside the group, remove focus from the group
         addEventHandler(
