@@ -1,0 +1,72 @@
+@import "config.css";
+
+.item {
+    -fx-background-color: -background-white;
+    -fx-border-width: 1px;
+    -fx-border-color: -primary-black;
+    -fx-border-style: solid;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+}
+
+.item__heading {
+    -fx-background-color: transparent;
+    -fx-text-fill: -primary-black;
+}
+
+.item__delete-button {
+    -fx-background-color: transparent;
+}
+
+.item__completion-button {
+    -fx-background-color: transparent;
+}
+
+.item__label-container {
+    -fx-background-color: transparent;
+    -fx-background-radius: 0px 0px 12px 12px;
+}
+
+/* prevent horizontal scroll bar from being clipped by scroll-pane viewport */
+.item__label-container .scroll-bar {
+    -fx-padding: 0px 6px 2px 6px;
+}
+
+.item__label-content {
+    -fx-background-color: -background-white;
+    -fx-background-radius: 0px 0px 12px 12px;
+    -fx-padding: 8px;
+}
+
+.item__label-chip {
+    -fx-padding: 0px 8px 0px 16px;
+    -fx-background-color: -primary-black;
+    -fx-border-radius: 16px;
+    -fx-background-radius: 16px;
+}
+
+.item__label-chip__text {
+    -fx-text-fill: -background-white;
+}
+
+.item__label-chip__delete-button {
+    -fx-text-fill: -background-white;
+    -fx-background-color: transparent;
+    -fx-align: center;
+}
+
+.item__add-label-chip {
+    -fx-background-color: -primary-black;
+    -fx-padding: 0px 8px;
+    -fx-border-radius: 16px;
+    -fx-background-radius: 16px;
+}
+
+.item__add-label-chip__button {
+    -fx-background-color: transparent;
+    -fx-text-fill: -background-white;
+}
+
+// Revisit this: https://stackoverflow.com/questions/19343531/javafx-combobox-styling
+.item__add-label-chip__combo-box {
+}

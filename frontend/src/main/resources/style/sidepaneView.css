@@ -1,0 +1,61 @@
+@import "config.css";
+
+.sidepane {
+    -fx-background-color: -background-white;
+    -fx-padding: 8px;
+}
+
+.sidepane__add-group {
+    -fx-text-fill: -primary-black;
+    -fx-alignment: center-left;
+    -fx-background-color: -background-white;
+    -fx-border-width: 1px;
+    -fx-border-style: solid;
+    -fx-border-color: -primary-black;
+}
+
+.sidepane__list__container > * {
+    -fx-background-color: transparent;
+}
+
+.sidepane__group {
+    -fx-background-color: -primary-black;
+    -fx-padding: 8px 16px 8px 16px;
+    -fx-border-color: -background-white;
+    -fx-border-width: 1px;
+    -fx-border-style: solid;
+}
+
+.sidepane__group--selected {
+    -fx-background-color: -accent-purple;
+    -fx-padding: 8px 16px 8px 16px;
+    -fx-border-color: -primary-black;
+    -fx-border-width: 1px;
+    -fx-border-style: solid
+}
+
+.sidepane__group--selected > .sidepane__group__label,
+.sidepane__group--selected > .sidepane__group__delete-button {
+    -fx-text-fill: -background-white;
+}
+
+.sidepane__group__label {
+    -fx-background-color: transparent;
+    -fx-text-fill: -background-white;
+}
+
+.sidepane__group:hover {
+    -fx-background-color: -background-white;
+    -fx-border-color: -primary-black;
+}
+
+.sidepane__group:hover > .sidepane__group__label,
+.sidepane__group:hover > .sidepane__group__delete-button {
+    -fx-text-fill: -primary-black;
+}
+
+.sidepane__group__delete-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: -background-white;
+    -fx-padding: 0; /* remove default button padding */
+}

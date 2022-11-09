@@ -5,6 +5,8 @@ import client.TODOClient
 import commands.CreateGroupCommand
 import commands.DeleteGroupCommand
 import commands.EditGroupCommand
+import javafx.beans.property.ObjectProperty
+import javafx.beans.property.SimpleObjectProperty
 import models.Group
 import views.SidepaneView
 
@@ -13,11 +15,11 @@ class SidepaneController(todoApp: TODOApplication) {
     private var view: SidepaneView? = null
     private var groups: List<Group> = listOf()
     private val todoClient = TODOClient()
+    private var focusedGroup: SimpleObjectProperty<Group> = SimpleObjectProperty<Group>()
 
     init {
         app = todoApp
     }
-    private var focusedGroup: Group? = null
 
     fun groups(): List<Group> {
         return groups
@@ -31,12 +33,12 @@ class SidepaneController(todoApp: TODOApplication) {
         view?.refreshGroups()
     }
 
-    fun focusedGroup(): Group? { return focusedGroup }
+    fun focusedGroup(): ObjectProperty<Group> { return focusedGroup }
 
     fun focusGroup(focus: Group?) {
         if (focus !in groups) return
-        focusedGroup = focus
-        app?.groupViewController?.loadGroup(focusedGroup)
+        focusedGroup.set(focus)
+        app?.groupViewController?.loadGroup(focusedGroup.value)
     }
 
     fun createGroup(group: Group) {
