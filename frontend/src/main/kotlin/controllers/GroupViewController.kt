@@ -20,6 +20,7 @@ class GroupViewController(todoApp: TODOApplication) {
     private var view: GroupView? = null
     private val todoClient = TODOClient()
     private var currentGroup: Group? = null
+    private var focusedItem: Item? = null
 
     init {
         app = todoApp
@@ -71,10 +72,18 @@ class GroupViewController(todoApp: TODOApplication) {
         view = groupView
     }
 
+    fun focusItem(item: Item) {
+        focusedItem = item
+    }
+
+    fun clearFocus() {
+        focusedItem = null
+    }
+
     /**
      * Returns the focused item in the list view if any.
      */
     fun getFocusedItem(): Item? {
-        return view?.getFocusedItem()
+        return focusedItem
     }
 }

@@ -22,7 +22,7 @@ class TODOApplication : Application() {
     private var primaryStage = Stage()
     private val sidepaneController = SidepaneController(this)
     val groupViewController = GroupViewController(this)
-    private val sidepaneView = SidepaneView(sidepaneController)
+    private val sidepaneView = SidepaneView(sidepaneController, groupViewController)
     private val groupView = GroupView(groupViewController)
 
     val commandHandler = CommandHandler()
@@ -38,6 +38,8 @@ class TODOApplication : Application() {
         init {
             this.left = sidepaneView
             this.center = groupView
+
+            styleClass.add("main-view")
         }
     }
 
@@ -48,9 +50,8 @@ class TODOApplication : Application() {
         sidepaneController.refreshGroups()
         groupViewController.reloadGroupView()
         val root = MainView(sidepaneView, groupView)
-        val scene = Scene(root)
-        addHotkeysToMainViewScene(scene)
-        primaryStage.scene = scene
+        primaryStage.scene.root = root
+        addHotkeysToMainViewScene(primaryStage.scene)
     }
 
     override fun start(stage: Stage) {
@@ -58,6 +59,7 @@ class TODOApplication : Application() {
         val root = LogInView(this)
 
         val scene = Scene(root)
+        scene.stylesheets.add("/style/TODOApplication.css")
 
         stage.title = "TODO List"
         stage.scene = scene

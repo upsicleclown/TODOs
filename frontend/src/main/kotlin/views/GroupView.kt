@@ -1,53 +1,80 @@
 package views
 
 import controllers.GroupViewController
+import javafx.event.EventHandler
 import javafx.scene.control.Label
-import javafx.scene.control.ListView
+import javafx.scene.control.ScrollPane
 import javafx.scene.control.TextField
-import javafx.scene.layout.Priority
+import javafx.scene.input.MouseEvent
 import javafx.scene.layout.VBox
 import models.Group
 import models.Item
 
-class GroupView(controller: GroupViewController) : VBox() {
+class GroupView(private val controller: GroupViewController) : VBox(36.0) {
 
     private var currentGroupName = Label("")
-    private val listView = ListView<Item>()
+    private val itemListScrollContainer = ScrollPane()
+    private val itemListContainer = VBox(36.0)
+    private val itemCreationField = TextField()
+    private var groupItemModels = listOf<Item>()
 
     init {
-        setVgrow(listView, Priority.ALWAYS)
-        children.add(currentGroupName)
+        /* region styling */
+        styleClass.add("group")
+        currentGroupName.styleClass.addAll("group__title", "title-max")
+        itemCreationField.styleClass.addAll("h2", "group__create-item")
+        itemListScrollContainer.styleClass.addAll("group__item-list__container")
+        itemListContainer.styleClass.addAll("group__item-list")
+        /* end region styling */
 
-        // create a text-field
-        val itemCreationField = TextField()
-        itemCreationField.promptText = "Create a new item..."
-
+        /* region event filters */
         // when enter is pressed
         itemCreationField.setOnAction {
             controller.createItem(Item(itemCreationField.text, false))
             itemCreationField.text = ""
         }
 
-        children.add(itemCreationField)
+        // when clicking outside of an item, unfocus that item
+        itemListContainer.addEventHandler(
+            MouseEvent.MOUSE_CLICKED,
+            EventHandler<MouseEvent> {
+                requestFocus()
+                controller.clearFocus()
+            }
+        )
 
-        listView.isEditable = true
+        this.addEventHandler(
+            MouseEvent.MOUSE_CLICKED,
+            EventHandler<MouseEvent> {
+                requestFocus()
+                controller.clearFocus()
+            }
+        )
+        /* end region event filters */
 
-        // from https://stackoverflow.com/questions/35963888/how-to-create-a-listview-of-complex-objects-and-allow-editing-a-field-on-the-obj
-        listView.setCellFactory { _: ListView<Item?>? -> ItemView(controller) }
+        /* region view setup */
+        itemCreationField.promptText = "Create a new item..."
 
-        children.add(listView)
+        itemListScrollContainer.isFitToWidth = true
+        itemListScrollContainer.content = itemListContainer
+        itemListScrollContainer.hmax = 0.0
+        itemListScrollContainer.hbarPolicy = ScrollPane.ScrollBarPolicy.NEVER
+
+        itemListContainer.children.addAll(
+            groupItemModels.map { item -> ItemView(controller, item) }
+        )
+
+        children.addAll(currentGroupName, itemCreationField, itemListScrollContainer)
+        /* end region view setup */
     }
 
     fun refreshWithItems(group: Group?, items: List<Item>) {
-        listView.items.clear()
-        children[0] = Label(group?.name)
-        listView.items.addAll(items)
-    }
-
-    /**
-     * Returns the focused item in the list view if any.
-     */
-    fun getFocusedItem(): Item? {
-        return listView.selectionModel.selectedItem
+        itemListContainer.children.clear()
+        currentGroupName.text = group?.name
+        children[0] = currentGroupName
+        groupItemModels = items
+        itemListContainer.children.addAll(
+            groupItemModels.map { item -> ItemView(controller, item) }
+        )
     }
 }
