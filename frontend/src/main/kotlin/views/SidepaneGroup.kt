@@ -1,6 +1,11 @@
 package views
 
 import controllers.SidepaneController
+import javafx.animation.Interpolator
+import javafx.animation.KeyFrame
+import javafx.animation.KeyValue
+import javafx.animation.Timeline
+import javafx.beans.property.SimpleBooleanProperty
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
 import javafx.geometry.Pos
@@ -10,6 +15,7 @@ import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.BorderPane
+import javafx.util.Duration
 import models.Group
 import javafx.scene.control.Label as JfxLabel
 
@@ -17,8 +23,10 @@ class SidepaneGroup(private val sidepaneController: SidepaneController, private 
     private val textField = TextField() // For modifying group name, initally hidden
     private val label = JfxLabel(group.name) // For displaying group name
     private val deleteButton = Button("x")
-    private var longPressCounter = 0L // Timer for determining long press duration
-    private val LONG_PRESS_TIME_QUANTUM = 1500L // 1.5 Second duration for long press recognition (in ms)
+    private var mouseReleased = false // A boolean flag to determine whether to cancel long press
+    private var longPressCounter = 0.0 // Timer for determining whether to focus group on mouse release
+    private var longPress = SimpleBooleanProperty(false) // An Observable flag that triggers long press functionality
+    private val LONG_PRESS_TIME_QUANTUM = 1000.0 // 1.0 Second duration for long press recognition (in ms)
 
     init {
         /* region styling */
@@ -38,19 +46,44 @@ class SidepaneGroup(private val sidepaneController: SidepaneController, private 
         }
 
         // Handling mouse click/long press
+        longPress.addListener { _, _, triggered ->
+            when (triggered) {
+                true -> longPress()
+                false -> Unit
+            }
+        }
+
         addEventHandler(
             MouseEvent.ANY,
             EventHandler { event ->
                 when (event.eventType) {
-                    MouseEvent.MOUSE_PRESSED -> longPressCounter = System.currentTimeMillis()
-                    MouseEvent.MOUSE_RELEASED ->
-                        if (System.currentTimeMillis() - longPressCounter >= LONG_PRESS_TIME_QUANTUM) {
-                            // When group is long pressed, enter group-name modification flow
-                            startEdit()
-                        } else {
-                            // When group is clicked on, switch to relevant GroupView
+                    MouseEvent.MOUSE_PRESSED -> {
+                        mouseReleased = false
+                        longPressCounter = System.currentTimeMillis().toDouble()
+
+                        // JavaFX only supports delaying changes on the application thread
+                        // This is only possible if we use their animation library instead
+                        // of the Kotlin concurrent scheduling library.
+                        var scheduler = Timeline()
+                        scheduler.cycleCount = 1
+                        scheduler.keyFrames.add(
+                            KeyFrame(
+                                Duration(LONG_PRESS_TIME_QUANTUM),
+                                KeyValue(longPress, true, Interpolator.DISCRETE)
+                            )
+                        )
+                        scheduler.play()
+                    }
+                    MouseEvent.MOUSE_RELEASED -> {
+                        mouseReleased = true
+                        if (System.currentTimeMillis() - longPressCounter < LONG_PRESS_TIME_QUANTUM) {
                             sidepaneController.focusGroup(group)
                         }
+                    }
+                    MouseEvent.MOUSE_CLICKED -> { // This case prevents SidepaneView from stealing focus
+                        mouseReleased = true
+                        event.consume()
+                    }
                 }
             }
         )
@@ -90,6 +123,11 @@ class SidepaneGroup(private val sidepaneController: SidepaneController, private 
         right = deleteButton
         deleteButton.maxHeight = 25.0
         deleteButton.alignment = Pos.BASELINE_CENTER
+    }
+
+    private fun longPress() {
+        if (!mouseReleased) startEdit()
+        longPress.set(false)
     }
 
     private fun startEdit() {
