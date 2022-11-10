@@ -6,6 +6,10 @@ import controllers.SidepaneController
 import javafx.application.Application
 import javafx.event.EventHandler
 import javafx.scene.Scene
+import javafx.scene.control.Menu
+import javafx.scene.control.MenuBar
+import javafx.scene.control.MenuItem
+import javafx.scene.control.SeparatorMenuItem
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyCodeCombination
 import javafx.scene.input.KeyCombination
@@ -45,12 +49,37 @@ class TODOApplication : Application() {
 
     /**
      * Changes the scene to be the main view and refreshes both the side pane and group view.
+     * Also adds the menu bar.
      */
     fun setMainView() {
         sidepaneController.refreshGroups()
         groupViewController.reloadGroupView()
         val root = MainView(sidepaneView, groupView)
+
+        val menuBar = MenuBar()
+
+        val fileMenu = Menu("File")
+        val createItem = MenuItem("Create Item")
+        createItem.setOnAction { createItem() }
+        fileMenu.items.add(createItem)
+
+        val editMenu = Menu("Edit")
+        val undo = MenuItem("Undo")
+        val redo = MenuItem("Redo")
+        val cut = MenuItem("Cut")
+        val copy = MenuItem("Copy")
+        val paste = MenuItem("Paste")
+        undo.setOnAction { commandHandler.undo() }
+        redo.setOnAction { commandHandler.redo() }
+        cut.setOnAction { cutItem() }
+        copy.setOnAction { copyItem() }
+        paste.setOnAction { pasteItem() }
+        editMenu.items.addAll(undo, redo, SeparatorMenuItem(), cut, copy, paste)
+
+        menuBar.menus.addAll(fileMenu, editMenu)
+        root.top = menuBar
         primaryStage.scene.root = root
+
         addHotkeysToMainViewScene(primaryStage.scene)
     }
 
@@ -113,23 +142,13 @@ class TODOApplication : Application() {
 
                 override fun handle(event: KeyEvent?) {
                     if (commandN.match(event)) {
-                        groupViewController.createItem(Item("Untitled", false))
+                        createItem()
                     } else if (commandC.match(event)) {
-                        val item: Item? = groupViewController.getFocusedItem()
-                        if (item != null) {
-                            clipboard.saveItem(item)
-                        }
+                        copyItem()
                     } else if (commandX.match(event)) {
-                        val item: Item? = groupViewController.getFocusedItem()
-                        if (item != null) {
-                            groupViewController.deleteItem(item)
-                            clipboard.saveItem(item)
-                        }
+                        cutItem()
                     } else if (commandV.match(event)) {
-                        val item: Item? = clipboard.getSavedItem()
-                        if (item != null) {
-                            groupViewController.createItem(item)
-                        }
+                        pasteItem()
                     } else if (commandZ.match(event)) {
                         commandHandler.undo()
                     } else if (commandY.match(event)) {
@@ -142,5 +161,34 @@ class TODOApplication : Application() {
                 }
             }
         )
+    }
+
+    /**
+     * Hotkey / menu functions
+     */
+    fun createItem() {
+        groupViewController.createItem(Item("Untitled", false))
+    }
+
+    fun copyItem() {
+        val item: Item? = groupViewController.getFocusedItem()
+        if (item != null) {
+            clipboard.saveItem(item)
+        }
+    }
+
+    fun cutItem() {
+        val item: Item? = groupViewController.getFocusedItem()
+        if (item != null) {
+            groupViewController.deleteItem(item)
+            clipboard.saveItem(item)
+        }
+    }
+
+    fun pasteItem() {
+        val item: Item? = clipboard.getSavedItem()
+        if (item != null) {
+            groupViewController.createItem(item)
+        }
     }
 }
