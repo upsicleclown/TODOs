@@ -25,7 +25,6 @@ class DeleteLabelCommand(private val label: Label, private val controller: Group
     }
 
     override fun redo() {
-        client.deleteLabel(label)
-        controller.reloadGroupView()
+        execute()
     }
 }
