@@ -1,19 +1,28 @@
 package commands
 
 import controllers.GroupViewController
+import models.Item
 import models.Label
 
-/* should probably use editItem for all of these */
-class CreateItemLabelCommand(private val label: Label, private val controller: GroupViewController) : Command {
+class CreateItemLabelCommand(private val label: Label, private val item: Item,
+                             private val controller: GroupViewController) : Command {
     override fun execute() {
-        TODO("Not yet implemented")
+        var newItem = item.copy()
+        newItem.labelIds.add(label.id)
+
+        controller.editItem(item, newItem)
+        controller.reloadGroupView()
     }
 
     override fun undo() {
-        TODO("Not yet implemented")
+        var newItem = item.copy()
+        newItem.labelIds.remove(label.id)
+
+        controller.editItem(item, newItem)
+        controller.reloadGroupView()
     }
 
     override fun redo() {
-        TODO("Not yet implemented")
+        execute()
     }
 }
