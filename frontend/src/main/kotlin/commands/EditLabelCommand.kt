@@ -1,18 +1,25 @@
 package commands
 
+import client.TODOClient
 import controllers.GroupViewController
 import models.Label
 
-class EditLabelCommand(private val label: Label, private val controller: GroupViewController) : Command {
+class EditLabelCommand(private val newLabel: Label, private val originalLabel: Label,
+                       private val controller: GroupViewController) : Command {
+    private val client = TODOClient()
+
     override fun execute() {
-        TODO("Not yet implemented")
+        client.editLabel(originalLabel.id, newLabel)
+        controller.reloadGroupView()
     }
 
     override fun undo() {
-        TODO("Not yet implemented")
+        client.editLabel(newLabel.id, originalLabel)
+        controller.reloadGroupView()
     }
 
     override fun redo() {
-        TODO("Not yet implemented")
+        client.editLabel(originalLabel.id, newLabel)
+        controller.reloadGroupView()
     }
 }
