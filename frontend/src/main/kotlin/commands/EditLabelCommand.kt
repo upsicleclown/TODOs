@@ -8,19 +8,19 @@ import models.Label
  * This command should only be used by the Settings UI for managing labels.
  */
 class EditLabelCommand(
-    private val newLabel: Label,
+    private val newLabelName: String,
     private val originalLabel: Label,
     private val controller: GroupViewController
 ) : Command {
     private val client = TODOClient()
 
     override fun execute() {
-        client.editLabel(originalLabel.id, newLabel)
+        client.editLabel(originalLabel.id, newLabelName)
         controller.reloadGroupView()
     }
 
     override fun undo() {
-        client.editLabel(newLabel.id, originalLabel)
+        client.editLabel(originalLabel.id, originalLabel.name)
         controller.reloadGroupView()
     }
 
