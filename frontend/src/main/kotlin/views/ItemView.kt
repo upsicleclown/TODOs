@@ -43,7 +43,6 @@ class ItemView(private val controller: GroupViewController, private val item: It
         setupTextField()
         setupLabelViewContainer()
         setupPriorityPicker()
-        textField.text = item.title
         configDeleteButton(item)
         configCompletionButton(item)
         /* end region item setup */
@@ -114,6 +113,8 @@ class ItemView(private val controller: GroupViewController, private val item: It
                 cancelEdit()
             }
         }
+
+        textField.text = item.title
     }
 
     private fun setupPriorityPicker() {
