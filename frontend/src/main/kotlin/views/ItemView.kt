@@ -81,7 +81,7 @@ class ItemView(private val controller: GroupViewController, private val item: It
         }
         if (itemLabels.isNotEmpty()) {
             labelChips = itemLabels.map {
-                LabelView(groupController = controller, label = it, item = item)
+                ItemLabelView(groupController = controller, label = it, item = item)
             }
         }
 

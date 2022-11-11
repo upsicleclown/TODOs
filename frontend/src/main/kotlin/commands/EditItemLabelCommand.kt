@@ -12,6 +12,7 @@ class EditItemLabelCommand(
     private val controller: GroupViewController
 ) : Command {
     override fun execute() {
+        println("executing edit item label, existing label: ${existingLabel}, newLabel: ${newLabel}, originalLabel: ${originalLabel}")
         var newItem = item.copy()
         newItem.labelIds.remove(originalLabel.id)
 
@@ -19,7 +20,7 @@ class EditItemLabelCommand(
             newItem.labelIds.add(newLabel.id)
         } else {
             controller.createLabel(newLabel)
-            var newLabelRecord = controller.labels().last { label -> label.name == newLabel.name }
+            var newLabelRecord = controller.labels().first { label -> label.name == newLabel.name }
             newItem.labelIds.add(newLabelRecord.id)
         }
 
@@ -35,7 +36,7 @@ class EditItemLabelCommand(
         } else {
             // newLabel is an object created ad-hoc. newLabel.id doesn't necessarily match the id of the
             // label that is created on the backend, so we must search for this label
-            var newLabelRecord = controller.labels().last { label: Label -> label.name == newLabel.name }
+            var newLabelRecord = controller.labels().first { label: Label -> label.name == newLabel.name }
             controller.deleteLabel(newLabel)
             newItem.labelIds.remove(newLabelRecord.id)
         }
