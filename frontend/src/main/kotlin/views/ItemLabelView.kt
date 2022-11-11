@@ -15,10 +15,13 @@ class ItemLabelView(
         comboBox.items.clear()
         comboBox.items.addAll(groupController.labels().map { label -> label.name })
 
+        // Set the starting text of the editor to the current label name
+        comboBox.editor.text = label.name
+
         center = comboBox
         right = null
 
-        comboBox.editor.requestFocus()
+        comboBox.requestFocus()
     }
 
     override fun commitEdit() {
