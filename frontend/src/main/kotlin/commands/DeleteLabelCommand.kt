@@ -3,7 +3,7 @@ package commands
 import controllers.GroupViewController
 import models.Label
 
-class DeleteLabelCommand(private val label: Label, controller: GroupViewController): Command {
+class DeleteLabelCommand(private val label: Label, controller: GroupViewController) : Command {
     override fun execute() {
         TODO("Not yet implemented")
     }

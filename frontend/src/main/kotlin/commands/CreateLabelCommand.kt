@@ -3,7 +3,7 @@ package commands
 import controllers.GroupViewController
 import models.Label
 
-class CreateLabelCommand(private val label: Label, private val controller: GroupViewController): Command {
+class CreateLabelCommand(private val label: Label, private val controller: GroupViewController) : Command {
     override fun execute() {
         TODO("Not yet implemented")
     }

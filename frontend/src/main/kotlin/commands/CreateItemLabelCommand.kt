@@ -4,7 +4,7 @@ import controllers.GroupViewController
 import models.Label
 
 /* should probably use editItem for all of these */
-class CreateItemLabelCommand(private val label: Label, private val controller: GroupViewController): Command {
+class CreateItemLabelCommand(private val label: Label, private val controller: GroupViewController) : Command {
     override fun execute() {
         TODO("Not yet implemented")
     }

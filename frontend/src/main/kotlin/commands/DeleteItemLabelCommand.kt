@@ -4,7 +4,7 @@ import controllers.GroupViewController
 import models.Label
 
 /* should probably use editItem for all of these */
-class DeleteItemLabelCommand(private val label: Label, controller: GroupViewController): Command {
+class DeleteItemLabelCommand(private val label: Label, controller: GroupViewController) : Command {
     override fun execute() {
         TODO("Not yet implemented")
     }
