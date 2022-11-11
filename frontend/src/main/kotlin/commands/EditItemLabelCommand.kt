@@ -12,7 +12,6 @@ class EditItemLabelCommand(
     private val controller: GroupViewController
 ) : Command {
     override fun execute() {
-        println("executing edit item label, existing label: ${existingLabel}, newLabel: ${newLabel}, originalLabel: ${originalLabel}")
         var newItem = item.copy()
         newItem.labelIds.remove(originalLabel.id)
 

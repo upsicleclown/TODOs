@@ -4,8 +4,11 @@ import controllers.GroupViewController
 import models.Item
 import models.Label
 
-class ItemLabelView(private val groupController: GroupViewController,
-                    private val label: Label, private val item: Item):
+class ItemLabelView(
+    private val groupController: GroupViewController,
+    private val label: Label,
+    private val item: Item
+) :
     LabelView(groupController, label, item) {
     override fun startEdit() {
         center = textField
@@ -16,10 +19,13 @@ class ItemLabelView(private val groupController: GroupViewController,
 
     override fun commitEdit(newLabelName: String) {
         var existingLabel = groupController.labels().any { l -> l.name == newLabelName }
-        var newLabel = if (existingLabel) groupController.labels().first { l -> l.name == newLabelName}
-                        else Label(newLabelName, LabelView.DEFAULT_LABEL_COLOR)
+        var newLabel = if (existingLabel) {
+            groupController.labels().first { l -> l.name == newLabelName }
+        } else {
+            Label(newLabelName, LabelView.DEFAULT_LABEL_COLOR)
+        }
 
-        groupController.editItemLabel(existingLabel=existingLabel, newLabel=newLabel, originalLabel=label, item=item)
+        groupController.editItemLabel(existingLabel = existingLabel, newLabel = newLabel, originalLabel = label, item = item)
         labelText.text = label.name
         center = labelText
         right = deleteButton
@@ -30,5 +36,4 @@ class ItemLabelView(private val groupController: GroupViewController,
         center = labelText
         right = deleteButton
     }
-
 }

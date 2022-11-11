@@ -100,7 +100,6 @@ abstract class LabelView(private val groupController: GroupViewController, priva
             }
         }
 
-
         deleteButton.setOnAction {
             groupController.deleteItemLabel(label, item)
         }

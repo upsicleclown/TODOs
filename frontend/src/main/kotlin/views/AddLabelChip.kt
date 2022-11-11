@@ -59,7 +59,8 @@ class AddLabelChip(private val controller: GroupViewController, private val item
             return
         }
         val existingLabel = controller.labels().any { label -> label.name == newLabelName }
-        val newLabel = if (existingLabel) controller.labels().first { label -> label.name == newLabelName } else Label(newLabelName, LabelView.DEFAULT_LABEL_COLOR)
+        val newLabel = if (existingLabel) controller.labels().first { label -> label.name == newLabelName }
+                        else Label(newLabelName, LabelView.DEFAULT_LABEL_COLOR)
         controller.createItemLabel(existingLabel, newLabel, item)
 
         center = addLabelButton
