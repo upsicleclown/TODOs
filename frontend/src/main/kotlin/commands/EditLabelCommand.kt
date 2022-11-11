@@ -4,6 +4,9 @@ import client.TODOClient
 import controllers.GroupViewController
 import models.Label
 
+/**
+ * This command should only be used by the Settings UI for managing labels.
+ */
 class EditLabelCommand(
     private val newLabel: Label,
     private val originalLabel: Label,
