@@ -32,7 +32,7 @@ class CreateItemLabelCommand(
             newItem.labelIds.remove(newLabel.id)
         } else {
             var newLabelRecord = controller.labels().last { label -> label.name == newLabel.name }
-            newItem.labelIds.remove(newLabel.id)
+            newItem.labelIds.remove(newLabelRecord.id)
         }
 
         controller.editItem(newItem = newItem, originalItem = item)
