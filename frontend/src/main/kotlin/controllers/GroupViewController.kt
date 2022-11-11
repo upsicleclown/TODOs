@@ -3,7 +3,9 @@ package controllers
 import TODOApplication
 import client.TODOClient
 import commands.CreateItemCommand
+import commands.CreateLabelCommand
 import commands.DeleteItemCommand
+import commands.DeleteLabelCommand
 import commands.EditItemCommand
 import models.Group
 import models.Item
@@ -62,11 +64,16 @@ class GroupViewController(todoApp: TODOApplication) {
 
     fun labels(): List<Label> { return labels }
 
-    fun createLabel(label: Label): Label {
-        val newLabel = todoClient.createLabel(label)
+    fun createLabel(label: Label) {
+        val createLabelCommand = CreateLabelCommand(label, this)
+        app?.commandHandler?.execute(createLabelCommand)
         refreshLabels()
+    }
 
-        return newLabel
+    fun deleteLabel(label: Label) {
+        val deleteLabelCommand = DeleteLabelCommand(label, this)
+        app?.commandHandler?.execute(deleteLabelCommand)
+        refreshLabels()
     }
 
     // view management
