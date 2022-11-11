@@ -5,7 +5,6 @@ import models.Label
 
 class EditItemLabelCommand(private val label: Label, private val controller: GroupViewController) : Command {
     override fun execute() {
-
     }
 
     override fun undo() {
