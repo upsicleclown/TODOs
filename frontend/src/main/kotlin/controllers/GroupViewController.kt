@@ -86,24 +86,6 @@ class GroupViewController(todoApp: TODOApplication) {
 
     fun labels(): List<Label> { return labels }
 
-    fun createLabel(label: Label) {
-        val createLabelCommand = CreateLabelCommand(label, this)
-        app?.commandHandler?.execute(createLabelCommand)
-        refreshLabels()
-    }
-
-    fun editLabel(label: Label, newLabelName: String) {
-        val editLabelCommand = EditLabelCommand(newLabelName, label, this)
-        app?.commandHandler?.execute(editLabelCommand)
-        refreshLabels()
-    }
-
-    fun deleteLabel(label: Label) {
-        val deleteLabelCommand = DeleteLabelCommand(label, this)
-        app?.commandHandler?.execute(deleteLabelCommand)
-        refreshLabels()
-    }
-
     // view management
     fun addView(groupView: GroupView) {
         view = groupView
