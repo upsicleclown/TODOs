@@ -7,17 +7,24 @@ import kotlinx.serialization.json.encodeToJsonElement
 import models.WindowSettings
 import java.io.File
 
-/*
-Class to cache items for the frontend.
-The window settings file path could be a secret.
+/**
+ * Class to cache items for the frontend.
+ * The window settings file path must be at root for packaging to work.
 */
-class Cache(private val windowSettingsFilePath: String = "src/main/kotlin/cache/window_settings.json") {
-
+class Cache(private val windowSettingsFilePath: String = "window_settings.json") {
     /* Properties related to window settings. */
     private lateinit var windowSettings: WindowSettings
+    private val emptyLength = 0L
+    private val defaultPosition = 0.0
+    private val defaultSize = 500.0
 
     init {
-        loadWindowSettings()
+        // If file content is empty, set default values.
+        if (File(windowSettingsFilePath).length() == emptyLength) {
+            windowSettings = WindowSettings(defaultPosition, defaultPosition, defaultSize, defaultSize)
+        } else {
+            loadWindowSettings()
+        }
     }
 
     /* Methods related to window settings */
