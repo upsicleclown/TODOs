@@ -16,7 +16,7 @@ class DeleteItemLabelCommand(
         var newItem = item.copy()
         newItem.labelIds.remove(label.id)
 
-        client.editItem(id=item.id, newItem=newItem)
+        client.editItem(id = item.id, newItem = newItem)
         controller.reloadGroupView()
     }
 
@@ -25,7 +25,7 @@ class DeleteItemLabelCommand(
         var newItem = item.copy()
         newItem.labelIds.add(label.id)
 
-        client.editItem(id=item.id, newItem=newItem)
+        client.editItem(id = item.id, newItem = newItem)
         controller.reloadGroupView()
     }
 

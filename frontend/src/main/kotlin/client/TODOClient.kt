@@ -98,6 +98,7 @@ class TODOClient {
         return Json.decodeFromString(labelResponse.body())
     }
 
+    // TODO: Pending backend support, this will be used for the settings UI that does not currently exist
     fun editLabel(id: Int, newLabelName: String): Label {
         val string = Json.encodeToString(newLabelName)
 
@@ -110,6 +111,7 @@ class TODOClient {
         return Json.decodeFromString(labelResponse.body())
     }
 
+    // TODO: This will be used for the settings UI that does not currently exist
     fun deleteLabel(label: Label) {
         val request = HttpRequest.newBuilder()
             .uri(URI.create("${serviceEndpoint}labels/${label.id}"))

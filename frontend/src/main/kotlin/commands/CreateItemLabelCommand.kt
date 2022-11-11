@@ -24,7 +24,7 @@ class CreateItemLabelCommand(
             newItem.labelIds.add(newLabelRecord.id)
         }
 
-        client.editItem(id=item.id, newItem = newItem)
+        client.editItem(id = item.id, newItem = newItem)
         controller.reloadGroupView()
     }
 
@@ -38,7 +38,7 @@ class CreateItemLabelCommand(
             newItem.labelIds.remove(newLabelRecord.id)
         }
 
-        client.editItem(id=item.id, newItem = newItem)
+        client.editItem(id = item.id, newItem = newItem)
         controller.reloadGroupView()
     }
 
