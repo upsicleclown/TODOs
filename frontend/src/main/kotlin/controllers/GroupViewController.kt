@@ -62,9 +62,11 @@ class GroupViewController(todoApp: TODOApplication) {
 
     fun labels(): List<Label> { return labels }
 
-    fun createLabel(label: Label) {
-        todoClient.createLabel(label)
+    fun createLabel(label: Label): Label {
+        val newLabel = todoClient.createLabel(label)
         refreshLabels()
+
+        return newLabel
     }
 
     // view management
