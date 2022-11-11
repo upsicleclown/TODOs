@@ -5,5 +5,5 @@ out/
 .DS_Store
 .idea/
 .gitattributes
-./backend/todo.db
-./frontend/src/main/kotlin/cache/window_settings.json
+/backend/todo.db
+/frontend/window_settings.json

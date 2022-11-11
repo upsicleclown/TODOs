@@ -23,7 +23,7 @@ tasks.withType(JavaCompile) {
 }
 
 application {
-    mainClass = 'TODOApplication'
+    mainClass = 'Main'
 }
 
 [compileKotlin, compileTestKotlin].forEach {
