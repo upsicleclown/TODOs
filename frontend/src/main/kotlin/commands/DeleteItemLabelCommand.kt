@@ -1,5 +1,6 @@
 package commands
 
+import client.TODOClient
 import controllers.GroupViewController
 import models.Item
 import models.Label
@@ -9,23 +10,22 @@ class DeleteItemLabelCommand(
     private val item: Item,
     private val controller: GroupViewController
 ) : Command {
+    private val client = TODOClient()
+
     override fun execute() {
         var newItem = item.copy()
         newItem.labelIds.remove(label.id)
 
-        controller.editItem(newItem = newItem, originalItem = item)
+        client.editItem(id=item.id, newItem=newItem)
         controller.reloadGroupView()
     }
 
-    /**
-     * Note: if DeleteItemLabelCommand.undo is called on an item that never had the referenced label,
-     * it will add the label. This is another reason we should track item state somewhere
-     */
     override fun undo() {
+        // TODO: We need to add item state management to handle undos when the item never had the label
         var newItem = item.copy()
         newItem.labelIds.add(label.id)
 
-        controller.editItem(newItem = newItem, originalItem = item)
+        client.editItem(id=item.id, newItem=newItem)
         controller.reloadGroupView()
     }
 

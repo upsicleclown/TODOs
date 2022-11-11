@@ -1,5 +1,6 @@
 package commands
 
+import client.TODOClient
 import controllers.GroupViewController
 import models.Item
 import models.Label
@@ -10,18 +11,20 @@ class CreateItemLabelCommand(
     private val item: Item,
     private val controller: GroupViewController
 ) : Command {
+    private val client = TODOClient()
+    private var newLabelRecord = newLabel
+
     override fun execute() {
         var newItem = item.copy()
 
         if (existingLabel) {
             newItem.labelIds.add(newLabel.id)
         } else {
-            controller.createLabel(newLabel)
-            var newLabelRecord = controller.labels().last { label -> label.name == newLabel.name }
+            newLabelRecord = client.createLabel(newLabel)
             newItem.labelIds.add(newLabelRecord.id)
         }
 
-        controller.editItem(newItem = newItem, originalItem = item)
+        client.editItem(id=item.id, newItem = newItem)
         controller.reloadGroupView()
     }
 
@@ -31,11 +34,11 @@ class CreateItemLabelCommand(
         if (existingLabel) {
             newItem.labelIds.remove(newLabel.id)
         } else {
-            var newLabelRecord = controller.labels().last { label -> label.name == newLabel.name }
+            client.deleteLabel(newLabelRecord)
             newItem.labelIds.remove(newLabelRecord.id)
         }
 
-        controller.editItem(newItem = newItem, originalItem = item)
+        client.editItem(id=item.id, newItem = newItem)
         controller.reloadGroupView()
     }
 

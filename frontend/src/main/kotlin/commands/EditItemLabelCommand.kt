@@ -1,5 +1,6 @@
 package commands
 
+import client.TODOClient
 import controllers.GroupViewController
 import models.Item
 import models.Label
@@ -11,6 +12,9 @@ class EditItemLabelCommand(
     private val item: Item,
     private val controller: GroupViewController
 ) : Command {
+    private val client = TODOClient()
+    private var newLabelRecord = newLabel
+
     override fun execute() {
         var newItem = item.copy()
         newItem.labelIds.remove(originalLabel.id)
@@ -18,12 +22,11 @@ class EditItemLabelCommand(
         if (existingLabel) {
             newItem.labelIds.add(newLabel.id)
         } else {
-            controller.createLabel(newLabel)
-            var newLabelRecord = controller.labels().first { label -> label.name == newLabel.name }
+            newLabelRecord = client.createLabel(newLabel)
             newItem.labelIds.add(newLabelRecord.id)
         }
 
-        controller.editItem(newItem = newItem, originalItem = item)
+        client.editItem(id=item.id, newItem=newItem)
         controller.reloadGroupView()
     }
 
@@ -33,15 +36,12 @@ class EditItemLabelCommand(
         if (existingLabel) {
             newItem.labelIds.remove(newLabel.id)
         } else {
-            // newLabel is an object created ad-hoc. newLabel.id doesn't necessarily match the id of the
-            // label that is created on the backend, so we must search for this label
-            var newLabelRecord = controller.labels().first { label: Label -> label.name == newLabel.name }
-            controller.deleteLabel(newLabel)
+            client.deleteLabel(newLabelRecord)
             newItem.labelIds.remove(newLabelRecord.id)
         }
 
         newItem.labelIds.add(originalLabel.id)
-        controller.editItem(newItem = newItem, originalItem = item)
+        client.editItem(id=item.id, newItem=newItem)
         controller.reloadGroupView()
     }
 
