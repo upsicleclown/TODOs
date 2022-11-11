@@ -99,6 +99,7 @@ abstract class LabelView(private val groupController: GroupViewController, priva
         }
         /* end region event filters */
 
+        comboBox.isEditable = true
         top = null
         center = labelText
         right = deleteButton

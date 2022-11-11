@@ -52,7 +52,7 @@ class AddLabelChip(private val controller: GroupViewController, private val item
         addLabelComboBox.items.addAll(controller.labels().map { label -> label.name })
 
         center = addLabelComboBox
-        addLabelComboBox.requestFocus()
+        addLabelComboBox.editor.requestFocus()
     }
 
     private fun commitEdit() {

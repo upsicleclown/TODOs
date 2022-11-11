@@ -18,7 +18,7 @@ class ItemLabelView(
         center = comboBox
         right = null
 
-        comboBox.requestFocus()
+        comboBox.editor.requestFocus()
     }
 
     override fun commitEdit() {
