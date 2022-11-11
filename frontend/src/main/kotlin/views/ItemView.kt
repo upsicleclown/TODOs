@@ -12,6 +12,7 @@ import javafx.scene.image.Image
 import javafx.scene.image.ImageView
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
+import javafx.scene.input.MouseEvent
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.HBox
 import models.Item
@@ -89,6 +90,12 @@ class ItemView(private val controller: GroupViewController, private val item: It
             labelViewContainer.children.addAll(labelChips)
         }
         labelViewContainer.children.add(AddLabelChip(controller = controller, item = item))
+
+        // When clicking outside a label, remove focus from that label
+        labelViewContainer.addEventHandler(
+            MouseEvent.MOUSE_CLICKED,
+            EventHandler<MouseEvent> { requestFocus() }
+        )
     }
 
     private fun setupTextField() {
