@@ -44,16 +44,23 @@ class AddLabelChip(private val controller: GroupViewController, private val item
         /* end region event filters */
         center = addLabelButton
         addLabelComboBox.isEditable = true
-        addLabelComboBox.items.addAll(controller.labels().map { label -> label.name })
     }
 
     private fun startEdit() {
+        // Refresh the combo box options
+        addLabelComboBox.items.clear()
+        addLabelComboBox.items.addAll(controller.labels().map { label -> label.name })
+
         center = addLabelComboBox
         addLabelComboBox.requestFocus()
     }
 
     private fun commitEdit() {
-        val newLabelName = addLabelComboBox.editor.text.trim()
+        val newLabelName = if (addLabelComboBox.selectionModel.selectedItem == null) {
+            addLabelComboBox.editor.text.trim()
+        } else {
+            addLabelComboBox.selectionModel.selectedItem
+        }
         if (newLabelName.isBlank()) {
             cancelEdit()
             return

@@ -9,7 +9,7 @@ import javafx.beans.property.SimpleBooleanProperty
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
 import javafx.scene.control.Button
-import javafx.scene.control.TextField
+import javafx.scene.control.ComboBox
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
 import javafx.scene.input.MouseEvent
@@ -22,7 +22,7 @@ import javafx.scene.control.Label as JfxLabel
 
 abstract class LabelView(private val groupController: GroupViewController, private val label: Label, private val item: Item) : BorderPane() {
     protected val labelText = JfxLabel(label.name)
-    protected val textField = TextField()
+    protected val comboBox = ComboBox<String>()
     protected val deleteButton = Button("x")
     private var mouseReleased = false // A boolean flag to determine whether to cancel long press
     private var longPressCounter = 0.0 // Timer for determining whether to focus group on mouse release
@@ -79,24 +79,19 @@ abstract class LabelView(private val groupController: GroupViewController, priva
         )
 
         // When the Text Field loses focus, cancel the edit
-        textField.focusedProperty().addListener { _, _, newValue ->
+        comboBox.focusedProperty().addListener { _, _, newValue ->
             when (newValue) {
                 true -> Unit
                 false -> cancelEdit()
             }
         }
 
-        // When we press enter, commit the edit
-        textField.onAction = EventHandler { _: ActionEvent? ->
-            commitEdit(textField.text)
-        }
-
-        // When we press ESC, cancel the edit
-        textField.addEventFilter(
-            KeyEvent.KEY_RELEASED
-        ) { e: KeyEvent ->
-            if (e.code == KeyCode.ESCAPE) {
-                cancelEdit()
+        // When we press enter/esc, commit/cancel the edit
+        comboBox.addEventFilter(KeyEvent.KEY_PRESSED) { event ->
+            when (event.code) {
+                KeyCode.ENTER -> commitEdit()
+                KeyCode.ESCAPE -> cancelEdit()
+                else -> Unit
             }
         }
 
@@ -118,7 +113,7 @@ abstract class LabelView(private val groupController: GroupViewController, priva
 
     abstract fun startEdit()
 
-    abstract fun commitEdit(newLabelName: String)
+    abstract fun commitEdit()
 
     abstract fun cancelEdit()
 

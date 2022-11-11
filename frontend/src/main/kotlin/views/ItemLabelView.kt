@@ -11,13 +11,26 @@ class ItemLabelView(
 ) :
     LabelView(groupController, label, item) {
     override fun startEdit() {
-        center = textField
+        // Refresh the combo box options
+        comboBox.items.clear()
+        comboBox.items.addAll(groupController.labels().map { label -> label.name })
+
+        center = comboBox
         right = null
 
-        textField.requestFocus()
+        comboBox.requestFocus()
     }
 
-    override fun commitEdit(newLabelName: String) {
+    override fun commitEdit() {
+        val newLabelName: String = if (comboBox.selectionModel.selectedItem == null) {
+            comboBox.editor.text.trim()
+        } else {
+            comboBox.selectionModel.selectedItem
+        }
+        if (newLabelName.isBlank()) {
+            cancelEdit()
+            return
+        }
         var existingLabel = groupController.labels().any { l -> l.name == newLabelName }
         var newLabel = if (existingLabel) {
             groupController.labels().first { l -> l.name == newLabelName }
