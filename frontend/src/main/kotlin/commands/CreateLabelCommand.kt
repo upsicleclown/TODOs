@@ -1,18 +1,24 @@
 package commands
 
+import client.TODOClient
 import controllers.GroupViewController
 import models.Label
 
 class CreateLabelCommand(private val label: Label, private val controller: GroupViewController) : Command {
+    private val client = TODOClient()
+
     override fun execute() {
-        TODO("Not yet implemented")
+        client.createLabel(label)
+        controller.reloadGroupView()
     }
 
     override fun undo() {
-        TODO("Not yet implemented")
+        client.deleteLabel(label)
+        controller.reloadGroupView()
     }
 
     override fun redo() {
-        TODO("Not yet implemented")
+        client.createLabel(label)
+        controller.reloadGroupView()
     }
 }
