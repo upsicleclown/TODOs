@@ -98,6 +98,27 @@ class TODOClient {
         return Json.decodeFromString(labelResponse.body())
     }
 
+    fun editLabel(id: Int, newLabel: Label): Label {
+        val string = Json.encodeToString(newLabel)
+
+        val request = HttpRequest.newBuilder()
+            .uri(URI.create("${serviceEndpoint}labels/id"))
+            .header("Content-Type", "application/json")
+            .PUT(HttpRequest.BodyPublishers.ofString(string))
+            .build()
+        val labelResponse = client.send(request, HttpResponse.BodyHandlers.ofString())
+        return Json.decodeFromString(labelResponse.body())
+    }
+
+    fun deleteLabel(label: Label) {
+        val request = HttpRequest.newBuilder()
+            .uri(URI.create("${serviceEndpoint}labels/${label.id}"))
+            .header("Content-Type", "application/json")
+            .DELETE()
+            .build()
+        client.send(request, HttpResponse.BodyHandlers.ofString())
+    }
+
     /* Methods related to group endpoint */
     fun getGroups(): List<Group> {
         val groupsResponse = URL("${serviceEndpoint}groups").readText()
