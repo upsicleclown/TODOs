@@ -25,11 +25,7 @@ class LabelView(private val groupController: GroupViewController, private val la
 
         /* region event filters */
         deleteButton.setOnAction {
-            val originalItem = item.copy()
-            val newItem = item.copy()
-            newItem.labelIds.remove(label.id)
-
-            groupController.editItem(newItem, originalItem)
+            groupController.deleteItemLabel(label, item)
         }
         /* end region event filters */
 
