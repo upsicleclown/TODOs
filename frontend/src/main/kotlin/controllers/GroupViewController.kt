@@ -3,10 +3,14 @@ package controllers
 import TODOApplication
 import client.TODOClient
 import commands.CreateItemCommand
+import commands.CreateItemLabelCommand
 import commands.CreateLabelCommand
 import commands.DeleteItemCommand
+import commands.DeleteItemLabelCommand
 import commands.DeleteLabelCommand
 import commands.EditItemCommand
+import commands.EditItemLabelCommand
+import commands.EditLabelCommand
 import models.Group
 import models.Item
 import models.Label
@@ -62,11 +66,35 @@ class GroupViewController(todoApp: TODOApplication) {
         reloadGroupView()
     }
 
+    fun createItemLabel(existingLabel: Boolean, newLabel: Label, item: Item) {
+        val createItemLabelCommand = CreateItemLabelCommand(existingLabel, newLabel, item, this)
+        app?.commandHandler?.execute(createItemLabelCommand)
+        reloadGroupView()
+    }
+
+    fun editItemLabel(existingLabel: Boolean, newLabel: Label, originalLabel: Label, item: Item) {
+        val editItemLabelCommand = EditItemLabelCommand(existingLabel, newLabel, originalLabel, item, this)
+        app?.commandHandler?.execute(editItemLabelCommand)
+        reloadGroupView()
+    }
+
+    fun deleteItemLabel(label: Label, item: Item) {
+        val deleteItemLabelCommand = DeleteItemLabelCommand(label, item, this)
+        app?.commandHandler?.execute(deleteItemLabelCommand)
+        reloadGroupView()
+    }
+
     fun labels(): List<Label> { return labels }
 
     fun createLabel(label: Label) {
         val createLabelCommand = CreateLabelCommand(label, this)
         app?.commandHandler?.execute(createLabelCommand)
+        refreshLabels()
+    }
+
+    fun editLabel(label: Label, newLabelName: String) {
+        val editLabelCommand = EditLabelCommand(newLabelName, label, this)
+        app?.commandHandler?.execute(editLabelCommand)
         refreshLabels()
     }
 
