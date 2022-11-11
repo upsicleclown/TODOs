@@ -13,7 +13,7 @@ class CreateItemLabelCommand(
         var newItem = item.copy()
         newItem.labelIds.add(label.id)
 
-        controller.editItem(newItem=newItem, originalItem=item)
+        controller.editItem(newItem = newItem, originalItem = item)
         controller.reloadGroupView()
     }
 
@@ -21,7 +21,7 @@ class CreateItemLabelCommand(
         var newItem = item.copy()
         newItem.labelIds.remove(label.id)
 
-        controller.editItem(newItem=newItem, originalItem=item)
+        controller.editItem(newItem = newItem, originalItem = item)
         controller.reloadGroupView()
     }
 
