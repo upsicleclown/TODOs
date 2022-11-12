@@ -18,7 +18,6 @@ class CreateItemCommand(private var item: Item, private val groupViewController:
     }
 
     override fun redo() {
-        item = todoClient.createItem(item)
-        groupViewController.reloadGroupView()
+        execute()
     }
 }
