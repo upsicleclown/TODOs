@@ -98,6 +98,29 @@ class TODOClient {
         return Json.decodeFromString(labelResponse.body())
     }
 
+    // TODO: Pending backend support, this will be used for the settings UI that does not currently exist
+    fun editLabel(id: Int, newLabelName: String): Label {
+        val string = Json.encodeToString(newLabelName)
+
+        val request = HttpRequest.newBuilder()
+            .uri(URI.create("${serviceEndpoint}labels/$id"))
+            .header("Content-Type", "application/json")
+            .PUT(HttpRequest.BodyPublishers.ofString(string))
+            .build()
+        val labelResponse = client.send(request, HttpResponse.BodyHandlers.ofString())
+        return Json.decodeFromString(labelResponse.body())
+    }
+
+    // TODO: This will be used for the settings UI that does not currently exist
+    fun deleteLabel(label: Label) {
+        val request = HttpRequest.newBuilder()
+            .uri(URI.create("${serviceEndpoint}labels/${label.id}"))
+            .header("Content-Type", "application/json")
+            .DELETE()
+            .build()
+        client.send(request, HttpResponse.BodyHandlers.ofString())
+    }
+
     /* Methods related to group endpoint */
     fun getGroups(): List<Group> {
         val groupsResponse = URL("${serviceEndpoint}groups").readText()

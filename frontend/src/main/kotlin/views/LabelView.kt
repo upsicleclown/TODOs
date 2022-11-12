@@ -1,16 +1,32 @@
 package views
 
 import controllers.GroupViewController
+import javafx.animation.Interpolator
+import javafx.animation.KeyFrame
+import javafx.animation.KeyValue
+import javafx.animation.Timeline
+import javafx.beans.property.SimpleBooleanProperty
+import javafx.event.EventHandler
 import javafx.scene.control.Button
+import javafx.scene.control.ComboBox
+import javafx.scene.input.KeyCode
+import javafx.scene.input.KeyEvent
+import javafx.scene.input.MouseEvent
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.Region
+import javafx.util.Duration
 import models.Item
 import models.Label
 import javafx.scene.control.Label as JfxLabel
 
-class LabelView(private val groupController: GroupViewController, private val label: Label, private val item: Item) : BorderPane() {
-    private val labelText = JfxLabel(label.name)
-    private val deleteButton = Button("x")
+abstract class LabelView(private val groupController: GroupViewController, private val label: Label, private val item: Item) : BorderPane() {
+    protected val labelText = JfxLabel(label.name)
+    protected val comboBox = ComboBox<String>()
+    protected val deleteButton = Button("x")
+    private var mouseReleased = false // A boolean flag to determine whether to cancel long press
+    private var longPressCounter = 0.0 // Timer for determining whether to focus group on mouse release
+    private var longPress = SimpleBooleanProperty(false) // An Observable flag that triggers long press functionality
+    private val LONG_PRESS_TIME_QUANTUM = 1000.0 // 1.0 Second duration for long press recognition (in ms)
 
     init {
         /* region styling */
@@ -24,20 +40,82 @@ class LabelView(private val groupController: GroupViewController, private val la
         /* end region styling */
 
         /* region event filters */
-        deleteButton.setOnAction {
-            val originalItem = item.copy()
-            val newItem = item.copy()
-            newItem.labelIds.remove(label.id)
+        longPress.addListener { _, _, triggered ->
+            when (triggered) {
+                true -> longPress()
+                false -> Unit
+            }
+        }
 
-            groupController.editItem(newItem, originalItem)
+        addEventHandler(
+            MouseEvent.ANY,
+            EventHandler { event ->
+                when (event.eventType) {
+                    MouseEvent.MOUSE_PRESSED -> {
+                        mouseReleased = false
+                        longPressCounter = System.currentTimeMillis().toDouble()
+
+                        // JavaFX only supports delaying changes on the application thread
+                        // This is only possible if we use their animation library instead
+                        // of the Kotlin concurrent scheduling library.
+                        var scheduler = Timeline()
+                        scheduler.cycleCount = 1
+                        scheduler.keyFrames.add(
+                            KeyFrame(
+                                Duration(LONG_PRESS_TIME_QUANTUM),
+                                KeyValue(longPress, true, Interpolator.DISCRETE)
+                            )
+                        )
+                        scheduler.play()
+                    }
+                    MouseEvent.MOUSE_CLICKED -> { // This case prevents LabelViewContainer from stealing focus
+                        mouseReleased = true
+                        if (event.clickCount == 2) startEdit()
+                        event.consume()
+                    }
+                }
+            }
+        )
+
+        // When the Text Field loses focus, cancel the edit
+        comboBox.focusedProperty().addListener { _, _, newValue ->
+            when (newValue) {
+                true -> Unit
+                false -> cancelEdit()
+            }
+        }
+
+        // When we press enter/esc, commit/cancel the edit
+        comboBox.addEventFilter(KeyEvent.KEY_PRESSED) { event ->
+            when (event.code) {
+                KeyCode.ENTER -> commitEdit()
+                KeyCode.ESCAPE -> cancelEdit()
+                else -> Unit
+            }
+        }
+
+        deleteButton.setOnAction {
+            groupController.deleteItemLabel(label, item)
         }
         /* end region event filters */
 
+        comboBox.isEditable = true
         top = null
         center = labelText
         right = deleteButton
         left = null
     }
+
+    private fun longPress() {
+        if (!mouseReleased) startEdit()
+        longPress.set(false)
+    }
+
+    abstract fun startEdit()
+
+    abstract fun commitEdit()
+
+    abstract fun cancelEdit()
 
     companion object {
         const val LABEL_HEIGHT = 32.0
