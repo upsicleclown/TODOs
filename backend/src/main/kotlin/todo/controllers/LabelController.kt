@@ -36,7 +36,7 @@ internal class LabelController(private val service: Service, private val authent
     }
 
     @PutMapping("/labels/{id}")
-    fun editItem(@RequestBody newLabel: Label?, @PathVariable id: Int?) {
+    fun editLabel(@RequestBody newLabel: Label?, @PathVariable id: Int?) {
         authenticationService.authenticate()
         newLabel?.let {
             id?.let {
