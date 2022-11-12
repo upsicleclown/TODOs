@@ -5,6 +5,13 @@ import controllers.GroupViewController
 import models.Item
 import models.Label
 
+/**
+ * DeleteItemLabelCommand is used to remove a label from an Item record.
+ *
+ * @param label : The label we want to delete from the item
+ * @param item : The item we want to remove a label from
+ * @param controller : used to reload the group view
+ */
 class DeleteItemLabelCommand(
     private val label: Label,
     private val item: Item,

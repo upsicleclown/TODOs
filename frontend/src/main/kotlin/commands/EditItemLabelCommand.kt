@@ -5,6 +5,18 @@ import controllers.GroupViewController
 import models.Item
 import models.Label
 
+/**
+ * EditItemLabelCommand is used to replace a label from an Item record with another label. The new label may or
+ * may not be an existing label in our backend.
+ *
+ * @param existingLabel : a boolean flag from our frontend that tells us whether new label already exists in our backend
+ * @param newLabel : The label we want to replace originalLabel with on the item. When existingLabel is false, this is
+ *  an ad-hoc struct that needs to be saved to the backend. When existingLabel is true, this is a label record that
+ *  is already saved on the backend
+ * @param originalLabel : The label that we want to replace
+ * @param item : the item that we want to replace a label on
+ * @param controller : used to refresh the group view
+ */
 class EditItemLabelCommand(
     private val existingLabel: Boolean,
     private val newLabel: Label,
