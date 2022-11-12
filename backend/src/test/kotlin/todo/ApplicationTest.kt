@@ -192,7 +192,7 @@ class ApplicationTest {
     }
 
     @Test
-    fun testCRDLabels() {
+    fun testCRUDLabel() {
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
 
@@ -220,6 +220,17 @@ class ApplicationTest {
             .map { i -> getLabelsResponseBody.getJSONObject(i) }
         assertEquals(1, newLabels.size)
         val newLabel = newLabels[0]
+
+        // Test updating previously created Label
+        testRestTemplate.put("/labels/" + newLabel.get("id"), HttpEntity("{\"name\":\"label4.1\", \"color\":\"#FFC0CB\"}", headers))
+
+        getLabelsResponse = testRestTemplate.getForEntity("/labels", String::class.java)
+        assertEquals(HttpStatus.OK, getLabelsResponse?.statusCode)
+        getLabelsResponseBody = JSONTokener(getLabelsResponse?.body).nextValue() as JSONArray
+        val editedLabels = (0 until getLabelsResponseBody.length())
+            .filter { i -> getLabelsResponseBody.getJSONObject(i).get("name") == "label4.1" }
+            .map { i -> getLabelsResponseBody.getJSONObject(i) }
+        assertEquals(1, editedLabels.size)
 
         // Test deleting previously created Label
         testRestTemplate.delete("/labels/" + newLabel.get("id"))
