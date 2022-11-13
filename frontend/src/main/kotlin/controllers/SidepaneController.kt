@@ -43,6 +43,10 @@ class SidepaneController(todoApp: TODOApplication) {
         app?.commandHandler?.execute(editGroupCommand)
     }
 
+    fun reloadGroupCreationView() {
+        view?.groupCreationDialog?.refreshLabels()
+    }
+
     // view management
     fun addView(sidepaneView: SidepaneView) {
         view = sidepaneView
