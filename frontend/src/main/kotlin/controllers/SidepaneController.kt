@@ -8,12 +8,14 @@ import commands.EditGroupCommand
 import javafx.beans.property.ObjectProperty
 import javafx.beans.property.SimpleObjectProperty
 import models.Group
+import models.Label
 import views.SidepaneView
 
 class SidepaneController(todoApp: TODOApplication) {
     private var app: TODOApplication? = null
     private var view: SidepaneView? = null
     private var groups: List<Group> = listOf()
+    private var labels = listOf<Label>()
     private val todoClient = TODOClient()
     private var focusedGroup: SimpleObjectProperty<Group> = SimpleObjectProperty<Group>()
 
@@ -25,8 +27,14 @@ class SidepaneController(todoApp: TODOApplication) {
         return groups
     }
 
+    fun labels(): List<Label> { return labels }
+
     fun loadGroups() {
         groups = todoClient.getGroups()
+    }
+
+    fun loadLabels() {
+        labels = todoClient.getLabels()
     }
 
     fun refreshGroups() {
@@ -57,6 +65,10 @@ class SidepaneController(todoApp: TODOApplication) {
         val editGroupCommand = EditGroupCommand(newGroup, originalGroup, this)
         app?.commandHandler?.execute(editGroupCommand)
         view?.refreshGroups()
+    }
+
+    fun reloadGroupCreationView() {
+        view?.groupCreationDialog?.refreshLabels()
     }
 
     // view management

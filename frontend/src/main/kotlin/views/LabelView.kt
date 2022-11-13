@@ -1,6 +1,5 @@
 package views
 
-import controllers.GroupViewController
 import javafx.animation.Interpolator
 import javafx.animation.KeyFrame
 import javafx.animation.KeyValue
@@ -15,11 +14,10 @@ import javafx.scene.input.MouseEvent
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.Region
 import javafx.util.Duration
-import models.Item
 import models.Label
 import javafx.scene.control.Label as JfxLabel
 
-abstract class LabelView(private val groupController: GroupViewController, private val label: Label, private val item: Item) : BorderPane() {
+abstract class LabelView(private val label: Label) : BorderPane() {
     protected val labelText = JfxLabel(label.name)
     protected val comboBox = ComboBox<String>()
     protected val deleteButton = Button("x")
@@ -95,7 +93,7 @@ abstract class LabelView(private val groupController: GroupViewController, priva
         }
 
         deleteButton.setOnAction {
-            groupController.deleteItemLabel(label, item)
+            deleteLabel()
         }
         /* end region event filters */
 
@@ -116,6 +114,8 @@ abstract class LabelView(private val groupController: GroupViewController, priva
     abstract fun commitEdit()
 
     abstract fun cancelEdit()
+
+    abstract fun deleteLabel()
 
     companion object {
         const val LABEL_HEIGHT = 32.0

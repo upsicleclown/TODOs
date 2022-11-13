@@ -18,8 +18,8 @@ class SidepaneView(
     //  But I have PTSD so I'm not going to do this now.
     private var groupListContainer = VBox(24.0)
     private var groupListScrollContainer = ScrollPane()
+    var groupCreationDialog: GroupCreationView? = null
     private val openGroupCreationDialogButton = Button("+ group")
-    private val groupCreationDialog = GroupCreationView()
     private val SIDEPANE_WIDTH = 200.0
 
     init {
@@ -48,7 +48,8 @@ class SidepaneView(
 
         // Field to create groups
         openGroupCreationDialogButton.onAction = EventHandler {
-            val optionalCreatedGroup = groupCreationDialog.showAndWait()
+            groupCreationDialog = GroupCreationView(sidepaneController)
+            val optionalCreatedGroup = groupCreationDialog!!.showAndWait()
             if (optionalCreatedGroup.isPresent) {
                 sidepaneController.createGroup(optionalCreatedGroup.get())
             }

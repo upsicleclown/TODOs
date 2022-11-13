@@ -9,7 +9,8 @@ class ItemLabelView(
     private val label: Label,
     private val item: Item
 ) :
-    LabelView(groupController, label, item) {
+    LabelView(label) {
+
     override fun startEdit() {
         // Refresh the combo box options
         comboBox.items.clear()
@@ -38,7 +39,7 @@ class ItemLabelView(
         var newLabel = if (existingLabel) {
             groupController.labels().first { l -> l.name == newLabelName }
         } else {
-            Label(newLabelName, LabelView.DEFAULT_LABEL_COLOR)
+            Label(newLabelName, DEFAULT_LABEL_COLOR)
         }
 
         groupController.editItemLabel(existingLabel = existingLabel, newLabel = newLabel, originalLabel = label, item = item)
@@ -51,5 +52,9 @@ class ItemLabelView(
         labelText.text = label.name
         center = labelText
         right = deleteButton
+    }
+
+    override fun deleteLabel() {
+        groupController.deleteItemLabel(label, item)
     }
 }
