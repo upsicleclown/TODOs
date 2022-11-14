@@ -15,6 +15,7 @@ import javafx.scene.input.KeyEvent
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.HBox
+import jfxtras.scene.control.LocalDateTimeTextField
 import models.Item
 import models.Label
 import models.Priority
@@ -26,6 +27,7 @@ class ItemView(private val controller: GroupViewController, private val item: It
     private val completionButton = Button()
     private val deleteButton = Button("x")
     private val priorityPicker = ComboBox<Priority>()
+    private val dueDatePicker = LocalDateTimeTextField()
     private val labelViewScrollContainer = ScrollPane()
     private val labelViewContainer = HBox(LABEL_VIEW_GUTTER_LENGTH)
 
@@ -44,6 +46,7 @@ class ItemView(private val controller: GroupViewController, private val item: It
         setupTextField()
         setupLabelViewContainer()
         setupPriorityPicker()
+        setupLocalDateTimePicker()
         configDeleteButton(item)
         configCompletionButton(item)
         /* end region item setup */
@@ -51,7 +54,7 @@ class ItemView(private val controller: GroupViewController, private val item: It
         left = completionButton
         right = deleteButton
         center = textField
-        bottom = HBox(priorityPicker, labelViewScrollContainer)
+        bottom = HBox(priorityPicker, dueDatePicker, labelViewScrollContainer)
         labelViewScrollContainer.isFitToWidth = true
     }
 
@@ -134,6 +137,20 @@ class ItemView(private val controller: GroupViewController, private val item: It
                 if (oldValue != newValue) {
                     val originalItem = item.copy()
                     item.priority = priorityPicker.value
+                    controller.editItem(item, originalItem)
+                }
+            }
+        )
+    }
+
+    private fun setupLocalDateTimePicker() {
+        item.edtDueDate?.let { dueDatePicker.localDateTime = it }
+
+        dueDatePicker.localDateTimeProperty().addListener(
+            ChangeListener { _, oldValue, newValue ->
+                if (oldValue != newValue) {
+                    val originalItem = item.copy()
+                    item.edtDueDate = dueDatePicker.localDateTime
                     controller.editItem(item, originalItem)
                 }
             }

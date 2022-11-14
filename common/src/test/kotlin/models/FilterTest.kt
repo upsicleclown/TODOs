@@ -1,15 +1,15 @@
 package models
 
-import kotlinx.datetime.toLocalDateTime
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import java.time.LocalDateTime
 
 internal class FilterTest {
 
     @Test
     fun testConstructor() {
-        val expectedEdtStartDate = "2010-06-01T22:19:44".toLocalDateTime()
-        val expectedEdtEndDate = "2016-06-01T22:19:44".toLocalDateTime()
+        val expectedEdtStartDate = LocalDateTime.parse("2010-06-01T22:19:44")
+        val expectedEdtEndDate = LocalDateTime.parse("2016-06-01T22:19:44")
         val expectedIsCompleted = false
 
         val filter = Filter(expectedEdtStartDate, expectedEdtEndDate, expectedIsCompleted)

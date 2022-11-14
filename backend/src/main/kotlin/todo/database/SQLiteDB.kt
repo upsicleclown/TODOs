@@ -1,7 +1,5 @@
 package todo.database
 
-import kotlinx.datetime.toJavaLocalDateTime
-import kotlinx.datetime.toKotlinLocalDateTime
 import org.jetbrains.exposed.sql.SizedCollection
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -21,12 +19,6 @@ import models.Priority as PriorityEnum
    SQLite Database.
    Used to interface between database layer and Service layer.
    Using singleton pattern so all services can share the same database state.
-
-   Notes:
-   - Dates in models are stored as Kotlin `LocalDateTime` because they need to be serializable and Java
-     `LocalDateTime` is not, whereas Dates in the database models package are stored as Java `LocalDateTime`
-     since this is the type `Exposed` uses to create `DATE` columns.
-     Hence, they are converted to and from one another in this class.
 
  */
 object SQLiteDB {
@@ -124,7 +116,7 @@ object SQLiteDB {
                 title = item.title
                 isComplete = item.isCompleted
                 labels = SizedCollection(labelsToSave)
-                edtDueDate = item.edtDueDate?.toJavaLocalDateTime() // assume local time is EDT
+                edtDueDate = item.edtDueDate // assume local time is EDT
                 priority = item.priority?.let { Priority[it.name].id }
                 user = userLoggedIn!!
             }
@@ -175,7 +167,7 @@ object SQLiteDB {
                 oldItem.title = newItem.title
                 oldItem.isComplete = newItem.isCompleted
                 oldItem.labels = SizedCollection(labelsToSave)
-                oldItem.edtDueDate = newItem.edtDueDate?.toJavaLocalDateTime() // assume local time is EDT
+                oldItem.edtDueDate = newItem.edtDueDate // assume local time is EDT
                 oldItem.priority = newItem.priority?.let { Priority[it.name].id }
                 oldItem.user = userLoggedIn!!
             }
@@ -194,7 +186,7 @@ object SQLiteDB {
                     it.title,
                     it.isComplete,
                     it.labels.map { label -> label.id.value } as MutableList<Int>,
-                    it.edtDueDate?.toKotlinLocalDateTime(), // assume local time is EDT
+                    it.edtDueDate, // assume local time is EDT
                     it.priority?.let { priority -> PriorityEnum.valueOf(priority.value) },
                     it.id.value
                 )
@@ -328,8 +320,8 @@ object SQLiteDB {
             Group.new {
                 name = group.name
                 filter = Filter.new {
-                    edtStartDateRange = groupFilter.edtStartDateRange?.toJavaLocalDateTime()
-                    edtEndDateRange = groupFilter.edtEndDateRange?.toJavaLocalDateTime()
+                    edtStartDateRange = groupFilter.edtStartDateRange
+                    edtEndDateRange = groupFilter.edtEndDateRange
                     isComplete = groupFilter.isCompleted
                     priorities = SizedCollection(groupFilter.priorities.map { Priority[it.name] })
                     labels = SizedCollection(labelsToSave)
@@ -382,8 +374,8 @@ object SQLiteDB {
                 val oldGroup: Group = Group.find { Groups.id eq groupId }.first { group: Group -> group.user.username == userLoggedIn!!.username }
                 val oldFilter: Filter = oldGroup.filter
 
-                oldFilter.edtStartDateRange = newFilter.edtStartDateRange?.toJavaLocalDateTime()
-                oldFilter.edtEndDateRange = newFilter.edtEndDateRange?.toJavaLocalDateTime()
+                oldFilter.edtStartDateRange = newFilter.edtStartDateRange
+                oldFilter.edtEndDateRange = newFilter.edtEndDateRange
                 oldFilter.isComplete = newFilter.isCompleted
                 oldFilter.labels = SizedCollection(labelsToSave)
                 oldFilter.priorities = SizedCollection(newFilter.priorities.map { Priority[it.name] })
@@ -407,8 +399,8 @@ object SQLiteDB {
                 models.Group(
                     it.name,
                     models.Filter(
-                        filter.edtStartDateRange?.toKotlinLocalDateTime(),
-                        filter.edtEndDateRange?.toKotlinLocalDateTime(),
+                        filter.edtStartDateRange,
+                        filter.edtEndDateRange,
                         filter.isComplete,
                         filter.priorities.map { priority -> PriorityEnum.valueOf(priority.id.toString()) } as MutableList<models.Priority>,
                         filter.labels.map { label -> label.id.value } as MutableList<Int>

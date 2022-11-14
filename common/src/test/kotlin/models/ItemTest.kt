@@ -1,8 +1,8 @@
 package models
 
-import kotlinx.datetime.toLocalDateTime
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import java.time.LocalDateTime
 
 internal class ItemTest {
 
@@ -10,7 +10,7 @@ internal class ItemTest {
     fun testConstructor() {
         val expectedTitle = "testTitle"
         val expectedIsCompleted = false
-        val expectDate = "2010-06-01T22:19:44".toLocalDateTime()
+        val expectDate = LocalDateTime.parse("2010-06-01T22:19:44")
         val expectedIsHighPriority = Priority.HIGH
 
         val item = Item(expectedTitle, expectedIsCompleted, edtDueDate = expectDate, priority = expectedIsHighPriority)

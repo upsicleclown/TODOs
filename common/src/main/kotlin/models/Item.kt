@@ -1,7 +1,8 @@
 package models
 
-import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
+import models.serializers.LocalDateTimeIso8601Serializer
+import java.time.LocalDateTime
 
 /**
  *  Individual TO-DO item. An item can have multiple labels.
@@ -15,6 +16,7 @@ data class Item(
     var title: String,
     var isCompleted: Boolean,
     var labelIds: MutableList<Int> = mutableListOf(),
+    @Serializable(with = LocalDateTimeIso8601Serializer::class)
     var edtDueDate: LocalDateTime? = null,
     var priority: Priority? = null,
     var id: Int = 0
