@@ -1,7 +1,7 @@
 package models
 
 import kotlinx.serialization.Serializable
-import models.serializers.LocalDateTimeIso8601Serializer
+import serializers.LocalDateTimeIso8601Serializer
 import java.time.LocalDateTime
 
 /**
