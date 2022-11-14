@@ -1,6 +1,5 @@
 package todo.database
 
-import kotlinx.datetime.toLocalDateTime
 import models.Filter
 import models.Group
 import models.Item
@@ -8,6 +7,7 @@ import models.Label
 import models.Priority
 import models.User
 import java.io.File
+import java.time.LocalDateTime
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -164,8 +164,8 @@ internal class SQLiteDBTest {
         val expectedGroupId = 5
         val expectedGroupTitle = "group4"
         val expectedGroupFilter = Filter(
-            "2010-06-01T22:19:44".toLocalDateTime(),
-            "2016-06-01T22:19:44".toLocalDateTime(),
+            LocalDateTime.parse("2010-06-01T22:19:44"),
+            LocalDateTime.parse("2016-06-01T22:19:44"),
             false,
             mutableListOf(Priority.MEDIUM, Priority.LOW),
             mutableListOf()
@@ -188,8 +188,8 @@ internal class SQLiteDBTest {
         val expectedGroupId = 1
         val newName = "newGroup1"
         val newGroupFilter = Filter(
-            "2010-06-01T22:19:44".toLocalDateTime(),
-            "2016-06-01T22:19:44".toLocalDateTime(),
+            LocalDateTime.parse("2010-06-01T22:19:44"),
+            LocalDateTime.parse("2016-06-01T22:19:44"),
             false,
             mutableListOf(Priority.MEDIUM, Priority.LOW),
             mutableListOf()
