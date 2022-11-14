@@ -8,20 +8,15 @@ import javafx.animation.Timeline
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.event.EventHandler
 import javafx.scene.control.Button
+import javafx.scene.control.ColorPicker
 import javafx.scene.control.ComboBox
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
 import javafx.scene.input.MouseEvent
-import javafx.geometry.Insets
-import javafx.scene.control.ColorPicker
-import javafx.scene.layout.Background
-import javafx.scene.layout.BackgroundFill
 import javafx.scene.layout.BorderPane
-import javafx.scene.layout.CornerRadii
 import javafx.scene.layout.HBox
 import javafx.scene.layout.Region
 import javafx.util.Duration
-import javafx.scene.paint.Color
 import models.Item
 import models.Label
 import javafx.scene.control.Label as JfxLabel
@@ -115,7 +110,7 @@ abstract class LabelView(private val groupController: GroupViewController, priva
 //            val newLabel = label.copy()
             label.color = c.toString()
 //            newItem.labelIds.remove(label.id)
-            println("New Color's RGB = $c");
+            println("New Color's RGB = $c")
             groupController.editLabel(newLabel = label, originalLabel = originalLabel, item)
         }
 

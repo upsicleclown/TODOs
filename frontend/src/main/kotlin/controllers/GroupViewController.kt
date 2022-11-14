@@ -84,7 +84,7 @@ class GroupViewController(todoApp: TODOApplication) {
     }
 
     fun editLabel(newLabel: Label, originalLabel: Label, item: Item) {
-        println("In controller, new: ${newLabel}, old: $originalLabel")
+        println("In controller, new: $newLabel, old: $originalLabel")
         val editLabelCommand = EditLabelCommand(false, newLabel, originalLabel, this)
         app?.commandHandler?.execute(editLabelCommand)
         reloadGroupView()
