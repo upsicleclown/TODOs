@@ -99,8 +99,8 @@ class TODOClient {
     }
 
     // TODO: Pending backend support, this will be used for the settings UI that does not currently exist
-    fun editLabel(id: Int, newLabelName: String): Label {
-        val string = Json.encodeToString(newLabelName)
+    fun editLabel(id: Int, newLabel: Label): Label {
+        val string = Json.encodeToString(newLabel)
 
         val request = HttpRequest.newBuilder()
             .uri(URI.create("${serviceEndpoint}labels/$id"))

@@ -15,7 +15,7 @@ import models.Label
  */
 class EditLabelCommand(
     private val collision: Boolean,
-    private val newLabelName: String,
+    private val newLabel: Label,
     private val originalLabel: Label,
     private val controller: GroupViewController
 ) : Command {
@@ -23,13 +23,13 @@ class EditLabelCommand(
 
     override fun execute() {
         if (collision) return
-        client.editLabel(originalLabel.id, newLabelName)
+        client.editLabel(originalLabel.id, newLabel)
         controller.reloadGroupView()
     }
 
     override fun undo() {
         if (collision) return
-        client.editLabel(originalLabel.id, originalLabel.name)
+        client.editLabel(originalLabel.id, originalLabel)
         controller.reloadGroupView()
     }
 

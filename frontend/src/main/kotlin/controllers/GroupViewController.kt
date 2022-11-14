@@ -8,6 +8,7 @@ import commands.DeleteItemCommand
 import commands.DeleteItemLabelCommand
 import commands.EditItemCommand
 import commands.EditItemLabelCommand
+import commands.EditLabelCommand
 import models.Group
 import models.Item
 import models.Label
@@ -32,6 +33,7 @@ class GroupViewController(todoApp: TODOApplication) {
     fun reloadGroupView() {
         items = todoClient.getItems()
         labels = todoClient.getLabels()
+        println("labels $labels")
         view?.refreshWithItems(currentGroup, items)
     }
 
@@ -78,6 +80,13 @@ class GroupViewController(todoApp: TODOApplication) {
     fun deleteItemLabel(label: Label, item: Item) {
         val deleteItemLabelCommand = DeleteItemLabelCommand(label, item, this)
         app?.commandHandler?.execute(deleteItemLabelCommand)
+        reloadGroupView()
+    }
+
+    fun editLabel(newLabel: Label, originalLabel: Label, item: Item) {
+        println("In controller, new: ${newLabel}, old: $originalLabel")
+        val editLabelCommand = EditLabelCommand(false, newLabel, originalLabel, this)
+        app?.commandHandler?.execute(editLabelCommand)
         reloadGroupView()
     }
 

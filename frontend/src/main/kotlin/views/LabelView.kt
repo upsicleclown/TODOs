@@ -12,9 +12,16 @@ import javafx.scene.control.ComboBox
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
 import javafx.scene.input.MouseEvent
+import javafx.geometry.Insets
+import javafx.scene.control.ColorPicker
+import javafx.scene.layout.Background
+import javafx.scene.layout.BackgroundFill
 import javafx.scene.layout.BorderPane
+import javafx.scene.layout.CornerRadii
+import javafx.scene.layout.HBox
 import javafx.scene.layout.Region
 import javafx.util.Duration
+import javafx.scene.paint.Color
 import models.Item
 import models.Label
 import javafx.scene.control.Label as JfxLabel
@@ -28,9 +35,13 @@ abstract class LabelView(private val groupController: GroupViewController, priva
     private var longPress = SimpleBooleanProperty(false) // An Observable flag that triggers long press functionality
     private val LONG_PRESS_TIME_QUANTUM = 1000.0 // 1.0 Second duration for long press recognition (in ms)
 
+    private val colorPicker = ColorPicker()
+
     init {
         /* region styling */
         styleClass.add("item__label-chip")
+//        println(Color.web(label.color))
+        style = "-fx-background-color:${label.color};"
         maxHeight = LABEL_HEIGHT
 
         labelText.styleClass.addAll("label-max", "item__label-chip__text")
@@ -97,12 +108,25 @@ abstract class LabelView(private val groupController: GroupViewController, priva
         deleteButton.setOnAction {
             groupController.deleteItemLabel(label, item)
         }
+
+        colorPicker.setOnAction {
+            val c = colorPicker.value
+            val originalLabel = label.copy()
+//            val newLabel = label.copy()
+            label.color = c.toString()
+//            newItem.labelIds.remove(label.id)
+            println("New Color's RGB = $c");
+            groupController.editLabel(newLabel = label, originalLabel = originalLabel, item)
+        }
+
+        colorPicker.styleClass.add("button")
+        colorPicker.style = "-fx-color-label-visible: false;"
         /* end region event filters */
 
         comboBox.isEditable = true
         top = null
         center = labelText
-        right = deleteButton
+        right = HBox(colorPicker, deleteButton)
         left = null
     }
 
