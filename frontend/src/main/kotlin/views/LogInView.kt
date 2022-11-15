@@ -12,7 +12,7 @@ import models.User
 import java.io.IOException
 
 class LogInView(private val todoApplication: TODOApplication) : VBox() {
-    private val todoClient = TODOClient()
+    private val todoClient = TODOClient
 
     init {
         val welcomeLabel = Label("Welcome to TODOs!")

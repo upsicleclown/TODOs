@@ -1,7 +1,6 @@
 package commands
 
 import client.TODOClient
-import controllers.GroupViewController
 import models.Item
 import models.Label
 
@@ -14,15 +13,13 @@ import models.Label
  *  When existingLabel is false, this is an ad-hoc Label struct that needs to be saved to the backend.
  *  When existingLabel is true, this is a valid Label record stored on the backend
  * @param item : the Item record which we want to add the Label to
- * @param controller : used to refresh the group view
  */
 class CreateItemLabelCommand(
     private val existingLabel: Boolean,
     private val newLabel: Label,
-    private val item: Item,
-    private val controller: GroupViewController
+    private val item: Item
 ) : Command {
-    private val client = TODOClient()
+    private val client = TODOClient
     private var newLabelRecord = newLabel
 
     override fun execute() {
@@ -36,7 +33,6 @@ class CreateItemLabelCommand(
         }
 
         client.editItem(id = item.id, newItem = newItem)
-        controller.reloadGroupView()
     }
 
     override fun undo() {
@@ -50,7 +46,6 @@ class CreateItemLabelCommand(
         }
 
         client.editItem(id = item.id, newItem = newItem)
-        controller.reloadGroupView()
     }
 
     override fun redo() {

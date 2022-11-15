@@ -4,7 +4,7 @@ import client.TODOClient
 import models.User
 
 class RegisterUserCommand(private val user: User) : Command {
-    private val todoClient = TODOClient()
+    private val todoClient = TODOClient
 
     override fun execute() {
         todoClient.registerUser(user)

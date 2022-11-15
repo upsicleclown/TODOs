@@ -1,7 +1,6 @@
 package commands
 
 import client.TODOClient
-import controllers.GroupViewController
 import models.Item
 import models.Label
 
@@ -10,21 +9,18 @@ import models.Label
  *
  * @param label : The label we want to delete from the item
  * @param item : The item we want to remove a label from
- * @param controller : used to reload the group view
  */
 class DeleteItemLabelCommand(
     private val label: Label,
-    private val item: Item,
-    private val controller: GroupViewController
+    private val item: Item
 ) : Command {
-    private val client = TODOClient()
+    private val client = TODOClient
 
     override fun execute() {
         var newItem = item.copy()
         newItem.labelIds.remove(label.id)
 
         client.editItem(id = item.id, newItem = newItem)
-        controller.reloadGroupView()
     }
 
     override fun undo() {
@@ -33,7 +29,6 @@ class DeleteItemLabelCommand(
         newItem.labelIds.add(label.id)
 
         client.editItem(id = item.id, newItem = newItem)
-        controller.reloadGroupView()
     }
 
     override fun redo() {
