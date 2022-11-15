@@ -7,7 +7,7 @@ import java.io.IOException
 class GetLabelsCommand(private val args: List<String>) : Command {
 
     companion object {
-        const val usage = "To list all labels, run as follows: '--labels'."
+        const val usage = "To see the list of labels, run as follows: '--labels'."
     }
 
     override fun execute() {

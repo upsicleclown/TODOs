@@ -7,7 +7,7 @@ import java.io.IOException
 class GetGroupsCommand(private val args: List<String>) : Command {
 
     companion object {
-        const val usage = "To list all groups, run as follows: '--groups'."
+        const val usage = "To see the list of groups, run as follows: '--groups'."
     }
 
     override fun execute() {

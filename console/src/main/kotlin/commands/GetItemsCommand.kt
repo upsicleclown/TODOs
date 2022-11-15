@@ -7,7 +7,7 @@ import java.io.IOException
 class GetItemsCommand(private val args: List<String>) : Command {
 
     companion object {
-        const val usage = "To list all items, run as follows: '--items'."
+        const val usage = "To see the list of items, run as follows: '--items'."
     }
 
     override fun execute() {
