@@ -49,6 +49,15 @@ class TODOClient {
         }
     }
 
+    fun logOutUser() {
+        val request = HttpRequest.newBuilder()
+            .uri(URI.create("${serviceEndpoint}logout"))
+            .header("Content-Type", "application/json")
+            .POST(HttpRequest.BodyPublishers.noBody())
+            .build()
+        client.send(request, HttpResponse.BodyHandlers.ofString())
+    }
+
     /* Methods related to item endpoint */
     fun getItems(): List<Item> {
         val itemsResponse = URL("${serviceEndpoint}items").readText()

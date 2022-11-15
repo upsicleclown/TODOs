@@ -2,6 +2,7 @@ import cache.Cache
 import client.TODOClient
 import clipboard.Clipboard
 import commands.CommandHandler
+import commands.LogOutUserCommand
 import controllers.GroupViewController
 import controllers.SidepaneController
 import javafx.application.Application
@@ -108,6 +109,7 @@ class TODOApplication : Application() {
         super.stop()
         cache.editWindowSettings(WindowSettings(primaryStage.x, primaryStage.y, primaryStage.height, primaryStage.width))
         cache.saveWindowSettings()
+        commandHandler.execute(LogOutUserCommand())
     }
 
     /**

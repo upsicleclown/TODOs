@@ -39,6 +39,14 @@ class AuthenticationService {
     }
 
     /**
+     * Logs out user currently logged in if any.
+     */
+    fun logOutUser() {
+        isUserLoggedIn = false
+        SQLiteDB.resetUserLoggedIn()
+    }
+
+    /**
      * Registers a user and returns user with their newly generated token.
      *
      * @throws IllegalArgumentException if username already exists or password is empty.

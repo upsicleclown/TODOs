@@ -1,5 +1,7 @@
 package commands
 
+import models.User
+
 /**
  * Command executed when the provided command-line argument don't map to a supported behaviour.
  */
@@ -15,7 +17,8 @@ class ErrorCommand(private val args: List<String>) : Command {
         }
     }
 
-    override fun execute() {
+    override fun execute(user: User?): User? {
         print("Unsupported arguments: $args. Please run the '--help' command for details on how to use this program.")
+        return user
     }
 }

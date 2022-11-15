@@ -39,6 +39,13 @@ object SQLiteDB {
     }
 
     /**
+     * Resets the current user logged in to null.
+     */
+    fun resetUserLoggedIn() {
+        userLoggedIn = null
+    }
+
+    /**
      * Adds the provided user.
      *
      * @throws IllegalArgumentException if username already exists.

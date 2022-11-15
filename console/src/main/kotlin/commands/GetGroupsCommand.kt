@@ -2,6 +2,7 @@ package commands
 
 import client.TODOClient
 import models.Group
+import models.User
 import java.io.IOException
 
 class GetGroupsCommand(private val args: List<String>) : Command {
@@ -10,15 +11,15 @@ class GetGroupsCommand(private val args: List<String>) : Command {
         const val usage = "To see the list of groups, run as follows: '--groups'."
     }
 
-    override fun execute() {
+    override fun execute(user: User?): User? {
         assert(args[0] == "--groups")
         if (args.size != 1) {
             ErrorCommand.print(usage)
-            return
+            return user
         }
         try {
             val groups: List<Group> = TODOClient().getGroups()
-            println("***** Groups in database *****")
+            println("***** [${user!!.username}] Groups in database *****")
             for (group in groups) {
                 println(group)
             }
@@ -26,5 +27,6 @@ class GetGroupsCommand(private val args: List<String>) : Command {
         } catch (ignore: IOException) {
             ErrorCommand.print("You must first login to see the list of groups.")
         }
+        return user
     }
 }

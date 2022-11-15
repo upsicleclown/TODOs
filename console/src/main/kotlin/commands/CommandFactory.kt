@@ -15,6 +15,7 @@ object CommandFactory {
             "--exit" -> ExitCommand(args)
             "--register" -> RegisterUserCommand(args)
             "--login" -> LoginUserCommand(args)
+            "--logout" -> LogOutUserCommand(args)
             "--items" -> GetItemsCommand(args)
             "--groups" -> GetGroupsCommand(args)
             "--labels" -> GetLabelsCommand(args)
