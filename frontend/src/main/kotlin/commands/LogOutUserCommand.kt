@@ -3,7 +3,7 @@ package commands
 import client.TODOClient
 
 class LogOutUserCommand : Command {
-    private val todoClient = TODOClient()
+    private val todoClient = TODOClient
 
     override fun execute() {
         todoClient.logOutUser()
