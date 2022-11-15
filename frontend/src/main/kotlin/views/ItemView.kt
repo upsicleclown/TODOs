@@ -125,6 +125,7 @@ class ItemView(private val controller: GroupViewController, private val item: It
     }
 
     private fun setupPriorityPicker() {
+        priorityPicker.styleClass.addAll("label-max", "item__priority-picker")
         priorityPicker.items.add(null)
         priorityPicker.items.addAll(Priority.values())
         priorityPicker.value = item.priority
