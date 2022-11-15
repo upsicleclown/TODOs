@@ -11,7 +11,8 @@ class ExitCommand(private val args: List<String>) : Command {
     override fun execute() {
         assert(args[0] == "--exit")
         if (args.size != 1) {
-            throw IllegalArgumentException(usage)
+            ErrorCommand.print(usage)
+            return
         }
         exitProcess(0)
     }

@@ -12,10 +12,15 @@ class LoginUserCommand(private val args: List<String>) : Command {
     override fun execute() {
         assert(args[0] == "--login")
         if (args.size != 3) {
-            throw IllegalArgumentException(usage)
+            ErrorCommand.print(usage)
+            return
         }
-        TODOClient().logInUser(User(args[1], args[2]))
-        println("User '${args[1]}' logged in.")
-        println()
+        try {
+            TODOClient().logInUser(User(args[1], args[2]))
+            println("User '${args[1]}' logged in.")
+            println()
+        } catch (ignore: IllegalArgumentException) {
+            ErrorCommand.print("Could not find user '${args[1]}' with the given credentials")
+        }
     }
 }

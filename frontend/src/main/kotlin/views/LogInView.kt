@@ -1,7 +1,8 @@
 package views
 
 import TODOApplication
-import client.TODOClient
+import commands.LogInUserCommand
+import commands.RegisterUserCommand
 import javafx.scene.control.Alert
 import javafx.scene.control.Button
 import javafx.scene.control.Label
@@ -9,10 +10,8 @@ import javafx.scene.control.TextField
 import javafx.scene.layout.HBox
 import javafx.scene.layout.VBox
 import models.User
-import java.io.IOException
 
 class LogInView(private val todoApplication: TODOApplication) : VBox() {
-    private val todoClient = TODOClient
 
     init {
         val welcomeLabel = Label("Welcome to TODOs!")
@@ -30,15 +29,19 @@ class LogInView(private val todoApplication: TODOApplication) : VBox() {
         val buttonsContainer = HBox()
         val registerButton = Button("Register")
         registerButton.setOnAction {
-            handleButtonOperation(User(usernameTextField.text, passwordTextField.text), todoClient::registerUser)
-            Alert(Alert.AlertType.CONFIRMATION, "User successfully created").show()
+            handleButtonOperation(
+                User(usernameTextField.text, passwordTextField.text)
+            ) { user ->
+                todoApplication.commandHandler.execute(RegisterUserCommand(user))
+                Alert(Alert.AlertType.CONFIRMATION, "User successfully created").show()
+            }
         }
         val logInButton = Button("Log in")
         logInButton.setOnAction {
             handleButtonOperation(
                 User(usernameTextField.text, passwordTextField.text)
             ) { user ->
-                todoClient.logInUser(user)
+                todoApplication.commandHandler.execute(LogInUserCommand(user))
                 todoApplication.setMainView()
             }
         }
@@ -54,7 +57,7 @@ class LogInView(private val todoApplication: TODOApplication) : VBox() {
         }
         try {
             operation(user)
-        } catch (ignore: IOException) {
+        } catch (ignore: IllegalArgumentException) {
             Alert(Alert.AlertType.ERROR, "Username and password invalid.").show()
             return
         }

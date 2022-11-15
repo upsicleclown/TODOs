@@ -12,10 +12,15 @@ class RegisterUserCommand(private val args: List<String>) : Command {
     override fun execute() {
         assert(args[0] == "--register")
         if (args.size != 3) {
-            throw IllegalArgumentException(usage)
+            ErrorCommand.print(usage)
+            return
         }
-        TODOClient().registerUser(User(args[1], args[2]))
-        println("User '${args[1]}' registered.")
-        println()
+        try {
+            TODOClient().registerUser(User(args[1], args[2]))
+            println("User '${args[1]}' registered.")
+            println()
+        } catch (ignore: IllegalArgumentException) {
+            ErrorCommand.print("Could not register user '${args[1]}' with the given credentials")
+        }
     }
 }

@@ -7,7 +7,7 @@ class ErrorCommand(private val args: List<String>) : Command {
 
     companion object {
         private const val red = "\u001B[31m"
-        const val reset = "\u001B[0m"
+        private const val reset = "\u001B[0m"
 
         fun print(message: String) {
             println(red + message + reset)

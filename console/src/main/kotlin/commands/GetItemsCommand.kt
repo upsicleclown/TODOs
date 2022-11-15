@@ -13,7 +13,8 @@ class GetItemsCommand(private val args: List<String>) : Command {
     override fun execute() {
         assert(args[0] == "--items")
         if (args.size != 1) {
-            throw IllegalArgumentException(usage)
+            ErrorCommand.print(usage)
+            return
         }
         try {
             val items: List<Item> = TODOClient().getItems()
@@ -23,7 +24,7 @@ class GetItemsCommand(private val args: List<String>) : Command {
             }
             println()
         } catch (ignore: IOException) {
-            ErrorCommand.print("You must first login to list groups.")
+            ErrorCommand.print("You must first login to see the list of items.")
         }
     }
 }

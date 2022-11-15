@@ -18,6 +18,7 @@ class TODOClient {
     // TODO: This will change once we deploy the service to the cloud, this could also be a secret.
     private val serviceEndpoint = "http://localhost:8080/"
     private val client: HttpClient = HttpClient.newBuilder().build()
+    private val successCode: Int = 200
 
     /* Methods related to user endpoint */
     fun registerUser(user: User) {
@@ -28,7 +29,10 @@ class TODOClient {
             .header("Content-Type", "application/json")
             .POST(HttpRequest.BodyPublishers.ofString(string))
             .build()
-        client.send(request, HttpResponse.BodyHandlers.ofString())
+        val response = client.send(request, HttpResponse.BodyHandlers.ofString())
+        if (response.statusCode() != successCode) {
+            throw IllegalArgumentException("User ${user.username} already exists.")
+        }
     }
 
     fun logInUser(user: User) {
@@ -39,7 +43,10 @@ class TODOClient {
             .header("Content-Type", "application/json")
             .POST(HttpRequest.BodyPublishers.ofString(string))
             .build()
-        client.send(request, HttpResponse.BodyHandlers.ofString())
+        val response = client.send(request, HttpResponse.BodyHandlers.ofString())
+        if (response.statusCode() != successCode) {
+            throw IllegalArgumentException("Invalid password for user ${user.username}.")
+        }
     }
 
     /* Methods related to item endpoint */
