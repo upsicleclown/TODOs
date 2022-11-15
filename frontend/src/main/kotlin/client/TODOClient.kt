@@ -1,5 +1,10 @@
 package client
 
+import bindings.GroupListProperty
+import bindings.ItemListProperty
+import bindings.LabelListProperty
+import javafx.collections.FXCollections
+import javafx.collections.ObservableList
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -13,11 +18,24 @@ import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 
-class TODOClient {
+object TODOClient {
+    private val itemList: ObservableList<Item> = FXCollections.observableArrayList()
+    private val groupList: ObservableList<Group> = FXCollections.observableArrayList()
+    private val labelList: ObservableList<Label> = FXCollections.observableArrayList()
+
+    val itemListProperty = ItemListProperty(itemList)
+    val groupListProperty = GroupListProperty(groupList)
+    val labelListProperty = LabelListProperty(labelList)
 
     // TODO: This will change once we deploy the service to the cloud, this could also be a secret.
     private val serviceEndpoint = "http://localhost:8080/"
     private val client: HttpClient = HttpClient.newBuilder().build()
+
+    fun init() {
+        getGroups()
+        getItems()
+        getLabels()
+    }
 
     /* Methods related to user endpoint */
     fun registerUser(user: User) {
@@ -45,7 +63,10 @@ class TODOClient {
     /* Methods related to item endpoint */
     fun getItems(): List<Item> {
         val itemsResponse = URL("${serviceEndpoint}items").readText()
-        return Json.decodeFromString(itemsResponse)
+        val newItemList: List<Item> = Json.decodeFromString(itemsResponse)
+
+        itemList.setAll(newItemList)
+        return itemListProperty.value
     }
 
     fun createItem(item: Item): Item {
@@ -57,7 +78,10 @@ class TODOClient {
             .POST(HttpRequest.BodyPublishers.ofString(string))
             .build()
         val itemResponse = client.send(request, HttpResponse.BodyHandlers.ofString())
-        return Json.decodeFromString(itemResponse.body())
+        val newItem: Item = Json.decodeFromString(itemResponse.body())
+
+        itemList.add(newItem)
+        return newItem
     }
 
     fun editItem(id: Int, newItem: Item) {
@@ -69,6 +93,8 @@ class TODOClient {
             .PUT(HttpRequest.BodyPublishers.ofString(string))
             .build()
         client.send(request, HttpResponse.BodyHandlers.ofString())
+
+        itemList[itemList.indexOf(newItem)] = newItem
     }
 
     fun deleteItem(item: Item) {
@@ -78,12 +104,17 @@ class TODOClient {
             .DELETE()
             .build()
         client.send(request, HttpResponse.BodyHandlers.ofString())
+
+        itemList.remove(item)
     }
 
     /* Methods related to labels endpoint */
     fun getLabels(): List<Label> {
         val labelsResponse = URL("${serviceEndpoint}labels").readText()
-        return Json.decodeFromString(labelsResponse)
+        val newLabelList: List<Label> = Json.decodeFromString(labelsResponse)
+
+        labelList.setAll(newLabelList)
+        return labelListProperty.value
     }
 
     fun createLabel(label: Label): Label {
@@ -95,12 +126,15 @@ class TODOClient {
             .POST(HttpRequest.BodyPublishers.ofString(string))
             .build()
         val labelResponse = client.send(request, HttpResponse.BodyHandlers.ofString())
-        return Json.decodeFromString(labelResponse.body())
+        val newLabel: Label = Json.decodeFromString(labelResponse.body())
+
+        labelList.add(label)
+        return label
     }
 
-    // TODO: Pending backend support, this will be used for the settings UI that does not currently exist
-    fun editLabel(id: Int, newLabelName: String): Label {
-        val string = Json.encodeToString(newLabelName)
+    // TODO: This will be used for the settings UI that does not currently exist
+    fun editLabel(id: Int, newLabel: Label): Label {
+        val string = Json.encodeToString(newLabel)
 
         val request = HttpRequest.newBuilder()
             .uri(URI.create("${serviceEndpoint}labels/$id"))
@@ -108,7 +142,10 @@ class TODOClient {
             .PUT(HttpRequest.BodyPublishers.ofString(string))
             .build()
         val labelResponse = client.send(request, HttpResponse.BodyHandlers.ofString())
-        return Json.decodeFromString(labelResponse.body())
+        val newLabel: Label = Json.decodeFromString(labelResponse.body())
+
+        labelList[labelList.indexOf(newLabel)] = newLabel
+        return newLabel
     }
 
     // TODO: This will be used for the settings UI that does not currently exist
@@ -119,12 +156,17 @@ class TODOClient {
             .DELETE()
             .build()
         client.send(request, HttpResponse.BodyHandlers.ofString())
+
+        labelList.remove(label)
     }
 
     /* Methods related to group endpoint */
     fun getGroups(): List<Group> {
         val groupsResponse = URL("${serviceEndpoint}groups").readText()
-        return Json.decodeFromString(groupsResponse)
+        val newGroupList: List<Group> = Json.decodeFromString(groupsResponse)
+
+        groupList.setAll(newGroupList)
+        return groupListProperty.value
     }
 
     fun createGroup(group: Group): Group {
@@ -136,7 +178,10 @@ class TODOClient {
             .POST(HttpRequest.BodyPublishers.ofString(string))
             .build()
         val groupResponse = client.send(request, HttpResponse.BodyHandlers.ofString())
-        return Json.decodeFromString(groupResponse.body())
+        val newGroup: Group = Json.decodeFromString(groupResponse.body())
+
+        groupList.add(newGroup)
+        return newGroup
     }
 
     fun editGroup(id: Int, newGroup: Group) {
@@ -148,6 +193,8 @@ class TODOClient {
             .PUT(HttpRequest.BodyPublishers.ofString(string))
             .build()
         client.send(request, HttpResponse.BodyHandlers.ofString())
+
+        groupList[groupList.indexOf(newGroup)] = newGroup
     }
 
     fun deleteGroup(group: Group) {
@@ -157,5 +204,7 @@ class TODOClient {
             .DELETE()
             .build()
         client.send(request, HttpResponse.BodyHandlers.ofString())
+
+        groupList.remove(group)
     }
 }

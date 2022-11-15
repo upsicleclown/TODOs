@@ -1,4 +1,5 @@
 import cache.Cache
+import client.TODOClient
 import clipboard.Clipboard
 import commands.CommandHandler
 import controllers.GroupViewController
@@ -26,7 +27,8 @@ class TODOApplication : Application() {
     private var primaryStage = Stage()
     private val sidepaneController = SidepaneController(this)
     val groupViewController = GroupViewController(this)
-    private val sidepaneView = SidepaneView(sidepaneController, groupViewController)
+    private val todoClient = TODOClient
+    private val sidepaneView = SidepaneView(sidepaneController)
     private val groupView = GroupView(groupViewController)
 
     val commandHandler = CommandHandler()
@@ -52,8 +54,8 @@ class TODOApplication : Application() {
      * Also adds the menu bar.
      */
     fun setMainView() {
-        sidepaneController.refreshGroups()
-        groupViewController.reloadGroupView()
+        todoClient.init()
+
         val root = MainView(sidepaneView, groupView)
 
         val menuBar = MenuBar()
@@ -171,14 +173,14 @@ class TODOApplication : Application() {
     }
 
     fun copyItem() {
-        val item: Item? = groupViewController.getFocusedItem()
+        val item: Item? = groupViewController.focusedItemProperty.value
         if (item != null) {
             clipboard.saveItem(item)
         }
     }
 
     fun cutItem() {
-        val item: Item? = groupViewController.getFocusedItem()
+        val item: Item? = groupViewController.focusedItemProperty.value
         if (item != null) {
             groupViewController.deleteItem(item)
             clipboard.saveItem(item)

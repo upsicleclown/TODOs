@@ -7,16 +7,14 @@ import javafx.scene.control.ScrollPane
 import javafx.scene.control.TextField
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.VBox
-import models.Group
 import models.Item
 
 class GroupView(private val controller: GroupViewController) : VBox(36.0) {
 
-    private var currentGroupName = Label("")
     private val itemListScrollContainer = ScrollPane()
     private val itemListContainer = VBox(36.0)
     private val itemCreationField = TextField()
-    private var groupItemModels = listOf<Item>()
+    private var currentGroupName = Label("")
 
     init {
         /* region styling */
@@ -60,21 +58,22 @@ class GroupView(private val controller: GroupViewController) : VBox(36.0) {
         itemListScrollContainer.hmax = 0.0
         itemListScrollContainer.hbarPolicy = ScrollPane.ScrollBarPolicy.NEVER
 
-        itemListContainer.children.addAll(
-            groupItemModels.map { item -> ItemView(controller, item) }
-        )
-
         children.addAll(currentGroupName, itemCreationField, itemListScrollContainer)
         /* end region view setup */
-    }
 
-    fun refreshWithItems(group: Group?, items: List<Item>) {
-        itemListContainer.children.clear()
-        currentGroupName.text = group?.name
-        children[0] = currentGroupName
-        groupItemModels = items
-        itemListContainer.children.addAll(
-            groupItemModels.map { item -> ItemView(controller, item) }
-        )
+        /* region data bindings */
+        controller.currentGroupProperty.addListener { _, _, newGroup ->
+            currentGroupName.text = newGroup.name
+        }
+
+        controller.itemListProperty.addListener { _, _, newItemList ->
+            itemListContainer.children.setAll(
+                newItemList.map {
+                        item ->
+                    ItemView(controller, item)
+                }
+            )
+        }
+        /* end region data bindings */
     }
 }

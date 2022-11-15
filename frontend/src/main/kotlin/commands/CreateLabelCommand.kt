@@ -1,7 +1,6 @@
 package commands
 
 import client.TODOClient
-import controllers.GroupViewController
 import models.Label
 
 /**
@@ -11,21 +10,18 @@ import models.Label
  * @param collision : A boolean flag from the frontend that determines whether there
  *  is a naming collision with a current label
  * @param newLabel : An ad-hoc class representing the label that we want to create
- * @param controller : used to refresh the group view
  */
 class CreateLabelCommand(
     private val collision: Boolean,
-    private val newLabel: Label,
-    private val controller: GroupViewController
+    private val newLabel: Label
 ) : Command {
-    private val client = TODOClient()
+    private val client = TODOClient
 
     override fun execute() {
         // If label already exists, don't create it
         if (collision) return
 
         client.createLabel(newLabel)
-        controller.reloadGroupView()
     }
 
     override fun undo() {
@@ -33,7 +29,6 @@ class CreateLabelCommand(
         if (collision) return
 
         client.deleteLabel(newLabel)
-        controller.reloadGroupView()
     }
 
     override fun redo() {

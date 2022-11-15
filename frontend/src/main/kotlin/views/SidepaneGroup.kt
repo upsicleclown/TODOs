@@ -30,7 +30,7 @@ class SidepaneGroup(private val sidepaneController: SidepaneController, private 
 
     init {
         /* region styling */
-        if (sidepaneController.focusedGroup().value == group) {
+        if (sidepaneController.focusedGroupProperty.value == group) {
             styleClass.setAll("sidepane__group--selected")
         } else {
             styleClass.setAll("sidepane__group")
@@ -42,7 +42,7 @@ class SidepaneGroup(private val sidepaneController: SidepaneController, private 
 
         /* region event filters */
         // When our group is focused, change style class to reflect that
-        sidepaneController.focusedGroup().addListener { _, _, focusedGroup ->
+        sidepaneController.focusedGroupProperty.addListener { _, _, focusedGroup ->
             when (focusedGroup) {
                 group -> styleClass.setAll("sidepane__group--selected")
                 else -> styleClass.setAll("sidepane__group")

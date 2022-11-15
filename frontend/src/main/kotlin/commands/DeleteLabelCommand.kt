@@ -1,21 +1,18 @@
 package commands
 
 import client.TODOClient
-import controllers.GroupViewController
 import models.Label
 
 /**
  * DeleteLabelCommand is used by the Settings UI to remove a label from the app
  *
  * @param label : the label that we want to delete from the app
- * @param controller : used to refresh the group view
  */
-class DeleteLabelCommand(private val label: Label, private val controller: GroupViewController) : Command {
-    private val client = TODOClient()
+class DeleteLabelCommand(private val label: Label) : Command {
+    private val client = TODOClient
 
     override fun execute() {
         client.deleteLabel(label)
-        controller.reloadGroupView()
     }
 
     /*TODO:
@@ -26,7 +23,6 @@ class DeleteLabelCommand(private val label: Label, private val controller: Group
      */
     override fun undo() {
         client.createLabel(label)
-        controller.reloadGroupView()
     }
 
     override fun redo() {
