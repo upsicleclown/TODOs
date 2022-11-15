@@ -32,9 +32,9 @@ object TODOClient {
     private val client: HttpClient = HttpClient.newBuilder().build()
 
     fun init() {
+        getLabels()
         getGroups()
         getItems()
-        getLabels()
     }
 
     /* Methods related to user endpoint */
@@ -128,8 +128,8 @@ object TODOClient {
         val labelResponse = client.send(request, HttpResponse.BodyHandlers.ofString())
         val newLabel: Label = Json.decodeFromString(labelResponse.body())
 
-        labelList.add(label)
-        return label
+        labelList.add(newLabel)
+        return newLabel
     }
 
     // TODO: This will be used for the settings UI that does not currently exist
@@ -142,10 +142,10 @@ object TODOClient {
             .PUT(HttpRequest.BodyPublishers.ofString(string))
             .build()
         val labelResponse = client.send(request, HttpResponse.BodyHandlers.ofString())
-        val newLabel: Label = Json.decodeFromString(labelResponse.body())
+        val label: Label = Json.decodeFromString(labelResponse.body())
 
-        labelList[labelList.indexOf(newLabel)] = newLabel
-        return newLabel
+        labelList[labelList.indexOf(newLabel)] = label
+        return label
     }
 
     // TODO: This will be used for the settings UI that does not currently exist
