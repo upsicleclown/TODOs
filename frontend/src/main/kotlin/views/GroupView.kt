@@ -100,7 +100,7 @@ class GroupView(private val controller: GroupViewController) : VBox(36.0) {
     }
 
     private fun loadSortOrderPicker() {
-        sortOrderIsDescButton.text = if (sortOrder.isDesc) "↓ " else "↑"
+        sortOrderIsDescButton.text = if (sortOrder.isDesc) "↑" else "↓"
         sortOrderAttributePicker.value = sortOrder.attribute.value
     }
 
