@@ -16,6 +16,10 @@ class HelpCommand(private val args: List<String>) : Command {
 
     override fun execute(user: User?): User? {
         assert(args[0] == "--help")
+        if (args.size != 1) {
+            ErrorCommand.print("To get help, run as follows: '--help'.")
+            return user
+        }
         print("***** Program usage ******")
         print(ExitCommand.usage)
         print(RegisterUserCommand.usage)

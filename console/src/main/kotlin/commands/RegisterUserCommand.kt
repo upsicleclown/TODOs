@@ -20,7 +20,7 @@ class RegisterUserCommand(private val args: List<String>) : Command {
             println("User '${args[1]}' registered.")
             println()
         } catch (ignore: IllegalArgumentException) {
-            ErrorCommand.print("Could not register user '${args[1]}' with the given credentials")
+            ErrorCommand.print("Could not register user '${args[1]}' since this user already exists.")
         }
         return user
     }
