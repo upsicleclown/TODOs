@@ -24,7 +24,6 @@ import views.GroupView
  * todoApp is passed as a parameter so that the GroupViewController can access the app's commandHandler
  */
 class GroupViewController(todoApp: TODOApplication) {
-
     private var app: TODOApplication? = null
     private var view: GroupView? = null
     private val todoClient = TODOClient

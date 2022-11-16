@@ -21,7 +21,7 @@ class GroupView(private val controller: GroupViewController) : VBox(36.0) {
 
         companion object {
             private val map = values().associateBy { it.value }
-            infix fun from(value: String) = map[value]
+            infix fun fromValue(value: String) = map[value]
         }
     }
 
@@ -117,7 +117,7 @@ class GroupView(private val controller: GroupViewController) : VBox(36.0) {
         sortOrderAttributePicker.valueProperty().addListener(
             ChangeListener { _, oldValue, newValue ->
                 if (oldValue != newValue) {
-                    controller.editSortOrder(SortOrder(Attribute.from(newValue)!!, sortOrder.isDesc), sortOrder)
+                    controller.editSortOrder(SortOrder(Attribute.fromValue(newValue)!!, sortOrder.isDesc), sortOrder)
                 }
             }
         )
