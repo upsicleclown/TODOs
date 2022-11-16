@@ -1,22 +1,44 @@
 package views
 
 import controllers.GroupViewController
+import javafx.beans.value.ChangeListener
 import javafx.event.EventHandler
+import javafx.scene.control.Button
+import javafx.scene.control.ComboBox
 import javafx.scene.control.Label
 import javafx.scene.control.ScrollPane
 import javafx.scene.control.TextField
 import javafx.scene.input.MouseEvent
+import javafx.scene.layout.HBox
 import javafx.scene.layout.VBox
 import models.Item
+import kotlin.properties.Delegates
 
 class GroupView(private val controller: GroupViewController) : VBox(36.0) {
 
+    enum class Attribute(val value: String) {
+        IS_COMPLETED("Completed"), EDT_DUEDATE("Due Date"), PRIORITY("Priority");
+
+        companion object {
+            private val map = values().associateBy { it.value }
+            infix fun fromValue(value: String) = map[value]
+        }
+    }
+
+    data class SortOrder(var attribute: Attribute = Attribute.IS_COMPLETED, var isDesc: Boolean = false)
+
+    var sortOrder: SortOrder by Delegates.observable(SortOrder()) { _, _, _ -> loadSortOrderPicker() }
+    val sortOrderAttributePicker = ComboBox<String>()
+    val sortOrderIsDescButton = Button()
+    val sortOrderPicker = HBox()
     private val itemListScrollContainer = ScrollPane()
     private val itemListContainer = VBox(36.0)
     private val itemCreationField = TextField()
     private var currentGroupName = Label("")
 
     init {
+
+        setUpSortOrderPicker()
         /* region styling */
         styleClass.add("group")
         currentGroupName.styleClass.addAll("group__title", "title-max")
@@ -58,7 +80,7 @@ class GroupView(private val controller: GroupViewController) : VBox(36.0) {
         itemListScrollContainer.hmax = 0.0
         itemListScrollContainer.hbarPolicy = ScrollPane.ScrollBarPolicy.NEVER
 
-        children.addAll(currentGroupName, itemCreationField, itemListScrollContainer)
+        children.addAll(currentGroupName, sortOrderPicker, itemCreationField, itemListScrollContainer)
         /* end region view setup */
 
         /* region data bindings */
@@ -66,7 +88,7 @@ class GroupView(private val controller: GroupViewController) : VBox(36.0) {
             currentGroupName.text = newGroup.name
         }
 
-        controller.itemListProperty.addListener { _, _, newItemList ->
+        controller.displayItemListProperty.addListener { _, _, newItemList ->
             itemListContainer.children.setAll(
                 newItemList.map {
                         item ->
@@ -75,5 +97,32 @@ class GroupView(private val controller: GroupViewController) : VBox(36.0) {
             )
         }
         /* end region data bindings */
+    }
+
+    private fun loadSortOrderPicker() {
+        sortOrderIsDescButton.text = if (sortOrder.isDesc) "↑" else "↓"
+        sortOrderAttributePicker.value = sortOrder.attribute.value
+    }
+
+    private fun setUpSortOrderPicker() {
+        loadSortOrderPicker()
+
+        sortOrderIsDescButton.setOnAction {
+            val newIsDesc = !sortOrder.isDesc
+            controller.editSortOrder(SortOrder(sortOrder.attribute, newIsDesc), sortOrder)
+        }
+
+        sortOrderAttributePicker.items.addAll(Attribute.values().map { it.value })
+
+        sortOrderAttributePicker.valueProperty().addListener(
+            ChangeListener { _, oldValue, newValue ->
+                if (oldValue != newValue) {
+                    controller.editSortOrder(SortOrder(Attribute.fromValue(newValue)!!, sortOrder.isDesc), sortOrder)
+                }
+            }
+        )
+
+        val sortOrderLabel = Label("Sort By: ")
+        sortOrderPicker.children.addAll(sortOrderLabel, sortOrderAttributePicker, sortOrderIsDescButton)
     }
 }

@@ -12,6 +12,9 @@ import commands.DeleteItemCommand
 import commands.DeleteItemLabelCommand
 import commands.EditItemCommand
 import commands.EditItemLabelCommand
+import commands.EditSortOrderCommand
+import javafx.collections.FXCollections
+import javafx.collections.ObservableList
 import models.Group
 import models.Item
 import models.Label
@@ -24,6 +27,9 @@ class GroupViewController(todoApp: TODOApplication) {
     private var app: TODOApplication? = null
     private var view: GroupView? = null
     private val todoClient = TODOClient
+    private var displayItemList: ObservableList<Item>
+
+    var displayItemListProperty: ItemListProperty
     var itemListProperty: ItemListProperty
     var labelListProperty: LabelListProperty
     var currentGroupProperty = GroupProperty()
@@ -33,7 +39,39 @@ class GroupViewController(todoApp: TODOApplication) {
         app = todoApp
         itemListProperty = todoClient.itemListProperty
         labelListProperty = todoClient.labelListProperty
+
+        displayItemList = FXCollections.observableArrayList(itemListProperty.value)
+        displayItemListProperty = ItemListProperty(displayItemList)
+
+        itemListProperty.addListener { _, _, newItemList ->
+            reloadDisplayItemList(newItemList)
+        }
     }
+
+    private fun reloadDisplayItemList(newItemList: ObservableList<Item>) {
+        val comparator = compareBy<Item> {
+            when (view?.sortOrder!!.attribute) {
+                GroupView.Attribute.IS_COMPLETED -> it.isCompleted
+                GroupView.Attribute.EDT_DUEDATE -> it.edtDueDate
+                GroupView.Attribute.PRIORITY -> it.priority
+            }
+        }
+        var sortedList: List<Item> = newItemList.sorted(comparator)
+
+        if (view?.sortOrder!!.isDesc) {
+            sortedList = sortedList.reversed()
+        }
+
+        displayItemList.setAll(
+            sortedList
+        )
+    }
+
+    fun setSortOrder(newSortOrder: GroupView.SortOrder) {
+        view?.sortOrder = newSortOrder
+        reloadDisplayItemList(displayItemList)
+    }
+
     fun loadGroup(group: Group?) {
         if (group === null) {
             return
@@ -69,6 +107,11 @@ class GroupViewController(todoApp: TODOApplication) {
     fun deleteItemLabel(label: Label, item: Item) {
         val deleteItemLabelCommand = DeleteItemLabelCommand(label, item)
         app?.commandHandler?.execute(deleteItemLabelCommand)
+    }
+
+    fun editSortOrder(newSortOrder: GroupView.SortOrder, oldSortOrder: GroupView.SortOrder) {
+        val editSortOrderCommand = EditSortOrderCommand(newSortOrder, oldSortOrder, this)
+        app?.commandHandler?.execute(editSortOrderCommand)
     }
 
     fun labels(): LabelListProperty {
