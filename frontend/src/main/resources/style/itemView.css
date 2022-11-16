@@ -22,6 +22,21 @@
     -fx-background-color: transparent;
 }
 
+.item__priority-picker-content {
+    -fx-padding: 16px;
+}
+
+.item__priority-picker {
+    -fx-background-color: -primary-black;
+    -fx-padding: 0px 8px;
+    -fx-background-radius: 16px;
+    -fx-spacing: 12px;
+}
+
+.item__priority-picker .list-cell:selected {
+    -fx-text-fill: white;
+}
+
 .item__label-container {
     -fx-background-color: transparent;
     -fx-background-radius: 0px 0px 12px 12px;

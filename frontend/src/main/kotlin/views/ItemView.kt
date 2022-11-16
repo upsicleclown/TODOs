@@ -26,6 +26,7 @@ class ItemView(private val controller: GroupViewController, private val item: It
     private val textField = TextField()
     private val completionButton = Button()
     private val deleteButton = Button("x")
+    private val priorityPickerContainer = HBox()
     private val priorityPicker = ComboBox<Priority>()
     private val dueDatePicker = LocalDateTimeTextField()
     private val labelViewScrollContainer = ScrollPane()
@@ -40,6 +41,8 @@ class ItemView(private val controller: GroupViewController, private val item: It
         labelViewScrollContainer.styleClass.addAll("item__label-container")
         labelViewScrollContainer.isFitToWidth = true
         labelViewContainer.styleClass.add("item__label-content")
+        priorityPickerContainer.styleClass.add("item__priority-picker-content")
+        priorityPicker.styleClass.addAll("item__priority-picker", "list-cell")
         /* end region styling */
 
         /* region item setup */
@@ -54,7 +57,7 @@ class ItemView(private val controller: GroupViewController, private val item: It
         left = completionButton
         right = deleteButton
         center = textField
-        bottom = HBox(priorityPicker, dueDatePicker, labelViewScrollContainer)
+        bottom = HBox(priorityPickerContainer, dueDatePicker, labelViewScrollContainer)
         labelViewScrollContainer.isFitToWidth = true
     }
 
@@ -128,6 +131,7 @@ class ItemView(private val controller: GroupViewController, private val item: It
     }
 
     private fun setupPriorityPicker() {
+        priorityPickerContainer.children.add(priorityPicker)
         priorityPicker.items.add(null)
         priorityPicker.items.addAll(Priority.values())
         priorityPicker.value = item.priority
