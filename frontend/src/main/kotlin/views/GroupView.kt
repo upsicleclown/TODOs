@@ -25,7 +25,7 @@ class GroupView(private val controller: GroupViewController) : VBox(36.0) {
         }
     }
 
-    data class SortOrder(var attribute: Attribute = Attribute.IS_COMPLETED, var isDesc: Boolean = true)
+    data class SortOrder(var attribute: Attribute = Attribute.IS_COMPLETED, var isDesc: Boolean = false)
 
     var sortOrder: SortOrder by Delegates.observable(SortOrder()) { _, _, _ -> loadSortOrderPicker() }
     val sortOrderAttributePicker = ComboBox<String>()
