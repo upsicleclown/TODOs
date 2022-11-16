@@ -15,4 +15,5 @@ pluginManagement {
 
 
 rootProject.name = 'cs346-project'
-include('frontend', 'common', 'backend')
+include('frontend', 'console', 'common', 'backend')
+

@@ -22,6 +22,11 @@ internal class UserController(private val authenticationService: AuthenticationS
         }
     }
 
+    @PostMapping("/logout")
+    fun logout() {
+        authenticationService.logOutUser()
+    }
+
     @DeleteMapping("/user/{username}")
     fun deleteUser(@PathVariable username: String?) {
         authenticationService.authenticate()
@@ -33,7 +38,7 @@ internal class UserController(private val authenticationService: AuthenticationS
         try {
             authenticationService.registerUser(user)
         } catch (illegalArgumentException: IllegalArgumentException) {
-            throw ResponseStatusException(HttpStatus.NOT_FOUND, "Could not find user with username ${user.username} and password ${user.password}", illegalArgumentException)
+            throw ResponseStatusException(HttpStatus.NOT_FOUND, "Could not register user with username ${user.username} and password ${user.password}", illegalArgumentException)
         }
     }
 }

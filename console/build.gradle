@@ -1,0 +1,29 @@
+plugins {
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.7.10'
+    id 'java'
+    id 'application'
+    id 'org.jetbrains.kotlin.jvm'
+    id 'org.beryx.jlink'
+    id 'todo.kotlin-conventions'
+}
+
+group 'net.codebot'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+sourceCompatibility = '17'
+targetCompatibility = '17'
+
+dependencies {
+    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0'
+    implementation project(':common')
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+}
+
+test {
+    useJUnitPlatform()
+}
