@@ -1,10 +1,9 @@
 package views
 
 import controllers.SidepaneController
-import models.Group
 import models.Label
 
-class AddGroupCreationLabelChip(private val controller: SidepaneController, private val group: Group) : AddLabelChip() {
+class AddGroupCreationLabelChip(private val controller: SidepaneController) : AddLabelChip() {
 
     override fun startEdit() {
         // Refresh the combo box options
