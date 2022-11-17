@@ -76,12 +76,12 @@ class SidepaneController(todoApp: TODOApplication) {
         app?.commandHandler?.execute(deleteGroupCreationLabelCommand)
     }
 
-    fun labels(): LabelListProperty {
-        return labelListProperty
-    }
-
     // view management
     fun addView(sidepaneView: SidepaneView) {
         view = sidepaneView
+    }
+
+    fun todoApp(): TODOApplication? {
+        return app
     }
 }

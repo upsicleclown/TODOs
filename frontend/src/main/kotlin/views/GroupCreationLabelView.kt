@@ -1,20 +1,18 @@
 package views
 
 import controllers.SidepaneController
-import models.Group
 import models.Label
 
 class GroupCreationLabelView(
     private val sidepaneController: SidepaneController,
-    private val label: Label,
-    private val group: Group
+    private val label: Label
 ) :
     LabelView(label) {
 
     override fun startEdit() {
         // Refresh the combo box options
         comboBox.items.clear()
-        comboBox.items.addAll(sidepaneController.labels().map { label -> label.name })
+        comboBox.items.addAll(sidepaneController.labelListProperty.map { label -> label.name })
 
         // Set the starting text of the editor to the current label name
         comboBox.editor.text = label.name
@@ -38,7 +36,7 @@ class GroupCreationLabelView(
         var newLabel = if (sidepaneController.groupCreationLabelListProperty.value.any { label -> label.name == newLabelName }) {
             null
         } else {
-            if (sidepaneController.labels().any { l -> l.name == newLabelName }) {
+            if (sidepaneController.labelListProperty.any { l -> l.name == newLabelName }) {
                 null
             } else {
                 Label(newLabelName, DEFAULT_LABEL_COLOR)

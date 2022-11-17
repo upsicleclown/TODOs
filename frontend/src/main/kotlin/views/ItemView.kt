@@ -78,7 +78,7 @@ class ItemView(private val controller: GroupViewController, private val item: It
         labelViewScrollContainer.content = labelViewContainer
 
         var labelChips = listOf<BorderPane>()
-        val itemLabels: List<Label> = controller.labels().filter {
+        val itemLabels: List<Label> = controller.labelListProperty.filter {
                 label ->
             label.id in item.labelIds
         }

@@ -8,7 +8,8 @@ import models.Label
  *
  * @param newLabel : The label we want to replace originalLabel with.
  * @param originalLabel : The label that we want to replace
- * @param controller: The controller that has control of the GroupCreationView
+ * @param controller: The controller is included here since it
+ * owns the groupCreationLabelListPropery that shores the labels being used in group creation
  */
 class EditGroupCreationLabelCommand(
     private val newLabel: Label,

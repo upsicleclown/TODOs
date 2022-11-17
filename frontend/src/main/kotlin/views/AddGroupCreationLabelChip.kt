@@ -9,7 +9,7 @@ class AddGroupCreationLabelChip(private val controller: SidepaneController, priv
     override fun startEdit() {
         // Refresh the combo box options
         addLabelComboBox.items.clear()
-        addLabelComboBox.items.addAll(controller.labels().map { label -> label.name })
+        addLabelComboBox.items.setAll(controller.labelListProperty.map { label -> label.name })
 
         center = addLabelComboBox
         addLabelComboBox.requestFocus()
@@ -29,8 +29,8 @@ class AddGroupCreationLabelChip(private val controller: SidepaneController, priv
         var newLabel = if (controller.groupCreationLabelListProperty.value.any { label -> label.name == newLabelName }) {
             null
         } else {
-            if (controller.labels().any { label -> label.name == newLabelName }) {
-                controller.labels().first { label -> label.name == newLabelName }
+            if (controller.labelListProperty.any { label -> label.name == newLabelName }) {
+                controller.labelListProperty.first { label -> label.name == newLabelName }
             } else {
                 Label(newLabelName, LabelView.DEFAULT_LABEL_COLOR)
             }

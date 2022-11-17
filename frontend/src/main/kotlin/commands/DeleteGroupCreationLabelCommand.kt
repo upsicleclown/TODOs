@@ -7,8 +7,9 @@ import models.Label
 /**
  * DeleteGroupCreationLabelCommand is used to remove a label created in a GroupCreationView.
  *
- * @param label : The label we want to delete from the item
- * @param controller: The controller that controls the GroupCreationView
+ * @param label : The label we want to delete from the group
+ * @param controller: The controller that controls the GroupCreationView. The controller is included here since it
+ * owns the groupCreationLabelListPropery that shores the labels being used in group creation
  */
 class DeleteGroupCreationLabelCommand(
     private val label: Label,

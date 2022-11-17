@@ -9,7 +9,7 @@ class AddItemLabelChip(private val controller: GroupViewController, private val 
     override fun startEdit() {
         // Refresh the combo box options
         addLabelComboBox.items.clear()
-        addLabelComboBox.items.addAll(controller.labels().map { label -> label.name })
+        addLabelComboBox.items.addAll(controller.labelListProperty.map { label -> label.name })
 
         center = addLabelComboBox
         addLabelComboBox.requestFocus()
@@ -25,9 +25,9 @@ class AddItemLabelChip(private val controller: GroupViewController, private val 
             cancelEdit()
             return
         }
-        val existingLabel = controller.labels().any { label -> label.name == newLabelName }
+        val existingLabel = controller.labelListProperty.any { label -> label.name == newLabelName }
         val newLabel = if (existingLabel) {
-            controller.labels().first { label -> label.name == newLabelName }
+            controller.labelListProperty.first { label -> label.name == newLabelName }
         } else {
             Label(newLabelName, LabelView.DEFAULT_LABEL_COLOR)
         }
