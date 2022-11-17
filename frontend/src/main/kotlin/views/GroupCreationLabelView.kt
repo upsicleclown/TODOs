@@ -1,27 +1,24 @@
 package views
 
-import controllers.GroupViewController
-import models.Item
+import controllers.SidepaneController
 import models.Label
 
-class ItemLabelView(
-    private val groupController: GroupViewController,
-    private val label: Label,
-    private val item: Item
+class GroupCreationLabelView(
+    private val sidepaneController: SidepaneController,
+    private val label: Label
 ) :
     LabelView(label) {
 
     override fun startEdit() {
         // Refresh the combo box options
         comboBox.items.clear()
-        comboBox.items.addAll(groupController.labels().map { label -> label.name })
+        comboBox.items.addAll(sidepaneController.labelListProperty.map { label -> label.name })
 
         // Set the starting text of the editor to the current label name
         comboBox.editor.text = label.name
 
         center = comboBox
         right = null
-
         comboBox.requestFocus()
     }
 
@@ -35,14 +32,23 @@ class ItemLabelView(
             cancelEdit()
             return
         }
-        var existingLabel = groupController.labels().any { l -> l.name == newLabelName }
-        var newLabel = if (existingLabel) {
-            groupController.labels().first { l -> l.name == newLabelName }
+
+        var newLabel = if (sidepaneController.groupCreationLabelListProperty.value.any { label -> label.name == newLabelName }) {
+            null
         } else {
-            Label(newLabelName, DEFAULT_LABEL_COLOR)
+            if (sidepaneController.labelListProperty.any { l -> l.name == newLabelName }) {
+                sidepaneController.labelListProperty.first { l -> l.name == newLabelName }
+            } else {
+                Label(newLabelName, DEFAULT_LABEL_COLOR)
+            }
         }
 
-        groupController.editItemLabel(existingLabel = existingLabel, newLabel = newLabel, originalLabel = label, item = item)
+        if (newLabel != null) {
+            sidepaneController.editGroupCreationLabel(newLabel, label)
+        } else {
+            sidepaneController.deleteGroupCreationLabel(label)
+        }
+
         labelText.text = label.name
         center = labelText
         right = deleteButton
@@ -55,6 +61,6 @@ class ItemLabelView(
     }
 
     override fun deleteLabel() {
-        groupController.deleteItemLabel(label, item)
+        sidepaneController.deleteGroupCreationLabel(label)
     }
 }

@@ -83,7 +83,7 @@ class TODOApplication : Application() {
         root.top = menuBar
         primaryStage.scene.root = root
 
-        addHotkeysToMainViewScene(primaryStage.scene)
+        enableHotkeys(primaryStage.scene)
     }
 
     override fun start(stage: Stage) {
@@ -113,9 +113,9 @@ class TODOApplication : Application() {
     }
 
     /**
-     * Adds hotkeys to the main view scene
+     * Adds hotkeys to scene
      */
-    private fun addHotkeysToMainViewScene(scene: Scene) {
+    fun enableHotkeys(scene: Scene) {
         scene.addEventFilter(
             KeyEvent.KEY_PRESSED,
             object : EventHandler<KeyEvent?> {
