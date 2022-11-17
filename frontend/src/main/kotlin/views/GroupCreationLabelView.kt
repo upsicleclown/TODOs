@@ -37,7 +37,7 @@ class GroupCreationLabelView(
             null
         } else {
             if (sidepaneController.labelListProperty.any { l -> l.name == newLabelName }) {
-                null
+                sidepaneController.labelListProperty.first { l -> l.name == newLabelName }
             } else {
                 Label(newLabelName, DEFAULT_LABEL_COLOR)
             }
