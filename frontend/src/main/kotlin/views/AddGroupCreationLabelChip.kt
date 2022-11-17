@@ -2,12 +2,9 @@ package views
 
 import controllers.SidepaneController
 import models.Group
+import models.Label
 
 class AddGroupCreationLabelChip(private val controller: SidepaneController, private val group: Group) : AddLabelChip() {
-
-    init {
-        addLabelComboBox.isEditable = false
-    }
 
     override fun startEdit() {
         // Refresh the combo box options
@@ -20,15 +17,25 @@ class AddGroupCreationLabelChip(private val controller: SidepaneController, priv
 
     override fun commitEdit() {
         val newLabelName = if (addLabelComboBox.selectionModel.selectedItem == null) {
-            cancelEdit()
-            return
+            addLabelComboBox.editor.text.trim()
         } else {
             addLabelComboBox.selectionModel.selectedItem
         }
-        val existingLabel = controller.labels().first { label -> label.name == newLabelName }
-        group.filter.labelIds.add(existingLabel.id)
+        if (newLabelName.isBlank()) {
+            cancelEdit()
+            return
+        }
 
-        controller.reloadGroupCreationView()
+        var newLabel = if (controller.groupCreationLabelListProperty.value.any { label -> label.name == newLabelName }) {
+            null
+        } else {
+            if (controller.labels().any { label -> label.name == newLabelName }) {
+                controller.labels().first { label -> label.name == newLabelName }
+            } else {
+                Label(newLabelName, LabelView.DEFAULT_LABEL_COLOR)
+            }
+        }
+        newLabel?.let { controller.createGroupCreationLabel(it) }
 
         center = addLabelButton
     }

@@ -1,6 +1,7 @@
 package views
 
 import controllers.SidepaneController
+import javafx.beans.value.ChangeListener
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
 import javafx.scene.control.Button
@@ -11,7 +12,6 @@ import javafx.scene.control.Dialog
 import javafx.scene.control.ScrollPane
 import javafx.scene.control.TextField
 import javafx.scene.input.MouseEvent
-import javafx.scene.layout.BorderPane
 import javafx.scene.layout.HBox
 import javafx.scene.layout.VBox
 import models.Filter
@@ -24,11 +24,8 @@ class GroupCreationView(private val controller: SidepaneController) : Dialog<Gro
     private val priorityPicker = ComboBox<Priority>()
     private val labelViewScrollContainer = ScrollPane()
     private val labelViewContainer = HBox()
-    private var groupLabels = listOf<Label>()
-
     init {
         group = Group("", Filter())
-        controller.loadLabels()
         title = "Create a Group"
 
         // field to create groups
@@ -39,13 +36,12 @@ class GroupCreationView(private val controller: SidepaneController) : Dialog<Gro
         groupCreationField.children.add(groupNameField)
 
         setupLabelViewContainer()
+        loadLabelViewContainer(listOf())
 
         val groupFilterField = VBox()
-
         groupFilterField.children.add(labelViewScrollContainer)
 
         groupCreationField.children.add(groupFilterField)
-
         dialogPane.content = groupCreationField
 
         // buttons
@@ -70,10 +66,22 @@ class GroupCreationView(private val controller: SidepaneController) : Dialog<Gro
         }
 
         setResultConverter { dialogButton ->
-            if (dialogButton === createButtonType) {
-                group?.name = groupNameField.text
-                result = group
+
+            when (dialogButton) {
+                (createButtonType) -> {
+                    group?.name = groupNameField.text
+                    controller.groupCreationLabelListProperty.value.forEach { label ->
+                        if (label.name !in controller.labels().map { it.name }) {
+                            controller.createLabel(false, label)
+                        }
+                    }
+                    group?.filter!!.labelIds = controller.labels().filter { it.name in controller.groupCreationLabelListProperty.value.map { groupCreationLabel -> groupCreationLabel.name } }.map { it.id }.toMutableList()
+                    result = group
+                }
+                else -> result = null
             }
+
+            controller.groupCreationLabelListProperty.setAll(mutableListOf())
             return@setResultConverter result
         }
     }
@@ -85,7 +93,11 @@ class GroupCreationView(private val controller: SidepaneController) : Dialog<Gro
         labelViewScrollContainer.vmax = 0.0 // prevent vertical scrolling
         labelViewScrollContainer.content = labelViewContainer
 
-        loadLabelChips()
+        controller.groupCreationLabelListProperty.addListener(
+            ChangeListener { _, _, newList ->
+                loadLabelViewContainer(newList)
+            }
+        )
 
         // When clicking outside a label, remove focus from that label
         labelViewContainer.addEventHandler(
@@ -94,27 +106,12 @@ class GroupCreationView(private val controller: SidepaneController) : Dialog<Gro
         )
     }
 
-    private fun loadLabelChips() {
-        var labelChips = listOf<BorderPane>()
-        groupLabels = controller.labels().filter {
-                label ->
-            label.id in group!!.filter!!.labelIds
-        }
-
-        if (groupLabels.isNotEmpty()) {
-            labelChips = groupLabels.map {
+    private fun loadLabelViewContainer(list: List<Label>) {
+        labelViewContainer.children.setAll(
+            list.map {
                 GroupCreationLabelView(sidepaneController = controller, label = it, group = group!!)
             }
-        }
-
-        labelViewContainer.children.clear()
-        if (labelChips.isNotEmpty()) {
-            labelViewContainer.children.addAll(labelChips)
-        }
+        )
         labelViewContainer.children.add(AddGroupCreationLabelChip(controller = controller, group = group!!))
-    }
-
-    fun refreshLabels() {
-        loadLabelChips()
     }
 }

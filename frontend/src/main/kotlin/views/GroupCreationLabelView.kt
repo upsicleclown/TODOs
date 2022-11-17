@@ -11,10 +11,6 @@ class GroupCreationLabelView(
 ) :
     LabelView(label) {
 
-    init {
-        comboBox.isEditable = false
-    }
-
     override fun startEdit() {
         // Refresh the combo box options
         comboBox.items.clear()
@@ -29,19 +25,35 @@ class GroupCreationLabelView(
     }
 
     override fun commitEdit() {
-        val newLabelName = if (comboBox.selectionModel.selectedItem == null) {
-            cancelEdit()
-            return
+        val newLabelName: String = if (comboBox.selectionModel.selectedItem == null) {
+            comboBox.editor.text.trim()
         } else {
             comboBox.selectionModel.selectedItem
         }
-        val existingLabel = sidepaneController.labels().first { label -> label.name == newLabelName }
-        group.filter.labelIds.add(existingLabel.id)
+        if (newLabelName.isBlank()) {
+            cancelEdit()
+            return
+        }
 
+        var newLabel = if (sidepaneController.groupCreationLabelListProperty.value.any { label -> label.name == newLabelName }) {
+            null
+        } else {
+            if (sidepaneController.labels().any { l -> l.name == newLabelName }) {
+                null
+            } else {
+                Label(newLabelName, DEFAULT_LABEL_COLOR)
+            }
+        }
+
+        if (newLabel != null) {
+            sidepaneController.editGroupCreationLabel(newLabel, label)
+        } else {
+            sidepaneController.deleteGroupCreationLabel(label)
+        }
+
+        labelText.text = label.name
         center = labelText
         right = deleteButton
-
-        sidepaneController.reloadGroupCreationView()
     }
 
     override fun cancelEdit() {
@@ -49,8 +61,8 @@ class GroupCreationLabelView(
         center = labelText
         right = deleteButton
     }
+
     override fun deleteLabel() {
-        group.filter.labelIds.remove(label.id)
-        sidepaneController.reloadGroupCreationView()
+        sidepaneController.deleteGroupCreationLabel(label)
     }
 }

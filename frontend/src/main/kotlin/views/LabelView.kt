@@ -86,7 +86,10 @@ abstract class LabelView(private val label: Label) : BorderPane() {
         // When we press enter/esc, commit/cancel the edit
         comboBox.addEventFilter(KeyEvent.KEY_PRESSED) { event ->
             when (event.code) {
-                KeyCode.ENTER -> commitEdit()
+                KeyCode.ENTER -> {
+                    commitEdit()
+                    event.consume()
+                }
                 KeyCode.ESCAPE -> cancelEdit()
                 else -> Unit
             }

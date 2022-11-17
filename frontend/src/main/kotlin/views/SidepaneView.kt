@@ -7,6 +7,8 @@ import javafx.scene.control.ScrollPane
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.Priority
 import javafx.scene.layout.VBox
+import models.Group
+import java.util.Optional
 
 class SidepaneView(
     private val sidepaneController: SidepaneController
@@ -44,10 +46,11 @@ class SidepaneView(
 
         // Field to create groups
         openGroupCreationDialogButton.onAction = EventHandler {
+
             groupCreationDialog = GroupCreationView(sidepaneController)
-            val optionalCreatedGroup = groupCreationDialog!!.showAndWait()
-            if (optionalCreatedGroup.isPresent) {
-                sidepaneController.createGroup(optionalCreatedGroup.get())
+            val createdGroup: Optional<Group?> = groupCreationDialog!!.showAndWait()
+            if (createdGroup.isPresent) {
+                sidepaneController.createGroup(createdGroup.get())
             }
         }
         /* end region view setup */
