@@ -42,7 +42,7 @@ class ItemView(private val controller: GroupViewController, private val item: It
         labelViewScrollContainer.isFitToWidth = true
         labelViewContainer.styleClass.add("item__label-content")
         priorityPickerContainer.styleClass.add("item__priority-picker-content")
-        priorityPicker.styleClass.addAll("item__priority-picker", "list-cell")
+        priorityPicker.styleClass.addAll("item__priority-picker", "list-cell", "label-max")
         /* end region styling */
 
         /* region item setup */
