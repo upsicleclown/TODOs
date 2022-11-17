@@ -95,7 +95,7 @@ class GroupCreationView(private val controller: SidepaneController) : Dialog<Gro
                 GroupCreationLabelView(sidepaneController = controller, label = it)
             }
         )
-        labelViewContainer.children.add(AddGroupCreationLabelChip(controller = controller, group = group!!))
+        labelViewContainer.children.add(AddGroupCreationLabelChip(controller = controller))
     }
 
     private fun setUpGroupResultConverter() {
