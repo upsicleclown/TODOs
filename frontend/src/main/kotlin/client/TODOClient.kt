@@ -148,20 +148,15 @@ object TODOClient {
         return newLabel
     }
 
-    // TODO: This will be used for the settings UI that does not currently exist
-    fun editLabel(id: Int, newLabel: Label): Label {
+    fun editLabel(id: Int, newLabel: Label) {
         val string = Json.encodeToString(newLabel)
-
         val request = HttpRequest.newBuilder()
             .uri(URI.create("${serviceEndpoint}labels/$id"))
             .header("Content-Type", "application/json")
             .PUT(HttpRequest.BodyPublishers.ofString(string))
             .build()
-        val labelResponse = client.send(request, HttpResponse.BodyHandlers.ofString())
-        val label: Label = Json.decodeFromString(labelResponse.body())
-
-        labelList[labelList.indexOf(newLabel)] = label
-        return label
+        client.send(request, HttpResponse.BodyHandlers.ofString())
+        labelList[labelList.indexOf(newLabel)] = newLabel
     }
 
     // TODO: This will be used for the settings UI that does not currently exist
