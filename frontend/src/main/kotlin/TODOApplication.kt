@@ -22,6 +22,7 @@ import models.Item
 import models.WindowSettings
 import views.GroupView
 import views.LogInView
+import views.SettingsView
 import views.SidepaneView
 
 class TODOApplication : Application() {
@@ -31,6 +32,7 @@ class TODOApplication : Application() {
     private val todoClient = TODOClient
     private val sidepaneView = SidepaneView(sidepaneController)
     private val groupView = GroupView(groupViewController)
+    private val settingsView = SettingsView(groupViewController)
 
     val commandHandler = CommandHandler()
     private val cache = Cache()
@@ -79,7 +81,12 @@ class TODOApplication : Application() {
         paste.setOnAction { pasteItem() }
         editMenu.items.addAll(undo, redo, SeparatorMenuItem(), cut, copy, paste)
 
-        menuBar.menus.addAll(fileMenu, editMenu)
+        val settingsMenu = Menu("Settings")
+        val openSettings = MenuItem("Open Settings")
+        openSettings.setOnAction { settingsView.show() }
+        settingsMenu.items.add(openSettings)
+
+        menuBar.menus.addAll(fileMenu, editMenu, settingsMenu)
         root.top = menuBar
         primaryStage.scene.root = root
 

@@ -28,6 +28,7 @@ abstract class LabelView(private val label: Label) : BorderPane() {
 
     init {
         /* region styling */
+        style = "-fx-background-color:${label.color};"
         styleClass.add("item__label-chip")
         maxHeight = LABEL_HEIGHT
 

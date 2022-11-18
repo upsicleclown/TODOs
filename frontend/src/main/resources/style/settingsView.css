@@ -1,0 +1,14 @@
+@import "config.css";
+
+.settings {
+    -fx-background-color: -background-black;
+    -fx-padding: 16px;
+}
+
+.settings__title {
+    -fx-text-fill: -primary-black;
+}
+
+.settings__label-text {
+    -fx-padding: 0px 8px
+}

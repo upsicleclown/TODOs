@@ -96,6 +96,16 @@ class GroupView(private val controller: GroupViewController) : VBox(36.0) {
                 }
             )
         }
+
+        // reload the items if the labels are modified
+        controller.labelListProperty.addListener { _, _, _ ->
+            itemListContainer.children.setAll(
+                controller.itemListProperty.map {
+                        item ->
+                    ItemView(controller, item)
+                }
+            )
+        }
         /* end region data bindings */
     }
 
