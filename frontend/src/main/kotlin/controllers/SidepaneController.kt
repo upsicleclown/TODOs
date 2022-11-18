@@ -36,7 +36,6 @@ class SidepaneController(todoApp: TODOApplication) {
     }
 
     fun focusGroup(focus: Group?) {
-        if (focus !in groupListProperty) return
         focusedGroupProperty.set(focus)
         app?.groupViewController?.loadGroup(focusedGroupProperty.value)
     }
@@ -47,6 +46,9 @@ class SidepaneController(todoApp: TODOApplication) {
     }
 
     fun deleteGroup(group: Group) {
+        if (group == focusedGroupProperty.value) {
+            focusGroup(null)
+        }
         val deleteGroupCommand = DeleteGroupCommand(group)
         app?.commandHandler?.execute(deleteGroupCommand)
     }

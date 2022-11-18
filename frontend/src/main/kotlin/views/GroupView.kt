@@ -85,7 +85,7 @@ class GroupView(private val controller: GroupViewController) : VBox(36.0) {
 
         /* region data bindings */
         controller.currentGroupProperty.addListener { _, _, newGroup ->
-            currentGroupName.text = newGroup.name
+            currentGroupName.text = newGroup?.name
         }
 
         controller.displayItemListProperty.addListener { _, _, newItemList ->

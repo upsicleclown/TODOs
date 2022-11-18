@@ -90,7 +90,9 @@ class GroupCreationView(private val controller: SidepaneController) : Dialog<Gro
     }
 
     private fun loadLabelViewContainer(list: List<Label>) {
-        labelViewContainer.children.setAll(
+        labelViewContainer.children.clear()
+        labelViewContainer.children.add(javafx.scene.control.Label("Labels: "))
+        labelViewContainer.children.addAll(
             list.map {
                 GroupCreationLabelView(sidepaneController = controller, label = it)
             }
