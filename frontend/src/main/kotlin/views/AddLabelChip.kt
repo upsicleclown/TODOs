@@ -1,14 +1,13 @@
 package views
 
 import javafx.scene.control.Button
-import javafx.scene.control.ComboBox
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
 import javafx.scene.layout.BorderPane
 
 abstract class AddLabelChip() : BorderPane() {
     protected val addLabelButton = Button("+")
-    protected val addLabelComboBox = ComboBox<String>()
+    protected val addLabelComboBox = AutocompleteComboBox()
 
     init {
         /* region styling */

@@ -7,7 +7,6 @@ import javafx.animation.Timeline
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.event.EventHandler
 import javafx.scene.control.Button
-import javafx.scene.control.ComboBox
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
 import javafx.scene.input.MouseEvent
@@ -19,7 +18,7 @@ import javafx.scene.control.Label as JfxLabel
 
 abstract class LabelView(private val label: Label) : BorderPane() {
     protected val labelText = JfxLabel(label.name)
-    protected val comboBox = ComboBox<String>()
+    protected val comboBox = AutocompleteComboBox()
     protected val deleteButton = Button("x")
     private var mouseReleased = false // A boolean flag to determine whether to cancel long press
     private var longPressCounter = 0.0 // Timer for determining whether to focus group on mouse release
