@@ -9,7 +9,7 @@ import javafx.scene.input.MouseEvent
 import javafx.scene.layout.Priority
 import javafx.scene.layout.VBox
 import models.Group
-import java.util.*
+import java.util.Optional
 
 class SidepaneView(
     private val sidepaneController: SidepaneController
