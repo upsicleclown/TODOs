@@ -46,6 +46,9 @@ class GroupViewController(todoApp: TODOApplication) {
         itemListProperty.addListener { _, _, newItemList ->
             reloadDisplayItemList(newItemList)
         }
+        currentGroupProperty.addListener { _, _, _ ->
+            reloadDisplayItemList(itemListProperty.value)
+        }
     }
 
     private fun reloadDisplayItemList(newItemList: ObservableList<Item>) {
@@ -56,7 +59,43 @@ class GroupViewController(todoApp: TODOApplication) {
                 GroupView.Attribute.PRIORITY -> it.priority
             }
         }
-        var sortedList: List<Item> = newItemList.sorted(comparator)
+
+        val filteredList = if (currentGroupProperty.value != null) {
+            newItemList.filter {
+                (if (currentGroupProperty.value!!.filter.isCompleted != null) currentGroupProperty.value!!.filter.isCompleted == it.isCompleted else true) &&
+
+                    (
+                        if (currentGroupProperty.value!!.filter.edtStartDateRange != null) {
+                            if (it.edtDueDate != null) {
+                                currentGroupProperty.value!!.filter.edtStartDateRange!! <= it.edtDueDate!!
+                            } else {
+                                false
+                            }
+                        } else {
+                            true
+                        }
+                        ) &&
+
+                    (
+                        if (currentGroupProperty.value!!.filter.edtEndDateRange != null) {
+                            if (it.edtDueDate != null) {
+                                currentGroupProperty.value!!.filter.edtEndDateRange!! >= it.edtDueDate!!
+                            } else {
+                                false
+                            }
+                        } else {
+                            true
+                        }
+                        ) &&
+
+                    (if (currentGroupProperty.value!!.filter.priorities.size != 0) it.priority in currentGroupProperty.value!!.filter.priorities else true) &&
+                    currentGroupProperty.value!!.filter.labelIds.all { labelId -> labelId in it.labelIds }
+            }
+        } else {
+            newItemList.toList()
+        }
+
+        var sortedList: List<Item> = filteredList.sortedWith(comparator)
 
         if (view?.sortOrder!!.isDesc) {
             sortedList = sortedList.reversed()
@@ -73,14 +112,11 @@ class GroupViewController(todoApp: TODOApplication) {
     }
 
     fun loadGroup(group: Group?) {
-        if (group === null) {
-            return
-        }
         currentGroupProperty.set(group)
     }
 
     fun createItem(item: Item) {
-        val createItemCommand = CreateItemCommand(item)
+        val createItemCommand = CreateItemCommand(item, currentGroupProperty.value)
         app?.commandHandler?.execute(createItemCommand)
     }
 

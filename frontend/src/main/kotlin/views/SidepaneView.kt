@@ -1,6 +1,7 @@
 package views
 
 import controllers.SidepaneController
+import javafx.event.ActionEvent
 import javafx.event.EventHandler
 import javafx.scene.control.Button
 import javafx.scene.control.ScrollPane
@@ -8,7 +9,7 @@ import javafx.scene.input.MouseEvent
 import javafx.scene.layout.Priority
 import javafx.scene.layout.VBox
 import models.Group
-import java.util.Optional
+import java.util.*
 
 class SidepaneView(
     private val sidepaneController: SidepaneController
@@ -19,6 +20,7 @@ class SidepaneView(
     var groupCreationDialog: GroupCreationView? = null
     private val openGroupCreationDialogButton = Button("+ group")
     private val SIDEPANE_WIDTH = 200.0
+    private val defaultNoGroup = Button("all")
 
     init {
         /* region styling */
@@ -55,6 +57,9 @@ class SidepaneView(
         }
         /* end region view setup */
 
+        defaultNoGroup.onAction = EventHandler<ActionEvent?> { event ->
+            sidepaneController.focusGroup(null)
+        }
         /* region data bindings */
         sidepaneController.groupListProperty.addListener { _, _, newList ->
             groupListContainer.children.setAll(
@@ -65,6 +70,6 @@ class SidepaneView(
             )
         }
         /* end region data bindings */
-        children.addAll(groupListScrollContainer, openGroupCreationDialogButton)
+        children.addAll(defaultNoGroup, groupListScrollContainer, openGroupCreationDialogButton)
     }
 }
