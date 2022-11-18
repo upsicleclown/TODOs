@@ -1,7 +1,7 @@
 @import "config.css";
 
 .settings {
-    -fx-background-color: -background-black;
+    -fx-background-color: -primary-black;
     -fx-padding: 16px;
 }
 

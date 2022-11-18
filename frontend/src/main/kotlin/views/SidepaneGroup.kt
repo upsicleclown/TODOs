@@ -38,6 +38,7 @@ class SidepaneGroup(private val sidepaneController: SidepaneController, private 
         // TODO: the font size for labels should be variable
         label.styleClass.addAll("sidepane__group__label", "body")
         deleteButton.styleClass.addAll("sidepane__group__delete-button", "body")
+        textField.styleClass.addAll("sidepane__group__text-field", "body")
         /* end region styling */
 
         /* region event filters */

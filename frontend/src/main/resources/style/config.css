@@ -1,4 +1,9 @@
 /* region modifications to modena.css */
+.text-field:focused {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
 .scroll-pane {
     -fx-background-color: transparent;
 }
@@ -44,6 +49,7 @@
     -error-red: #FF0000;
     -selection-blue: #0029FF;
     -accent-purple: #8000FF;
+    -burnt-orange: #833F00;
 }
 /* end region color variables */
 

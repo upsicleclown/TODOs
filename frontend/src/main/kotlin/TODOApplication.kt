@@ -21,7 +21,7 @@ import javafx.stage.Stage
 import models.Item
 import models.WindowSettings
 import views.GroupView
-import views.LogInView
+import views.LoginView
 import views.SettingsView
 import views.SidepaneView
 
@@ -95,7 +95,7 @@ class TODOApplication : Application() {
 
     override fun start(stage: Stage) {
         primaryStage = stage
-        val root = LogInView(this)
+        val root = LoginView(this)
 
         val scene = Scene(root)
         scene.stylesheets.add("/style/TODOApplication.css")

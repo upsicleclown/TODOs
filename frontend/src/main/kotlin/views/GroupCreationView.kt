@@ -4,6 +4,7 @@ import controllers.SidepaneController
 import javafx.beans.value.ChangeListener
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
+import javafx.geometry.Pos
 import javafx.scene.control.Button
 import javafx.scene.control.ButtonBar
 import javafx.scene.control.ButtonType
@@ -16,57 +17,73 @@ import javafx.scene.layout.VBox
 import models.Filter
 import models.Group
 import models.Label
+import javafx.scene.control.Label as JfxLabel
 
 class GroupCreationView(private val controller: SidepaneController) : Dialog<Group?>() {
-    var group: Group? = null
+    var group = Group("", Filter())
+    private var createButton = Button()
+    private var cancelButton = Button()
     private val labelViewScrollContainer = ScrollPane()
-    private val labelViewContainer = HBox()
-    private val groupCreationField = VBox()
-    private val groupNameField = TextField()
-    private val groupFilterField = VBox()
-    private val createButtonType = ButtonType("Create", ButtonBar.ButtonData.YES)
+    private val labelViewContainer = HBox(20.0)
+    private val groupCreationContainer = VBox(24.0)
+    private val groupNameField = TextField("")
+    private val groupFilterLabel = JfxLabel("FILTERS")
+    private val groupFilterContainer = VBox()
+    private val createButtonType = ButtonType("save", ButtonBar.ButtonData.YES)
 
     init {
-        controller.todoApp()?.enableHotkeys(dialogPane.scene)
+        /* region styling */
         dialogPane.scene.stylesheets.add("/style/TODOApplication.css")
-        this.isResizable = true
-        dialogPane.setMinSize(500.0, 400.0)
+        controller.todoApp()?.enableHotkeys(dialogPane.scene)
 
-        group = Group("", Filter())
-        title = "Create a Group"
+        groupCreationContainer.styleClass.add("group-creation")
+        groupCreationContainer.alignment = Pos.CENTER
+        groupNameField.styleClass.addAll("title-min", "group-creation__text-field")
+        groupNameField.maxWidth = 540.0
 
-        // field to add group's name
-        groupNameField.promptText = "Create a new group..."
-        groupCreationField.children.add(groupNameField)
+        groupFilterLabel.styleClass.addAll("subtitle")
 
-        // field to add group's filter labels
-        setupLabelViewContainer()
-        loadLabelViewContainer(listOf())
-        groupFilterField.children.add(labelViewScrollContainer)
-
-        groupCreationField.children.add(groupFilterField)
-        dialogPane.content = groupCreationField
+        labelViewScrollContainer.styleClass.addAll("group-creation__label-container")
+        groupFilterContainer.styleClass.add("group-creation__filters")
 
         dialogPane.buttonTypes.addAll(createButtonType, ButtonType.CANCEL)
+        createButton = dialogPane.lookupButton(createButtonType) as Button
+        cancelButton = dialogPane.lookupButton(ButtonType.CANCEL) as Button
+        cancelButton.text = "cancel"
+        createButton.styleClass.addAll("body", "group-creation__create-button")
+        cancelButton.styleClass.addAll("body", "group-creation__cancel-button")
 
-        val createButton = dialogPane.lookupButton(createButtonType) as Button
+        title = "Create a Group"
+        isResizable = true
+        dialogPane.setMinSize(560.0, 400.0)
+        /* end region styling */
+
+        /* region view setup */
+        setupLabelViewContainer()
+        loadLabelViewContainer()
+        setupGroupResultConverter()
+
+        dialogPane.content = groupCreationContainer
+
+        groupNameField.promptText = "group name..."
+        groupFilterContainer.children.add(labelViewScrollContainer)
+        groupCreationContainer.children.addAll(groupNameField, groupFilterLabel, groupFilterContainer)
+        /* end region view setup */
+
+        /* region event filters */
+        // Prevent dialog from closing when input is invalid
         createButton.addEventFilter(
             ActionEvent.ACTION
         ) { event ->
-            // Check whether the textfield is empty
-            if (groupNameField.text == "") {
-                // The conditions are not fulfilled so that we consume the event to prevent the dialog from closing
-                event.consume()
-            }
+            if (groupNameField.text.isBlank()) event.consume()
         }
 
-        // ensure initial state is clear
+        // Reset state on initialization
         onShowing = EventHandler {
             result = null
             groupNameField.text = ""
         }
-
-        setUpGroupResultConverter()
+        /* end region event filters */
     }
 
     private fun setupLabelViewContainer() {
@@ -89,10 +106,8 @@ class GroupCreationView(private val controller: SidepaneController) : Dialog<Gro
         )
     }
 
-    private fun loadLabelViewContainer(list: List<Label>) {
-        labelViewContainer.children.clear()
-        labelViewContainer.children.add(javafx.scene.control.Label("Labels: "))
-        labelViewContainer.children.addAll(
+    private fun loadLabelViewContainer(list: List<Label> = listOf()) {
+        labelViewContainer.children.setAll(
             list.map {
                 GroupCreationLabelView(sidepaneController = controller, label = it)
             }
@@ -100,18 +115,18 @@ class GroupCreationView(private val controller: SidepaneController) : Dialog<Gro
         labelViewContainer.children.add(AddGroupCreationLabelChip(controller = controller))
     }
 
-    private fun setUpGroupResultConverter() {
+    private fun setupGroupResultConverter() {
         setResultConverter { dialogButton ->
 
             when (dialogButton) {
                 (createButtonType) -> {
-                    group?.name = groupNameField.text
+                    group.name = groupNameField.text
                     controller.groupCreationLabelListProperty.value.forEach { label ->
                         if (label.name !in controller.labelListProperty.map { it.name }) {
                             controller.createLabel(false, label)
                         }
                     }
-                    group?.filter!!.labelIds = controller.labelListProperty.filter { it.name in controller.groupCreationLabelListProperty.value.map { groupCreationLabel -> groupCreationLabel.name } }.map { it.id }.toMutableList()
+                    group.filter.labelIds = controller.labelListProperty.filter { it.name in controller.groupCreationLabelListProperty.value.map { groupCreationLabel -> groupCreationLabel.name } }.map { it.id }.toMutableList()
                     result = group
                 }
                 else -> result = null
