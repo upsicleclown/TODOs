@@ -1,0 +1,57 @@
+@import "config.css";
+
+.combobox {
+    -fx-pref-width: 120 ;
+}
+
+/* hide dropdown arrow */
+.combobox .arrow,
+.combobox .arrow-button {
+    -fx-background-radius: 0;
+    -fx-padding: 0;
+    -fx-background-color: transparent;
+}
+
+/* needs to be dynamically set based on label color */
+.combobox .text-field {
+    -fx-text-fill: -background-white;
+    -fx-background-color: transparent;
+    -fx-highlight-fill: -background-white;
+    -fx-highlight-text-fill: -primary-black;
+}
+
+
+/* option styling */
+.combobox .list-view {
+    -fx-background-color: -background-white;
+    -fx-background-insets: 0;
+    -fx-padding: 8px;
+    -fx-border-style: solid;
+    -fx-border-width: 1;
+    -fx-border-color: -primary-black;
+}
+
+/* hide scroll bar */
+.combobox .scroll-bar {
+    -fx-padding: 0;
+}
+
+.combobox .list-cell:filled {
+    -fx-padding: 8px;
+    -fx-border-style: hidden hidden solid hidden;
+    -fx-border-width: 1;
+    -fx-border-color: -primary-black;
+    -fx-text-fill: -primary-black;
+}
+
+.combobox .list-cell:filled:focused,
+.combobox .list-cell:filled:focused:hover,
+.combo-box .list-cell:filled:hover {
+    -fx-background-color: -background-grey;
+    -fx-text-fill: -background-white;
+}
+
+.combobox .list-cell--last {
+    -fx-border-style: hidden hidden hidden hidden;
+    -fx-border-width: 0;
+}
