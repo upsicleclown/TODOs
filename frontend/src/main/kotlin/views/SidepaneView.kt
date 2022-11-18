@@ -20,7 +20,7 @@ class SidepaneView(
     var groupCreationDialog: GroupCreationView? = null
     private val openGroupCreationDialogButton = Button("+ group")
     private val SIDEPANE_WIDTH = 200.0
-    private val showAllItems = Button("all")
+    private val showAllItemsButton = Button("Show All Items")
 
     init {
         /* region styling */
@@ -57,7 +57,7 @@ class SidepaneView(
         }
         /* end region view setup */
 
-        showAllItems.onAction = EventHandler<ActionEvent?> { event ->
+        showAllItemsButton.onAction = EventHandler<ActionEvent?> { event ->
             sidepaneController.focusGroup(null)
         }
         /* region data bindings */
@@ -70,6 +70,6 @@ class SidepaneView(
             )
         }
         /* end region data bindings */
-        children.addAll(showAllItems, groupListScrollContainer, openGroupCreationDialogButton)
+        children.addAll(showAllItemsButton, groupListScrollContainer, openGroupCreationDialogButton)
     }
 }
