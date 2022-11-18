@@ -12,6 +12,7 @@ import commands.DeleteItemCommand
 import commands.DeleteItemLabelCommand
 import commands.EditItemCommand
 import commands.EditItemLabelCommand
+import commands.EditLabelCommand
 import commands.EditSortOrderCommand
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
@@ -109,6 +110,10 @@ class GroupViewController(todoApp: TODOApplication) {
         app?.commandHandler?.execute(deleteItemLabelCommand)
     }
 
+    fun editLabel(collision: Boolean, newLabel: Label, originalLabel: Label) {
+        val editLabelCommand = EditLabelCommand(collision, newLabel, originalLabel)
+        app?.commandHandler?.execute(editLabelCommand)
+    }
     fun editSortOrder(newSortOrder: GroupView.SortOrder, oldSortOrder: GroupView.SortOrder) {
         val editSortOrderCommand = EditSortOrderCommand(newSortOrder, oldSortOrder, this)
         app?.commandHandler?.execute(editSortOrderCommand)
