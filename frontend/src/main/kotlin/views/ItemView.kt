@@ -19,6 +19,7 @@ import jfxtras.scene.control.LocalDateTimeTextField
 import models.Item
 import models.Label
 import models.Priority
+import javafx.scene.layout.Priority as JfxPriority
 
 class ItemView(private val controller: GroupViewController, private val item: Item) : BorderPane() {
     private val LABEL_VIEW_GUTTER_LENGTH = 12.0
@@ -26,6 +27,7 @@ class ItemView(private val controller: GroupViewController, private val item: It
     private val textField = TextField()
     private val completionButton = Button()
     private val deleteButton = Button("x")
+    private val propertyContainer = HBox()
     private val priorityPickerContainer = HBox()
     private val priorityPicker = ComboBox<Priority>()
     private val dueDatePicker = LocalDateTimeTextField()
@@ -39,10 +41,10 @@ class ItemView(private val controller: GroupViewController, private val item: It
         deleteButton.styleClass.addAll("item__delete-button")
         completionButton.styleClass.addAll("item__completion-button")
         labelViewScrollContainer.styleClass.addAll("item__label-container")
-        labelViewScrollContainer.isFitToWidth = true
         labelViewContainer.styleClass.add("item__label-content")
         priorityPickerContainer.styleClass.add("item__priority-picker-content")
         priorityPicker.styleClass.addAll("item__priority-picker", "list-cell", "label-max")
+        priorityPicker.minWidth = 130.0
         /* end region styling */
 
         /* region item setup */
@@ -54,11 +56,13 @@ class ItemView(private val controller: GroupViewController, private val item: It
         configCompletionButton(item)
         /* end region item setup */
 
+        propertyContainer.children.addAll(priorityPickerContainer, dueDatePicker, labelViewScrollContainer)
+        HBox.setHgrow(labelViewScrollContainer, JfxPriority.ALWAYS)
+
         left = completionButton
         right = deleteButton
         center = textField
-        bottom = HBox(priorityPickerContainer, dueDatePicker, labelViewScrollContainer)
-        labelViewScrollContainer.isFitToWidth = true
+        bottom = propertyContainer
     }
 
     private fun focusItem() {

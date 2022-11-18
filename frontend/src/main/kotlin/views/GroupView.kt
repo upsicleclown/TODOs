@@ -17,7 +17,7 @@ import kotlin.properties.Delegates
 class GroupView(private val controller: GroupViewController) : VBox(36.0) {
 
     enum class Attribute(val value: String) {
-        IS_COMPLETED("Completed"), EDT_DUEDATE("Due Date"), PRIORITY("Priority");
+        IS_COMPLETED("completed"), EDT_DUEDATE("due date"), PRIORITY("priority");
 
         companion object {
             private val map = values().associateBy { it.value }
@@ -28,17 +28,16 @@ class GroupView(private val controller: GroupViewController) : VBox(36.0) {
     data class SortOrder(var attribute: Attribute = Attribute.IS_COMPLETED, var isDesc: Boolean = false)
 
     var sortOrder: SortOrder by Delegates.observable(SortOrder()) { _, _, _ -> loadSortOrderPicker() }
-    val sortOrderAttributePicker = ComboBox<String>()
-    val sortOrderIsDescButton = Button()
-    val sortOrderPicker = HBox()
+    private val sortOrderAttributePicker = ComboBox<String>()
+    private val sortOrderIsDescButton = Button()
+    private val sortOrderPicker = HBox(12.0)
+    private val sortOrderLabel = Label("SORT")
     private val itemListScrollContainer = ScrollPane()
     private val itemListContainer = VBox(36.0)
     private val itemCreationField = TextField()
-    private var currentGroupName = Label("")
+    private var currentGroupName = Label("Default View")
 
     init {
-
-        setUpSortOrderPicker()
         /* region styling */
         styleClass.add("group")
         currentGroupName.styleClass.addAll("group__title", "title-max")
@@ -73,6 +72,8 @@ class GroupView(private val controller: GroupViewController) : VBox(36.0) {
         /* end region event filters */
 
         /* region view setup */
+        setUpSortOrderPicker()
+
         itemCreationField.promptText = "Create a new item..."
 
         itemListScrollContainer.isFitToWidth = true
@@ -85,7 +86,11 @@ class GroupView(private val controller: GroupViewController) : VBox(36.0) {
 
         /* region data bindings */
         controller.currentGroupProperty.addListener { _, _, newGroup ->
-            currentGroupName.text = newGroup?.name
+            if (newGroup != null) {
+                currentGroupName.text = newGroup.name
+            } else {
+                currentGroupName.text = "Default View"
+            }
         }
 
         controller.displayItemListProperty.addListener { _, _, newItemList ->
@@ -115,6 +120,13 @@ class GroupView(private val controller: GroupViewController) : VBox(36.0) {
     }
 
     private fun setUpSortOrderPicker() {
+        /* region styling */
+        sortOrderPicker.styleClass.addAll("sort")
+        sortOrderLabel.styleClass.addAll("h1")
+        sortOrderAttributePicker.styleClass.addAll("label-max", "sort__picker")
+        sortOrderIsDescButton.styleClass.addAll("label-max", "sort__desc-button")
+        /* end region styling */
+
         loadSortOrderPicker()
 
         sortOrderIsDescButton.setOnAction {
@@ -132,7 +144,6 @@ class GroupView(private val controller: GroupViewController) : VBox(36.0) {
             }
         )
 
-        val sortOrderLabel = Label("Sort By: ")
         sortOrderPicker.children.addAll(sortOrderLabel, sortOrderAttributePicker, sortOrderIsDescButton)
     }
 }

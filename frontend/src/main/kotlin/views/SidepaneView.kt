@@ -13,14 +13,14 @@ import java.util.Optional
 
 class SidepaneView(
     private val sidepaneController: SidepaneController
-) : VBox() {
+) : VBox(24.0) {
 
     private var groupListContainer = VBox(24.0)
     private var groupListScrollContainer = ScrollPane()
     var groupCreationDialog: GroupCreationView? = null
     private val openGroupCreationDialogButton = Button("+ group")
     private val SIDEPANE_WIDTH = 200.0
-    private val showAllItemsButton = Button("Show All Items")
+    private val showAllItemsButton = Button("default")
 
     init {
         /* region styling */
@@ -30,6 +30,7 @@ class SidepaneView(
         groupListScrollContainer.styleClass.add("sidepane__list__container")
         groupListContainer.styleClass.add("sidepane__list")
         openGroupCreationDialogButton.styleClass.addAll("body", "sidepane__add-group")
+        showAllItemsButton.styleClass.addAll("body", "sidepane__default-group")
         /* end region styling */
 
         /* region event filters */
@@ -57,10 +58,11 @@ class SidepaneView(
         }
         /* end region view setup */
 
-        showAllItemsButton.onAction = EventHandler<ActionEvent?> { event ->
+        /* region data bindings */
+        showAllItemsButton.onAction = EventHandler<ActionEvent?> { _ ->
             sidepaneController.focusGroup(null)
         }
-        /* region data bindings */
+
         sidepaneController.groupListProperty.addListener { _, _, newList ->
             groupListContainer.children.setAll(
                 newList.map {

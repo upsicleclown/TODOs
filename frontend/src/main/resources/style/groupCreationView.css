@@ -1,0 +1,44 @@
+@import "config.css";
+
+.group-creation {
+    -fx-padding: 36px;
+}
+
+.group-creation__filters {
+    -fx-border-style: solid;
+    -fx-border-width: 1px;
+    -fx-border-color: -primary-black;
+    -fx-background-color: -background-white;
+    -fx-padding: 16px;
+}
+
+.group-creation__filters .viewport {
+    -fx-background-color: transparent;
+}
+
+.group-creation__cancel-button {
+    -fx-background-color: -primary-black;
+    -fx-text-fill: -background-white;
+    -fx-border-style: solid;
+    -fx-border-color: -primary-black;
+    -fx-border-width: 1px;
+}
+
+.group-creation__cancel-button:hover {
+    -fx-text-fill: -primary-black;
+    -fx-background-color: -background-white;
+    -fx-border-color: -primary-black;
+}
+
+.group-creation__create-button {
+    -fx-background-color: -background-white;
+    -fx-text-fill: -selection-blue;
+    -fx-border-style : solid;
+    -fx-border-color: -selection-blue;
+    -fx-border-width: 1px;
+}
+
+.group-creation__create-button:hover {
+    -fx-text-fill: -background-white;
+    -fx-background-color: -selection-blue;
+}

@@ -7,15 +7,38 @@
 
 .sidepane__add-group {
     -fx-text-fill: -primary-black;
-    -fx-alignment: center-left;
+    -fx-padding: 8px 42px 8px 26px;
     -fx-background-color: -background-white;
     -fx-border-width: 1px;
     -fx-border-style: solid;
     -fx-border-color: -primary-black;
 }
 
+.sidepane__list {
+    -fx-padding: 0px 12px 0px 0px;
+}
+
+.sidepane__add-group:hover {
+    -fx-text-fill: -background-white;
+    -fx-background-color: -primary-black;
+}
+
 .sidepane__list__container > * {
     -fx-background-color: transparent;
+}
+
+.sidepane__default-group:hover {
+    -fx-text-fill: -background-white;
+    -fx-background-color: -burnt-orange;
+}
+
+.sidepane__default-group {
+    -fx-background-color: -secondary-beige;
+    -fx-padding: 8px 30px 8px 30px;
+    -fx-border-color: -primary-black;
+    -fx-border-width: 1px;
+    -fx-border-style: solid;
+    -fx-text-fill: -burnt-orange
 }
 
 .sidepane__group {
@@ -26,12 +49,21 @@
     -fx-border-style: solid;
 }
 
+.sidepane__group__text-field {
+    -fx-highlight-fill: -background-grey;
+    -fx-highlight-text-fill: -background-white;
+}
+
 .sidepane__group--selected {
     -fx-background-color: -accent-purple;
     -fx-padding: 8px 16px 8px 16px;
     -fx-border-color: -primary-black;
     -fx-border-width: 1px;
     -fx-border-style: solid
+}
+
+.sidepane__group--selected:hover {
+    -fx-background-color: -selection-blue;
 }
 
 .sidepane__group--selected > .sidepane__group__label,

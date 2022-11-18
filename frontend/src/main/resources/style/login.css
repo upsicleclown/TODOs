@@ -1,0 +1,40 @@
+@import "config.css";
+
+.username {
+    -fx-align: center;
+}
+
+.username__text-field,
+.password__text-field {
+    -fx-border-style : solid;
+    -fx-border-color: -background-grey;
+    -fx-border-width: 0.5px;
+    -fx-text-fill: -background-grey;
+}
+
+.buttons__register {
+    -fx-background-color: -primary-black;
+    -fx-text-fill: -background-white;
+    -fx-border-style: solid;
+    -fx-border-color: -primary-black;
+    -fx-border-width: 1px;
+}
+
+.buttons__register:hover {
+    -fx-text-fill: -primary-black;
+    -fx-background-color: -background-white;
+    -fx-border-color: -primary-black;
+}
+
+.buttons__login {
+    -fx-background-color: -background-white;
+    -fx-text-fill: -selection-blue;
+    -fx-border-style : solid;
+    -fx-border-color: -selection-blue;
+    -fx-border-width: 1px;
+}
+
+.buttons__login:hover {
+    -fx-text-fill: -background-white;
+    -fx-background-color: -selection-blue;
+}

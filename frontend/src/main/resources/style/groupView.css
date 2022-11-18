@@ -11,6 +11,7 @@
 
 .group__item-list {
     -fx-background-insets: 0px;
+    -fx-padding: 0px 12px 0px 0px;
 }
 
 .group__title {
@@ -26,4 +27,47 @@
     -fx-border-color: -primary-black;
     -fx-border-radius: 12px;
     -fx-background-radius: 12px;
+}
+
+.sort {
+    -fx-align: baseline-center;
+}
+
+.sort .list-view .list-cell {
+    -fx-text-fill: -background-white;
+    -fx-background-color: -primary-black;
+    -fx-padding: 8px;
+    -fx-border-style: hidden hidden solid hidden;
+    -fx-border-width: 1px;
+    -fx-border-color: -background-white;
+}
+
+.sort .list-view .list-cell:hover,
+.sort .list-view .list-cell:focused {
+    -fx-text-fill: -primary-black;
+    -fx-background-color: -background-white;
+}
+
+.sort__picker {
+    -fx-alignment: center;
+    -fx-border-color: -primary-black;
+    -fx-background-color: -primary-black;
+    -fx-text-fill: -background-white;
+    -fx-background-radius: 16px;
+    -fx-border-radius: 16px;
+    -fx-padding: 0px 0px 0px 12px;
+}
+
+.sort__picker > .list-cell {
+    -fx-text-fill: -background-white;
+}
+
+.sort__picker .arrow {
+    -fx-background-color: -background-white;
+}
+
+.sort__desc-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: -primary-black;
+    -fx-border-style: hidden;
 }
