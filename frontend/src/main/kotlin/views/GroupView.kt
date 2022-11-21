@@ -16,7 +16,7 @@ import kotlin.properties.Delegates
 class GroupView(private val controller: GroupViewController) : VBox(36.0) {
 
     enum class Attribute(val value: String) {
-        IS_COMPLETED("completed"), EDT_DUEDATE("due date"), PRIORITY("priority"), CUSTOM("custom");
+        IS_COMPLETED("completed"), EDT_DUEDATE("due date"), PRIORITY("priority"), CUSTOM("");
 
         companion object {
             private val map = values().associateBy { it.value }
