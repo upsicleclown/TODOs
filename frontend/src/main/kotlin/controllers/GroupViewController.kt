@@ -5,6 +5,7 @@ import bindings.GroupProperty
 import bindings.ItemListProperty
 import bindings.ItemProperty
 import bindings.LabelListProperty
+import cache.Cache
 import client.TODOClient
 import commands.CreateItemCommand
 import commands.CreateItemLabelCommand
@@ -24,7 +25,7 @@ import views.GroupView
 /**
  * todoApp is passed as a parameter so that the GroupViewController can access the app's commandHandler
  */
-class GroupViewController(todoApp: TODOApplication) {
+class GroupViewController(todoApp: TODOApplication, private val cache: Cache) {
     private var app: TODOApplication? = null
     private var view: GroupView? = null
     private val todoClient = TODOClient
@@ -49,6 +50,7 @@ class GroupViewController(todoApp: TODOApplication) {
         }
         currentGroupProperty.addListener { _, _, _ ->
             reloadDisplayItemList(itemListProperty.value)
+            resetSortOrderIfNeeded()
         }
     }
 
@@ -58,6 +60,7 @@ class GroupViewController(todoApp: TODOApplication) {
                 GroupView.Attribute.IS_COMPLETED -> it.isCompleted
                 GroupView.Attribute.EDT_DUEDATE -> it.edtDueDate
                 GroupView.Attribute.PRIORITY -> it.priority
+                GroupView.Attribute.CUSTOM -> null // comparator not used for custom.
             }
         }
 
@@ -96,10 +99,15 @@ class GroupViewController(todoApp: TODOApplication) {
             newItemList.toList()
         }
 
-        var sortedList: List<Item> = filteredList.sortedWith(comparator)
-
-        if (view?.sortOrder!!.isDesc) {
-            sortedList = sortedList.reversed()
+        // if custom sorting, order by cached ordering, else use `sortOrder`.
+        var sortedList: List<Item>
+        if (view?.sortOrder!!.attribute == GroupView.Attribute.CUSTOM) {
+            sortedList = orderByCurrentGroupItemOrdering(filteredList.toMutableList())
+        } else {
+            sortedList = filteredList.sortedWith(comparator)
+            if (view?.sortOrder!!.isDesc) {
+                sortedList = sortedList.reversed()
+            }
         }
 
         displayItemList.setAll(
@@ -170,5 +178,42 @@ class GroupViewController(todoApp: TODOApplication) {
 
     fun clearFocus() {
         focusedItemProperty.set(null)
+    }
+
+    /**
+     * Orders the provided item list based on the cached item order for the current group.
+     * The list is left un-touched if nothing is cached for the current group or the current group is null.
+     */
+    private fun orderByCurrentGroupItemOrdering(itemList: MutableList<Item>): List<Item> {
+        val currentGroupId: Int = currentGroupProperty.value?.id ?: return itemList
+        val itemIdOrdering: List<Int> = cache.getGroupIdToItemIdOrdering()[currentGroupId] ?: return itemList
+
+        // for all items that have a saved order, order them.
+        val orderedItemList = mutableListOf<Item>()
+        for (itemId in itemIdOrdering) {
+            val itemIdList: List<Int> = itemList.map { item: Item? -> item!!.id }
+            if (itemIdList.contains(itemId)) {
+                val nextItem = itemList[itemIdList.indexOf(itemId)]
+                orderedItemList.add(nextItem)
+                itemList.remove(nextItem)
+            }
+        }
+
+        // for all items that do not have a saved order, if any, append them after ordering is done.
+        for (item in itemList) {
+            orderedItemList.add(item)
+        }
+
+        return orderedItemList
+    }
+
+    /**
+     * If current group is default group and sort order is custom, reset to default sort order.
+     * (We do not support custom ordering for the default group.)
+     */
+    private fun resetSortOrderIfNeeded() {
+        if (currentGroupProperty.value == null && view?.sortOrder!!.attribute == GroupView.Attribute.CUSTOM) {
+            setSortOrder(GroupView.SortOrder())
+        }
     }
 }

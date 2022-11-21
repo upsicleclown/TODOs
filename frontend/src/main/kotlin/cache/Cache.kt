@@ -9,14 +9,18 @@ import java.io.File
 
 /**
  * Class to cache items for the frontend.
- * The window settings file path must be at root for packaging to work.
+ * Cache files path must be at root for packaging to work.
 */
-class Cache(private val windowSettingsFilePath: String = "window_settings.json") {
+class Cache(private val windowSettingsFilePath: String = "window_settings.json", private val groupIdToItemIdOrderingFilePath: String = "group_id_to_item_id_ordering.json") {
+    private val emptyLength = 0L
+
     /* Properties related to window settings. */
     private lateinit var windowSettings: WindowSettings
-    private val emptyLength = 0L
     private val defaultPosition = 0.0
     private val defaultSize = 500.0
+
+    /* Properties related to item ordering. */
+    private var groupIdToItemIdOrdering: HashMap<Int, List<Int>> = HashMap()
 
     init {
         // If file content is empty, set default values.
@@ -24,6 +28,11 @@ class Cache(private val windowSettingsFilePath: String = "window_settings.json")
             windowSettings = WindowSettings(defaultPosition, defaultPosition, defaultSize, defaultSize)
         } else {
             loadWindowSettings()
+        }
+
+        // If file content is non-empty, load values.
+        if (File(groupIdToItemIdOrderingFilePath).length() != emptyLength) {
+            loadGroupIdToItemIdOrdering()
         }
     }
 
@@ -44,5 +53,24 @@ class Cache(private val windowSettingsFilePath: String = "window_settings.json")
     private fun loadWindowSettings() {
         val jsonDict = File(windowSettingsFilePath).readText()
         windowSettings = Json.decodeFromString(jsonDict)
+    }
+
+    /* Methods related to item ordering */
+    fun editGroupToItemOrdering(groupIdToItemIdOrdering: HashMap<Int, List<Int>>) {
+        this.groupIdToItemIdOrdering = groupIdToItemIdOrdering
+    }
+
+    fun getGroupIdToItemIdOrdering(): HashMap<Int, List<Int>> {
+        return groupIdToItemIdOrdering
+    }
+
+    fun saveGroupIdToItemIdOrdering() {
+        val jsonDict: JsonElement = Json.encodeToJsonElement(groupIdToItemIdOrdering)
+        File(groupIdToItemIdOrderingFilePath).writeText(jsonDict.toString())
+    }
+
+    private fun loadGroupIdToItemIdOrdering() {
+        val jsonDict = File(groupIdToItemIdOrderingFilePath).readText()
+        groupIdToItemIdOrdering = Json.decodeFromString(jsonDict)
     }
 }

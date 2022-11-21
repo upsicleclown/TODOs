@@ -27,17 +27,18 @@ import views.SidepaneView
 
 class TODOApplication : Application() {
     private var primaryStage = Stage()
-    private val sidepaneController = SidepaneController(this)
-    val groupViewController = GroupViewController(this)
-    private val todoClient = TODOClient
-    private val sidepaneView = SidepaneView(sidepaneController)
-    private val groupView = GroupView(groupViewController)
-    private val settingsView = SettingsView(groupViewController)
 
     val commandHandler = CommandHandler()
     private val cache = Cache()
     private val clipboard = Clipboard()
     private val minSize = 500.0
+
+    private val sidepaneController = SidepaneController(this)
+    val groupViewController = GroupViewController(this, cache)
+    private val todoClient = TODOClient
+    private val sidepaneView = SidepaneView(sidepaneController)
+    private val groupView = GroupView(groupViewController)
+    private val settingsView = SettingsView(groupViewController)
 
     init {
         sidepaneController.addView(sidepaneView)

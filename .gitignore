@@ -7,3 +7,4 @@ out/
 .gitattributes
 /backend/todo.db
 /frontend/window_settings.json
+/frontend/group_id_to_item_id_ordering.json
