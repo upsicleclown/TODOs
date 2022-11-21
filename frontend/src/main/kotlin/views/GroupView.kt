@@ -1,7 +1,6 @@
 package views
 
 import controllers.GroupViewController
-import javafx.beans.value.ChangeListener
 import javafx.event.EventHandler
 import javafx.scene.control.Button
 import javafx.scene.control.ComboBox
@@ -17,7 +16,7 @@ import kotlin.properties.Delegates
 class GroupView(private val controller: GroupViewController) : VBox(36.0) {
 
     enum class Attribute(val value: String) {
-        IS_COMPLETED("completed"), EDT_DUEDATE("due date"), PRIORITY("priority");
+        IS_COMPLETED("completed"), EDT_DUEDATE("due date"), PRIORITY("priority"), CUSTOM("");
 
         companion object {
             private val map = values().associateBy { it.value }
@@ -136,13 +135,13 @@ class GroupView(private val controller: GroupViewController) : VBox(36.0) {
 
         sortOrderAttributePicker.items.addAll(Attribute.values().map { it.value })
 
-        sortOrderAttributePicker.valueProperty().addListener(
-            ChangeListener { _, oldValue, newValue ->
-                if (oldValue != newValue) {
-                    controller.editSortOrder(SortOrder(Attribute.fromValue(newValue)!!, sortOrder.isDesc), sortOrder)
-                }
+        sortOrderAttributePicker.valueProperty().addListener { _, oldValue, newValue ->
+            if (oldValue != newValue) {
+                controller.editSortOrder(SortOrder(Attribute.fromValue(newValue)!!, sortOrder.isDesc), sortOrder)
+                // disable IsDescButton on custom ordering.
+                sortOrderIsDescButton.isDisable = newValue == Attribute.CUSTOM.value
             }
-        )
+        }
 
         sortOrderPicker.children.addAll(sortOrderLabel, sortOrderAttributePicker, sortOrderIsDescButton)
     }

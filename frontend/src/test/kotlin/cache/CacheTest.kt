@@ -5,7 +5,10 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class CacheTest {
-    private val cache = Cache(this.javaClass.classLoader.getResource("cache/window_settings.json")!!.path)
+    private val cache = Cache(
+        this.javaClass.classLoader.getResource("cache/window_settings.json")!!.path,
+        this.javaClass.classLoader.getResource("cache/group_id_to_item_id_ordering.json")!!.path
+    )
 
     /*
        Tests related to window settings.
@@ -35,5 +38,36 @@ class CacheTest {
         assertEquals(windowSettings.y, expectedPosition)
         assertEquals(windowSettings.height, expectedSize)
         assertEquals(windowSettings.width, expectedSize)
+    }
+
+    /*
+       Tests related to item ordering
+     */
+    @Test
+    fun testEditItemOrdering() {
+        val expectedNumberOfCachedOrdering = 2
+        val newGroupToItemOrdering: HashMap<Int, List<Int>> = HashMap()
+        val expectedGroup1 = 1
+        val expectedGroup1ItemIdOrdering = listOf(2, 1, 3)
+        newGroupToItemOrdering[expectedGroup1] = expectedGroup1ItemIdOrdering
+        val expectedGroup2 = 2
+        val expectedGroup2ItemIdOrdering = listOf(4, 3)
+        newGroupToItemOrdering[expectedGroup2] = expectedGroup2ItemIdOrdering
+
+        cache.editGroupToItemOrdering(newGroupToItemOrdering)
+        val newItemOrdering = cache.getGroupToItemOrdering()
+        assertEquals(newItemOrdering.size, expectedNumberOfCachedOrdering)
+        assertEquals(newItemOrdering[expectedGroup1], expectedGroup1ItemIdOrdering)
+        assertEquals(newItemOrdering[expectedGroup2], expectedGroup2ItemIdOrdering)
+    }
+
+    @Test
+    fun testGetItemOrdering() {
+        val expectedNumberOfCachedOrdering = 1
+        val expectedItemIdOrdering = listOf(1, 2, 3)
+
+        val groupIdToItemIdOrdering = cache.getGroupToItemOrdering()
+        assertEquals(groupIdToItemIdOrdering.size, expectedNumberOfCachedOrdering)
+        assertEquals(groupIdToItemIdOrdering[1], expectedItemIdOrdering)
     }
 }
