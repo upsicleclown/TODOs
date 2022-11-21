@@ -48,7 +48,8 @@ class GroupViewController(todoApp: TODOApplication, private val cache: Cache) {
         itemListProperty.addListener { _, _, newItemList ->
             reloadDisplayItemList(newItemList)
         }
-        currentGroupProperty.addListener { _, _, _ ->
+        currentGroupProperty.addListener { _, oldGroup, _ ->
+            saveSortOrderIfNeeded(oldGroup, displayItemList)
             reloadDisplayItemList(itemListProperty.value)
             resetSortOrderIfNeeded()
         }
@@ -214,6 +215,27 @@ class GroupViewController(todoApp: TODOApplication, private val cache: Cache) {
     private fun resetSortOrderIfNeeded() {
         if (currentGroupProperty.value == null && view?.sortOrder!!.attribute == GroupView.Attribute.CUSTOM) {
             setSortOrder(GroupView.SortOrder())
+        }
+    }
+
+    /**
+     * If current group is not default and sort order is custom, save sort order.
+     * Items are passed in the order to be saved in.
+     */
+    private fun saveSortOrderIfNeeded(group: Group?, items: List<Item>) {
+        if (group != null && view?.sortOrder!!.attribute == GroupView.Attribute.CUSTOM) {
+            val groupToItemOrdering: HashMap<Int, List<Int>> = cache.getGroupToItemOrdering()
+            groupToItemOrdering[group.id] = items.map { item -> item.id }
+            cache.editGroupToItemOrdering(groupToItemOrdering)
+        }
+    }
+
+    /**
+     * `saveSortOrderIfNeeded` wrapper for the app to save the current sort order if need be on app stop.
+     */
+    fun saveCurrentSortOrderIfNeeded() {
+        if (currentGroupProperty.value != null) {
+            saveSortOrderIfNeeded(currentGroupProperty.value, displayItemList)
         }
     }
 }
