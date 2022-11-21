@@ -102,7 +102,7 @@ class GroupViewController(todoApp: TODOApplication, private val cache: Cache) {
         // if custom sorting, order by cached ordering, else use `sortOrder`.
         var sortedList: List<Item>
         if (view?.sortOrder!!.attribute == GroupView.Attribute.CUSTOM) {
-            sortedList = orderByCurrentGroupItemOrdering(filteredList.toMutableList())
+            sortedList = orderByCustom(filteredList.toMutableList())
         } else {
             sortedList = filteredList.sortedWith(comparator)
             if (view?.sortOrder!!.isDesc) {
@@ -184,9 +184,9 @@ class GroupViewController(todoApp: TODOApplication, private val cache: Cache) {
      * Orders the provided item list based on the cached item order for the current group.
      * The list is left un-touched if nothing is cached for the current group or the current group is null.
      */
-    private fun orderByCurrentGroupItemOrdering(itemList: MutableList<Item>): List<Item> {
+    private fun orderByCustom(itemList: MutableList<Item>): List<Item> {
         val currentGroupId: Int = currentGroupProperty.value?.id ?: return itemList
-        val itemIdOrdering: List<Int> = cache.getGroupIdToItemIdOrdering()[currentGroupId] ?: return itemList
+        val itemIdOrdering: List<Int> = cache.getGroupToItemOrdering()[currentGroupId] ?: return itemList
 
         // for all items that have a saved order, order them.
         val orderedItemList = mutableListOf<Item>()

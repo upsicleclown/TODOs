@@ -55,7 +55,7 @@ class CacheTest {
         newGroupToItemOrdering[expectedGroup2] = expectedGroup2ItemIdOrdering
 
         cache.editGroupToItemOrdering(newGroupToItemOrdering)
-        val newItemOrdering = cache.getGroupIdToItemIdOrdering()
+        val newItemOrdering = cache.getGroupToItemOrdering()
         assertEquals(newItemOrdering.size, expectedNumberOfCachedOrdering)
         assertEquals(newItemOrdering[expectedGroup1], expectedGroup1ItemIdOrdering)
         assertEquals(newItemOrdering[expectedGroup2], expectedGroup2ItemIdOrdering)
@@ -66,7 +66,7 @@ class CacheTest {
         val expectedNumberOfCachedOrdering = 1
         val expectedItemIdOrdering = listOf(1, 2, 3)
 
-        val groupIdToItemIdOrdering = cache.getGroupIdToItemIdOrdering()
+        val groupIdToItemIdOrdering = cache.getGroupToItemOrdering()
         assertEquals(groupIdToItemIdOrdering.size, expectedNumberOfCachedOrdering)
         assertEquals(groupIdToItemIdOrdering[1], expectedItemIdOrdering)
     }
