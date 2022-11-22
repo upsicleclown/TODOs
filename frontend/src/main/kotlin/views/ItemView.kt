@@ -56,24 +56,37 @@ class ItemView(private val controller: GroupViewController, private val item: It
         configCompletionButton(item)
         /* end region item setup */
 
-        propertyContainer.children.addAll(priorityPickerContainer, dueDatePicker, labelViewScrollContainer)
+        // For some unknown reason, the `hoverProperty` listener and  `setOnMouseDragged` event don't cover
+        // the same region of the border plane which led to discrepancies between the two triggers.
+        // To work around this issue, we decided to use these two clickable regions instead.
+        val topClickableRegion = HBox()
+        topClickableRegion.minWidth = 40.0
+        topClickableRegion.children.add(completionButton)
+
+        val bottomClickableRegion = HBox()
+        bottomClickableRegion.minWidth = 40.0
+
+        propertyContainer.children.addAll(bottomClickableRegion, priorityPickerContainer, dueDatePicker, labelViewScrollContainer)
         HBox.setHgrow(labelViewScrollContainer, JfxPriority.ALWAYS)
 
-        left = completionButton
+        left = topClickableRegion
         right = deleteButton
         center = textField
         bottom = propertyContainer
 
         /* hovering and dragging setup */
-        this.hoverProperty().addListener { _, _, newValue ->
-            if (newValue) {
-                controller.setOpenHandCursor()
-            } else {
-                controller.resetCursor()
-            }
+        topClickableRegion.hoverProperty().addListener { _, _, newValue ->
+            if (newValue) controller.setOpenHandCursor() else controller.resetCursor()
+        }
+        topClickableRegion.setOnMouseDragged { event ->
+            controller.setClosedHandCursor()
+            controller.setItemNewYPosition(item, this.layoutY + event.y)
         }
 
-        this.setOnMouseDragged { event ->
+        bottomClickableRegion.hoverProperty().addListener { _, _, newValue ->
+            if (newValue) controller.setOpenHandCursor() else controller.resetCursor()
+        }
+        bottomClickableRegion.setOnMouseDragged { event ->
             controller.setClosedHandCursor()
             controller.setItemNewYPosition(item, this.layoutY + event.y)
         }
