@@ -17,6 +17,7 @@ import commands.EditLabelCommand
 import commands.EditSortOrderCommand
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
+import javafx.scene.Node
 import models.Group
 import models.Item
 import models.Label
@@ -237,5 +238,42 @@ class GroupViewController(todoApp: TODOApplication, private val cache: Cache) {
         if (currentGroupProperty.value != null) {
             saveSortOrderIfNeeded(currentGroupProperty.value, displayItemList)
         }
+    }
+
+    fun setItemNewYPosition(item: Item, newYPosition: Double) {
+        val itemContainers: ObservableList<Node> = view?.getItemContainers()!!
+        var newIdx = -1 // new index the item will be placed at in the list.
+
+        for (itemContainer in itemContainers) {
+            // if y coordinate is greater or equal than current item, it will be placed after in the list.
+            if (newYPosition >= itemContainer.layoutY) {
+                newIdx += 1
+                continue
+            }
+            // if y coordinate is less than current item, break.
+            break
+        }
+        // once we have the item's new index, switch only if required.
+        if (newIdx != displayItemList.indexOf(item)) {
+            displayItemList.remove(item)
+            displayItemList.add(newIdx, item)
+            resetCursor()
+            view!!.setCustomOrder()
+        }
+    }
+
+    /**
+     * Cursor functions
+     */
+    fun setOpenHandCursor() {
+        app?.setOpenHandCursor()
+    }
+
+    fun setClosedHandCursor() {
+        app?.setClosedHandCursor()
+    }
+
+    fun resetCursor() {
+        app?.resetCursor()
     }
 }

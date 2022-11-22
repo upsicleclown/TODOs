@@ -1,7 +1,9 @@
 package views
 
 import controllers.GroupViewController
+import javafx.collections.ObservableList
 import javafx.event.EventHandler
+import javafx.scene.Node
 import javafx.scene.control.Button
 import javafx.scene.control.ComboBox
 import javafx.scene.control.Label
@@ -144,5 +146,13 @@ class GroupView(private val controller: GroupViewController) : VBox(36.0) {
         }
 
         sortOrderPicker.children.addAll(sortOrderLabel, sortOrderAttributePicker, sortOrderIsDescButton)
+    }
+
+    fun getItemContainers(): ObservableList<Node>? {
+        return itemListContainer.children
+    }
+
+    fun setCustomOrder() {
+        sortOrderAttributePicker.value = Attribute.CUSTOM.value
     }
 }

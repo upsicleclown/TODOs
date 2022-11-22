@@ -63,6 +63,21 @@ class ItemView(private val controller: GroupViewController, private val item: It
         right = deleteButton
         center = textField
         bottom = propertyContainer
+
+        /* hovering and dragging setup */
+        this.hoverProperty().addListener { _, _, newValue ->
+            if (newValue) {
+                controller.setOpenHandCursor()
+            } else {
+                controller.resetCursor()
+            }
+        }
+
+        this.setOnMouseDragged { event ->
+            controller.setClosedHandCursor()
+            controller.setItemNewYPosition(item, this.layoutY + event.y)
+        }
+        /* hovering and dragging setup end */
     }
 
     private fun focusItem() {

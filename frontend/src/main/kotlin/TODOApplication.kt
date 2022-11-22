@@ -7,6 +7,7 @@ import controllers.GroupViewController
 import controllers.SidepaneController
 import javafx.application.Application
 import javafx.event.EventHandler
+import javafx.scene.Cursor
 import javafx.scene.Scene
 import javafx.scene.control.Menu
 import javafx.scene.control.MenuBar
@@ -204,5 +205,20 @@ class TODOApplication : Application() {
         if (item != null) {
             groupViewController.createItem(item)
         }
+    }
+
+    /**
+     * Cursor functions
+     */
+    fun setOpenHandCursor() {
+        primaryStage.scene.cursor = Cursor.OPEN_HAND
+    }
+
+    fun setClosedHandCursor() {
+        primaryStage.scene.cursor = Cursor.CLOSED_HAND
+    }
+
+    fun resetCursor() {
+        primaryStage.scene.cursor = Cursor.DEFAULT
     }
 }
