@@ -29,7 +29,7 @@ class GroupViewController(todoApp: TODOApplication, private val cache: Cache) {
     private var app: TODOApplication? = null
     private var view: GroupView? = null
     private val todoClient = TODOClient
-    private var displayItemList: ObservableList<Item>
+    var displayItemList: ObservableList<Item>
 
     var displayItemListProperty: ItemListProperty
     var itemListProperty: ItemListProperty
