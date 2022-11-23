@@ -15,13 +15,14 @@ import javafx.scene.input.KeyEvent
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.HBox
+import javafx.scene.layout.Region
 import jfxtras.scene.control.LocalDateTimeTextField
 import models.Item
 import models.Label
 import models.Priority
 import javafx.scene.layout.Priority as JfxPriority
 
-class ItemView(private val controller: GroupViewController, private val item: Item) : BorderPane() {
+class ItemView(private val controller: GroupViewController, val item: Item) : BorderPane() {
     private val LABEL_VIEW_GUTTER_LENGTH = 12.0
 
     private val textField = TextField()
@@ -56,38 +57,27 @@ class ItemView(private val controller: GroupViewController, private val item: It
         configCompletionButton(item)
         /* end region item setup */
 
-        // For some unknown reason, the `hoverProperty` listener and  `setOnMouseDragged` event don't cover
-        // the same region of the border plane which led to discrepancies between the two triggers.
-        // To work around this issue, we decided to use these two clickable regions instead.
-        val topClickableRegion = HBox()
-        topClickableRegion.minWidth = 40.0
-        topClickableRegion.children.add(completionButton)
-
-        val bottomClickableRegion = HBox()
-        bottomClickableRegion.minWidth = 40.0
-
-        propertyContainer.children.addAll(bottomClickableRegion, priorityPickerContainer, dueDatePicker, labelViewScrollContainer)
+        val dragContainer = HBox(ImageView(Image("drag_32.png")))
+        val spacer = Region()
+        HBox.setHgrow(spacer, javafx.scene.layout.Priority.ALWAYS)
+        propertyContainer.children.addAll(priorityPickerContainer, dueDatePicker, labelViewScrollContainer, spacer, dragContainer)
         HBox.setHgrow(labelViewScrollContainer, JfxPriority.ALWAYS)
 
-        left = topClickableRegion
+        left = completionButton
         right = deleteButton
         center = textField
         bottom = propertyContainer
 
         /* hovering and dragging setup */
-        topClickableRegion.hoverProperty().addListener { _, _, newValue ->
+        dragContainer.hoverProperty().addListener { _, _, newValue ->
             if (newValue) controller.setOpenHandCursor() else controller.resetCursor()
         }
-        topClickableRegion.setOnMouseDragged { event ->
+        dragContainer.setOnMouseDragged {
             controller.setClosedHandCursor()
-            controller.setItemNewYPosition(item, this.layoutY + event.y)
         }
 
-        bottomClickableRegion.hoverProperty().addListener { _, _, newValue ->
-            if (newValue) controller.setOpenHandCursor() else controller.resetCursor()
-        }
-        bottomClickableRegion.setOnMouseDragged { event ->
-            controller.setClosedHandCursor()
+        dragContainer.setOnMouseReleased { event ->
+            controller.resetCursor()
             controller.setItemNewYPosition(item, this.layoutY + event.y)
         }
         /* hovering and dragging setup end */

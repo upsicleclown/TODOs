@@ -257,7 +257,6 @@ class GroupViewController(todoApp: TODOApplication, private val cache: Cache) {
         if (newIdx != displayItemList.indexOf(item)) {
             displayItemList.remove(item)
             displayItemList.add(newIdx, item)
-            resetCursor()
             view!!.setCustomOrder()
         }
     }
