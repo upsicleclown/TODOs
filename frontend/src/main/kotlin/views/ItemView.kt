@@ -22,7 +22,7 @@ import models.Label
 import models.Priority
 import javafx.scene.layout.Priority as JfxPriority
 
-class ItemView(private val controller: GroupViewController, val item: Item) : BorderPane() {
+class ItemView(private val controller: GroupViewController, private val item: Item) : BorderPane() {
     private val LABEL_VIEW_GUTTER_LENGTH = 12.0
 
     private val textField = TextField()
