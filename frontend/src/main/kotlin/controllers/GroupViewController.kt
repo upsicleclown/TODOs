@@ -54,7 +54,7 @@ class GroupViewController(todoApp: TODOApplication, private val cache: Cache) {
         }
     }
 
-    fun reloadDisplayItemList(newItemList: ObservableList<Item>) {
+    private fun reloadDisplayItemList(newItemList: ObservableList<Item>) {
         val comparator = compareBy<Item> {
             when (view?.sortOrder!!.attribute) {
                 GroupView.Attribute.IS_COMPLETED -> it.isCompleted
