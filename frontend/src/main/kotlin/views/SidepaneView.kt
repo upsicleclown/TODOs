@@ -20,7 +20,7 @@ class SidepaneView(
     var groupCreationDialog: GroupCreationView? = null
     private val openGroupCreationDialogButton = Button("+ group")
     private val SIDEPANE_WIDTH = 200.0
-    private val showAllItemsButton = Button("default")
+    private val showAllItemsButton = Button("all")
 
     init {
         /* region styling */

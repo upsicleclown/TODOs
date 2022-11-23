@@ -34,7 +34,7 @@ class GroupView(private val controller: GroupViewController) : VBox(36.0) {
     private val itemListScrollContainer = ScrollPane()
     private val itemListContainer = VBox(36.0)
     private val itemCreationField = TextField()
-    private var currentGroupName = Label("Default View")
+    private var currentGroupName = Label("All Items")
 
     init {
         /* region styling */
@@ -88,7 +88,7 @@ class GroupView(private val controller: GroupViewController) : VBox(36.0) {
             if (newGroup != null) {
                 currentGroupName.text = newGroup.name
             } else {
-                currentGroupName.text = "Default View"
+                currentGroupName.text = "All Items"
             }
         }
 

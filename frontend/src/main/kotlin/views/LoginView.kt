@@ -13,7 +13,7 @@ import javafx.scene.layout.VBox
 import models.User
 
 class LoginView(private val todoApplication: TODOApplication) : VBox(24.0) {
-    private val title = Label("nexus")
+    private val title = Label("TODOs")
     private val usernameContainer = HBox(12.0)
     private val usernameLabel = Label("USERNAME")
     private val usernameTextField = TextField()
