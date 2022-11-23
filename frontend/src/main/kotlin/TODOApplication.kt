@@ -65,16 +65,16 @@ class TODOApplication : Application() {
         val menuBar = MenuBar()
 
         val fileMenu = Menu("File")
-        val createItem = MenuItem("Create Item")
+        val createItem = MenuItem("Create Item (⌘N)")
         createItem.setOnAction { createItem() }
         fileMenu.items.add(createItem)
 
         val editMenu = Menu("Edit")
-        val undo = MenuItem("Undo")
-        val redo = MenuItem("Redo")
-        val cut = MenuItem("Cut")
-        val copy = MenuItem("Copy")
-        val paste = MenuItem("Paste")
+        val undo = MenuItem("Undo (⌘Z)")
+        val redo = MenuItem("Redo (⌘Y)")
+        val cut = MenuItem("Cut (⌘X)")
+        val copy = MenuItem("Copy (⌘C)")
+        val paste = MenuItem("Paste (⌘P)")
         undo.setOnAction { commandHandler.undo() }
         redo.setOnAction { commandHandler.redo() }
         cut.setOnAction { cutItem() }
@@ -83,7 +83,7 @@ class TODOApplication : Application() {
         editMenu.items.addAll(undo, redo, SeparatorMenuItem(), cut, copy, paste)
 
         val settingsMenu = Menu("Settings")
-        val openSettings = MenuItem("Open Settings")
+        val openSettings = MenuItem("Open Settings (⌘,)")
         openSettings.setOnAction { settingsView.show() }
         settingsMenu.items.add(openSettings)
 
@@ -151,6 +151,10 @@ class TODOApplication : Application() {
                     KeyCode.Y,
                     KeyCombination.SHORTCUT_DOWN
                 )
+                val commandComma: KeyCombination = KeyCodeCombination(
+                    KeyCode.COMMA,
+                    KeyCombination.SHORTCUT_DOWN
+                )
 
                 override fun handle(event: KeyEvent?) {
                     if (commandN.match(event)) {
@@ -165,6 +169,8 @@ class TODOApplication : Application() {
                         commandHandler.undo()
                     } else if (commandY.match(event)) {
                         commandHandler.redo()
+                    } else if (commandComma.match(event)) {
+                        settingsView.show()
                     } else {
                         // Don't consume event if not one of the above.
                         return
