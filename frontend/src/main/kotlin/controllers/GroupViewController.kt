@@ -29,7 +29,7 @@ class GroupViewController(todoApp: TODOApplication, private val cache: Cache) {
     private var app: TODOApplication? = null
     private var view: GroupView? = null
     private val todoClient = TODOClient
-    private var displayItemList: ObservableList<Item>
+    var displayItemList: ObservableList<Item>
 
     var displayItemListProperty: ItemListProperty
     var itemListProperty: ItemListProperty
@@ -54,7 +54,7 @@ class GroupViewController(todoApp: TODOApplication, private val cache: Cache) {
         }
     }
 
-    private fun reloadDisplayItemList(newItemList: ObservableList<Item>) {
+    fun reloadDisplayItemList(newItemList: ObservableList<Item>) {
         val comparator = compareBy<Item> {
             when (view?.sortOrder!!.attribute) {
                 GroupView.Attribute.IS_COMPLETED -> it.isCompleted
