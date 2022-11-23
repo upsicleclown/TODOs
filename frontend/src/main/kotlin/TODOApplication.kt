@@ -65,16 +65,16 @@ class TODOApplication : Application() {
         val menuBar = MenuBar()
 
         val fileMenu = Menu("File")
-        val createItem = MenuItem("Create Item ⌘N")
+        val createItem = MenuItem("Create Item (⌘N)")
         createItem.setOnAction { createItem() }
         fileMenu.items.add(createItem)
 
         val editMenu = Menu("Edit")
-        val undo = MenuItem("Undo ⌘Z")
-        val redo = MenuItem("Redo ⌘Y")
-        val cut = MenuItem("Cut ⌘X")
-        val copy = MenuItem("Copy ⌘C")
-        val paste = MenuItem("Paste ⌘P")
+        val undo = MenuItem("Undo (⌘Z)")
+        val redo = MenuItem("Redo (⌘Y)")
+        val cut = MenuItem("Cut (⌘X)")
+        val copy = MenuItem("Copy (⌘C)")
+        val paste = MenuItem("Paste (⌘P)")
         undo.setOnAction { commandHandler.undo() }
         redo.setOnAction { commandHandler.redo() }
         cut.setOnAction { cutItem() }
@@ -83,7 +83,7 @@ class TODOApplication : Application() {
         editMenu.items.addAll(undo, redo, SeparatorMenuItem(), cut, copy, paste)
 
         val settingsMenu = Menu("Settings")
-        val openSettings = MenuItem("Open Settings ⌘,")
+        val openSettings = MenuItem("Open Settings (⌘,)")
         openSettings.setOnAction { settingsView.show() }
         settingsMenu.items.add(openSettings)
 
