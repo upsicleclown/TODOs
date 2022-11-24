@@ -20,10 +20,12 @@ class AddSettingsLabelChip(private val controller: GroupViewController) : AddLab
         } else {
             addLabelComboBox.selectionModel.selectedItem
         }
+
         if (newLabelName.isBlank()) {
             cancelEdit()
             return
         }
+
         val existingLabel = controller.labelListProperty.any { label -> label.name == newLabelName }
         val newLabel = if (existingLabel) {
             controller.labelListProperty.first { label -> label.name == newLabelName }
