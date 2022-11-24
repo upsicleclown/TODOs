@@ -17,6 +17,7 @@ import commands.EditLabelCommand
 import commands.EditSortOrderCommand
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
+import javafx.scene.Node
 import models.Group
 import models.Item
 import models.Label
@@ -48,7 +49,8 @@ class GroupViewController(todoApp: TODOApplication, private val cache: Cache) {
         itemListProperty.addListener { _, _, newItemList ->
             reloadDisplayItemList(newItemList)
         }
-        currentGroupProperty.addListener { _, _, _ ->
+        currentGroupProperty.addListener { _, oldGroup, _ ->
+            saveSortOrderIfNeeded(oldGroup, displayItemList)
             reloadDisplayItemList(itemListProperty.value)
             resetSortOrderIfNeeded()
         }
@@ -215,5 +217,67 @@ class GroupViewController(todoApp: TODOApplication, private val cache: Cache) {
         if (currentGroupProperty.value == null && view?.sortOrder!!.attribute == GroupView.Attribute.CUSTOM) {
             setSortOrder(GroupView.SortOrder())
         }
+    }
+
+    /**
+     * If current group is not default and sort order is custom, save sort order.
+     * Items are passed in the order to be saved in.
+     */
+    private fun saveSortOrderIfNeeded(group: Group?, items: List<Item>) {
+        if (group != null && view?.sortOrder!!.attribute == GroupView.Attribute.CUSTOM) {
+            val groupToItemOrdering: HashMap<Int, List<Int>> = cache.getGroupToItemOrdering()
+            groupToItemOrdering[group.id] = items.map { item -> item.id }
+            cache.editGroupToItemOrdering(groupToItemOrdering)
+        }
+    }
+
+    /**
+     * `saveSortOrderIfNeeded` wrapper for the app to save the current sort order if need be on app stop.
+     */
+    fun saveCurrentSortOrderIfNeeded() {
+        if (currentGroupProperty.value != null) {
+            saveSortOrderIfNeeded(currentGroupProperty.value, displayItemList)
+        }
+    }
+
+    /**
+     * Given the item's new Y position, it updates the `displayItemList` to place said item at the right position.
+     */
+    fun setItemNewYPosition(item: Item, newYPosition: Double) {
+        val itemContainers: ObservableList<Node> = view?.getItemContainers()!!
+        var newIdx = 0 // new index the item will be placed at in the list.
+
+        // assume item is placed at the start so skip first item.
+        for (itemContainer in itemContainers.subList(1, itemContainers.size)) {
+            // if y coordinate is greater or equal than current item, it will be placed after in the list.
+            // new index cannot ge greater than the last index.
+            if (newYPosition >= itemContainer.layoutY && newIdx < itemContainers.size - 1) {
+                newIdx += 1
+                continue
+            }
+            // if y coordinate is less than current item, break.
+            break
+        }
+        // once we have the item's new index, switch only if required.
+        if (newIdx != displayItemList.indexOf(item)) {
+            displayItemList.remove(item)
+            displayItemList.add(newIdx, item)
+            view!!.setCustomOrder()
+        }
+    }
+
+    /**
+     * Cursor functions
+     */
+    fun setOpenHandCursor() {
+        app?.setOpenHandCursor()
+    }
+
+    fun setClosedHandCursor() {
+        app?.setClosedHandCursor()
+    }
+
+    fun resetCursor() {
+        app?.resetCursor()
     }
 }
