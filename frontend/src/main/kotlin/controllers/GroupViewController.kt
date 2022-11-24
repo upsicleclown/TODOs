@@ -287,11 +287,12 @@ class GroupViewController(todoApp: TODOApplication, private val cache: Cache) {
     }
 
     /**
-     * Increments or decrements the provided item (based on `isIncrementIndex`) if within the range.
+     * Increments the provided item's index if `downwards` true else decrements it.
      */
-    fun oneOffItemIndex(item: Item, isIncrementIndex: Boolean) {
+    fun moveItem(item: Item, downwards: Boolean) {
         val originalIndex = displayItemList.indexOf(item)
-        val indexChange = if (isIncrementIndex) 1 else -1
+        // downwards mean further into the list, so increment index.
+        val indexChange = if (downwards) 1 else -1
         setItemNewIndex(item, originalIndex + indexChange)
     }
 

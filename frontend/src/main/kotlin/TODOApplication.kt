@@ -175,9 +175,9 @@ class TODOApplication : Application() {
                     } else if (commandComma.match(event)) {
                         settingsView.show()
                     } else if (event?.code == KeyCode.UP) {
-                        moveItem(false)
+                        moveItem(downwards = false)
                     } else if (event?.code == KeyCode.DOWN) {
-                        moveItem(true)
+                        moveItem(downwards = true)
                     } else {
                         // Don't consume event if not one of the above.
                         return
@@ -217,10 +217,10 @@ class TODOApplication : Application() {
         }
     }
 
-    fun moveItem(isIncrementIndex: Boolean) {
+    fun moveItem(downwards: Boolean) {
         val item: Item? = groupViewController.focusedItemProperty.value
         if (item != null) {
-            groupViewController.oneOffItemIndex(item, isIncrementIndex)
+            groupViewController.moveItem(item, downwards)
         }
     }
 
