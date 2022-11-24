@@ -174,6 +174,10 @@ class TODOApplication : Application() {
                         commandHandler.redo()
                     } else if (commandComma.match(event)) {
                         settingsView.show()
+                    } else if (event?.code == KeyCode.UP) {
+                        moveItem(false)
+                    } else if (event?.code == KeyCode.DOWN) {
+                        moveItem(true)
                     } else {
                         // Don't consume event if not one of the above.
                         return
@@ -210,6 +214,13 @@ class TODOApplication : Application() {
         val item: Item? = clipboard.getSavedItem()
         if (item != null) {
             groupViewController.createItem(item)
+        }
+    }
+
+    fun moveItem(isIncrementIndex: Boolean) {
+        val item: Item? = groupViewController.focusedItemProperty.value
+        if (item != null) {
+            groupViewController.oneOffItemIndex(item, isIncrementIndex)
         }
     }
 
