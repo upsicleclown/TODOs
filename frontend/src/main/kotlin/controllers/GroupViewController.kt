@@ -240,13 +240,18 @@ class GroupViewController(todoApp: TODOApplication, private val cache: Cache) {
         }
     }
 
+    /**
+     * Given the item's new Y position, it updates the `displayItemList` to place said item at the right position.
+     */
     fun setItemNewYPosition(item: Item, newYPosition: Double) {
         val itemContainers: ObservableList<Node> = view?.getItemContainers()!!
-        var newIdx = -1 // new index the item will be placed at in the list.
+        var newIdx = 0 // new index the item will be placed at in the list.
 
-        for (itemContainer in itemContainers) {
+        // assume item is placed at the start so skip first item.
+        for (itemContainer in itemContainers.subList(1, itemContainers.size)) {
             // if y coordinate is greater or equal than current item, it will be placed after in the list.
-            if (newYPosition >= itemContainer.layoutY) {
+            // new index cannot ge greater than the last index.
+            if (newYPosition >= itemContainer.layoutY && newIdx < itemContainers.size - 1) {
                 newIdx += 1
                 continue
             }

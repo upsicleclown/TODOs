@@ -4,6 +4,7 @@ import controllers.GroupViewController
 import javafx.beans.value.ChangeListener
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
+import javafx.geometry.Insets
 import javafx.scene.control.Button
 import javafx.scene.control.ComboBox
 import javafx.scene.control.ScrollPane
@@ -33,6 +34,8 @@ class ItemView(private val controller: GroupViewController, private val item: It
     private val priorityPicker = ComboBox<Priority>()
     private val dueDatePicker = LocalDateTimeTextField()
     private val labelViewScrollContainer = ScrollPane()
+    private val dragContainer = HBox()
+    private val HSpacer = Region()
     private val labelViewContainer = HBox(LABEL_VIEW_GUTTER_LENGTH)
 
     init {
@@ -55,32 +58,17 @@ class ItemView(private val controller: GroupViewController, private val item: It
         setupLocalDateTimePicker()
         configDeleteButton(item)
         configCompletionButton(item)
+        configDragContainer()
+        configHSpacer()
         /* end region item setup */
 
-        val dragContainer = HBox(ImageView(Image("drag_32.png")))
-        val spacer = Region()
-        HBox.setHgrow(spacer, javafx.scene.layout.Priority.ALWAYS)
-        propertyContainer.children.addAll(priorityPickerContainer, dueDatePicker, labelViewScrollContainer, spacer, dragContainer)
+        propertyContainer.children.addAll(priorityPickerContainer, dueDatePicker, labelViewScrollContainer, HSpacer, dragContainer)
         HBox.setHgrow(labelViewScrollContainer, JfxPriority.ALWAYS)
 
         left = completionButton
         right = deleteButton
         center = textField
         bottom = propertyContainer
-
-        /* hovering and dragging setup */
-        dragContainer.hoverProperty().addListener { _, _, newValue ->
-            if (newValue) controller.setOpenHandCursor() else controller.resetCursor()
-        }
-        dragContainer.setOnMouseDragged {
-            controller.setClosedHandCursor()
-        }
-
-        dragContainer.setOnMouseReleased { event ->
-            controller.resetCursor()
-            controller.setItemNewYPosition(item, this.layoutY + event.y)
-        }
-        /* hovering and dragging setup end */
     }
 
     private fun focusItem() {
@@ -225,5 +213,28 @@ class ItemView(private val controller: GroupViewController, private val item: It
             newItem.isCompleted = !item.isCompleted
             controller.editItem(newItem, item)
         }
+    }
+
+    private fun configDragContainer() {
+        dragContainer.children.add(ImageView(Image("drag_32.png")))
+        dragContainer.padding = Insets(0.0, 5.0, 5.0, 0.0)
+
+        /* hovering and dragging setup */
+        dragContainer.hoverProperty().addListener { _, _, newValue ->
+            if (newValue) controller.setOpenHandCursor() else controller.resetCursor()
+        }
+        dragContainer.setOnMouseDragged {
+            controller.setClosedHandCursor()
+        }
+
+        dragContainer.setOnMouseReleased { event ->
+            controller.resetCursor()
+            controller.setItemNewYPosition(item, this.layoutY + event.y)
+        }
+        /* hovering and dragging setup end */
+    }
+
+    private fun configHSpacer() {
+        HBox.setHgrow(HSpacer, javafx.scene.layout.Priority.ALWAYS)
     }
 }
