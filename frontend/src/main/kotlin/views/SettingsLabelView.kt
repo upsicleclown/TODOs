@@ -59,20 +59,9 @@ class SettingsLabelView(
             return
         }
 
-        var newLabel = if (groupController.labelListProperty.value.any { label -> label.name == newLabelName }) {
-            null
-        } else {
-            if (groupController.labelListProperty.any { label -> label.name == newLabelName }) {
-                groupController.labelListProperty.first { label -> label.name == newLabelName }
-            } else {
-                Label(newLabelName, label.color)
-            }
-        }
-
-        if (newLabel != null) {
+        if (groupController.labelListProperty.value.none { label -> label.name == newLabelName }) {
+            val newLabel = Label(newLabelName, label.color)
             groupController.editLabel(false, newLabel, label)
-        } else {
-            groupController.deleteLabel(label)
         }
 
         labelText.text = label.name
