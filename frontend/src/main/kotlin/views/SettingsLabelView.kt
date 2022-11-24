@@ -2,7 +2,6 @@ package views
 
 import controllers.GroupViewController
 import javafx.scene.control.ColorPicker
-import javafx.scene.layout.BorderPane
 import javafx.scene.layout.HBox
 import javafx.scene.paint.Color
 import models.Label
