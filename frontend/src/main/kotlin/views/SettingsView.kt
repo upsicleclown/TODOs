@@ -43,6 +43,7 @@ class SettingsView(
             if (labelChips.isNotEmpty()) {
                 settingsViewContainer.children.addAll(labelChips)
             }
+            settingsViewContainer.children.add(AddSettingsLabelChip(controller = controller))
         }
 
         val settingsScene = Scene(root, 400.0, 400.0)
