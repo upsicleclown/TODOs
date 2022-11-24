@@ -9,8 +9,10 @@ import cache.Cache
 import client.TODOClient
 import commands.CreateItemCommand
 import commands.CreateItemLabelCommand
+import commands.CreateLabelCommand
 import commands.DeleteItemCommand
 import commands.DeleteItemLabelCommand
+import commands.DeleteLabelCommand
 import commands.EditItemCommand
 import commands.EditItemLabelCommand
 import commands.EditLabelCommand
@@ -156,10 +158,21 @@ class GroupViewController(todoApp: TODOApplication, private val cache: Cache) {
         app?.commandHandler?.execute(deleteItemLabelCommand)
     }
 
+    fun createLabel(collision: Boolean, newLabel: Label) {
+        val createLabelCommand = CreateLabelCommand(collision, newLabel)
+        app?.commandHandler?.execute(createLabelCommand)
+    }
+
     fun editLabel(collision: Boolean, newLabel: Label, originalLabel: Label) {
         val editLabelCommand = EditLabelCommand(collision, newLabel, originalLabel)
         app?.commandHandler?.execute(editLabelCommand)
     }
+
+    fun deleteLabel(label: Label) {
+        val deleteLabelCommand = DeleteLabelCommand(label)
+        app?.commandHandler?.execute(deleteLabelCommand)
+    }
+
     fun editSortOrder(newSortOrder: GroupView.SortOrder, oldSortOrder: GroupView.SortOrder) {
         val editSortOrderCommand = EditSortOrderCommand(newSortOrder, oldSortOrder, this)
         app?.commandHandler?.execute(editSortOrderCommand)
