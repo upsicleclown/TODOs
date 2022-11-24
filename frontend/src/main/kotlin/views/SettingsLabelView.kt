@@ -8,7 +8,7 @@ import javafx.scene.control.ColorPicker
 import javafx.scene.layout.HBox
 import javafx.scene.paint.Color
 import models.Label
-import java.util.*
+import java.util.Optional
 
 class SettingsLabelView(
     private val groupController: GroupViewController,
