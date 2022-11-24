@@ -13,7 +13,7 @@ class SettingsView(
     private val controller: GroupViewController
 ) : Stage() {
     private val settingsViewScrollContainer = ScrollPane()
-    private val settingsViewContainer = VBox()
+    private val settingsViewContainer = VBox(8.0)
     private var labelTitle = Text("Labels")
 
     init {

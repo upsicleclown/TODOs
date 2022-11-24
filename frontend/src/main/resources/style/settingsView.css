@@ -1,7 +1,7 @@
 @import "config.css";
 
 .settings {
-    -fx-background-color: -primary-black;
+    /*-fx-background-color: -primary-black;*/
     -fx-padding: 16px;
 }
 
@@ -11,4 +11,12 @@
 
 .settings__label-text {
     -fx-padding: 0px 8px
+}
+
+.settings__color-picker {
+    -fx-max-width: 50px;
+}
+
+.settings__label {
+    -fx-padding: 2px 0px
 }

@@ -11,6 +11,7 @@ import commands.CreateItemCommand
 import commands.CreateItemLabelCommand
 import commands.DeleteItemCommand
 import commands.DeleteItemLabelCommand
+import commands.DeleteLabelCommand
 import commands.EditItemCommand
 import commands.EditItemLabelCommand
 import commands.EditLabelCommand
@@ -158,6 +159,12 @@ class GroupViewController(todoApp: TODOApplication, private val cache: Cache) {
         val editLabelCommand = EditLabelCommand(collision, newLabel, originalLabel)
         app?.commandHandler?.execute(editLabelCommand)
     }
+
+    fun deleteLabel(label: Label) {
+        val deleteLabelCommand = DeleteLabelCommand(label)
+        app?.commandHandler?.execute(deleteLabelCommand)
+    }
+
     fun editSortOrder(newSortOrder: GroupView.SortOrder, oldSortOrder: GroupView.SortOrder) {
         val editSortOrderCommand = EditSortOrderCommand(newSortOrder, oldSortOrder, this)
         app?.commandHandler?.execute(editSortOrderCommand)
