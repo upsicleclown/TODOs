@@ -149,6 +149,7 @@ object TODOClient {
     }
 
     fun editLabel(id: Int, newLabel: Label) {
+        println("$id, $newLabel, id, newLabel")
         val string = Json.encodeToString(newLabel)
         val request = HttpRequest.newBuilder()
             .uri(URI.create("${serviceEndpoint}labels/$id"))

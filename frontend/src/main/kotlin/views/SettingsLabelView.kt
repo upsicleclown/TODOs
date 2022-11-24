@@ -10,7 +10,6 @@ class SettingsLabelView(
     private val groupController: GroupViewController,
     private val label: Label
 ) : LabelView(label) {
-//    private val labelText = javafx.scene.control.Label(label.name)
     private val colorPicker = ColorPicker(Color.web(label.color))
 
     init {
@@ -50,34 +49,27 @@ class SettingsLabelView(
         } else {
             comboBox.selectionModel.selectedItem
         }
-        println("newLabelName $newLabelName")
 
         if (newLabelName.isBlank()) {
             cancelEdit()
             return
         }
-        println("spot1")
 
         var newLabel = if (groupController.labelListProperty.value.any { label -> label.name == newLabelName }) {
             null
         } else {
-            if (groupController.labelListProperty.any { l -> l.name == newLabelName }) {
-                groupController.labelListProperty.first { l -> l.name == newLabelName }
+            if (groupController.labelListProperty.any { label -> label.name == newLabelName }) {
+                groupController.labelListProperty.first { label -> label.name == newLabelName }
             } else {
-                Label(newLabelName, DEFAULT_LABEL_COLOR)
+                Label(newLabelName, label.color)
             }
         }
 
-        print("newLabel, $newLabel")
-        print("label, $label")
         if (newLabel != null) {
-            println("spot5")
             groupController.editLabel(false, newLabel, label)
         } else {
-            println("spot6")
             groupController.deleteLabel(label)
         }
-        println("spot7")
 
         labelText.text = label.name
         center = labelText

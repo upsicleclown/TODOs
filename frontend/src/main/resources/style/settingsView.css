@@ -18,5 +18,5 @@
 }
 
 .settings__label {
-    -fx-padding: 2px 0px
+    -fx-padding: 2px 8px 2px 16px;
 }
