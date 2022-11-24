@@ -271,12 +271,29 @@ class GroupViewController(todoApp: TODOApplication, private val cache: Cache) {
             // if y coordinate is less than current item, break.
             break
         }
-        // once we have the item's new index, switch only if required.
-        if (newIdx != displayItemList.indexOf(item)) {
+        setItemNewIndex(item, newIdx)
+    }
+
+    /**
+     * Given the item's new index, it updates the `displayItemList` to place said item at the index if within the range.
+     */
+    private fun setItemNewIndex(item: Item, newIndex: Int) {
+        // switch only if required and within the range.
+        if (newIndex != displayItemList.indexOf(item) && newIndex >= 0 && newIndex < displayItemList.size) {
             displayItemList.remove(item)
-            displayItemList.add(newIdx, item)
+            displayItemList.add(newIndex, item)
             view!!.setCustomOrder()
         }
+    }
+
+    /**
+     * Increments the provided item's index if `downwards` true else decrements it.
+     */
+    fun moveItem(item: Item, downwards: Boolean) {
+        val originalIndex = displayItemList.indexOf(item)
+        // downwards mean further into the list, so increment index.
+        val indexChange = if (downwards) 1 else -1
+        setItemNewIndex(item, originalIndex + indexChange)
     }
 
     /**
