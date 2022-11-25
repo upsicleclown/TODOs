@@ -95,6 +95,10 @@ class TODOApplication : Application() {
         enableHotkeys(primaryStage.scene)
     }
 
+    fun setLoginView() {
+        primaryStage.scene.root = LoginView(this)
+    }
+
     override fun start(stage: Stage) {
         primaryStage = stage
         val root = LoginView(this)

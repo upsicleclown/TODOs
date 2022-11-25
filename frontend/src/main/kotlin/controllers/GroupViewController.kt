@@ -17,6 +17,7 @@ import commands.EditItemCommand
 import commands.EditItemLabelCommand
 import commands.EditLabelCommand
 import commands.EditSortOrderCommand
+import commands.LogOutUserCommand
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import javafx.scene.Node
@@ -309,5 +310,14 @@ class GroupViewController(todoApp: TODOApplication, private val cache: Cache) {
 
     fun resetCursor() {
         app?.resetCursor()
+    }
+
+    /**
+     * Logout User
+     */
+    fun logoutUser() {
+        saveCurrentSortOrderIfNeeded()
+        app?.commandHandler?.execute(LogOutUserCommand())
+        app?.setLoginView()
     }
 }
