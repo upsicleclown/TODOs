@@ -198,7 +198,7 @@ class GroupViewController(todoApp: TODOApplication, private val cache: Cache) {
      * If the current group is null, which assumes the provided item list is for the default view (all items),
      * this method orders the list based on the cached item order for the logged-in user.
      *
-     * If the current group is not note, which assumes the provided item list is for that group,
+     * If the current group is not null, which assumes the provided item list is for that group,
      * this method orders the list based on the cached item order for the group.
      *
      * The list is left un-touched if nothing is cached.
@@ -239,7 +239,7 @@ class GroupViewController(todoApp: TODOApplication, private val cache: Cache) {
      * If the current group is null, which assumes the provided item list is for the default view (all items),
      * this method saves the provided item order for the logged-in user.
      *
-     * If the current group is not note, which assumes the provided item list is for that group,
+     * If the current group is not null, which assumes the provided item list is for that group,
      * this method saves the provided item order for the provided group.
      */
     private fun saveSortOrderIfNeeded(group: Group?, items: List<Item>) {
