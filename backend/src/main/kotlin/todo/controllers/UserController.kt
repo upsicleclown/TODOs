@@ -14,9 +14,9 @@ import todo.service.authentication.AuthenticationService
 internal class UserController(private val authenticationService: AuthenticationService) {
 
     @PostMapping("/user")
-    fun login(@RequestBody user: User) {
+    fun login(@RequestBody user: User): User {
         try {
-            authenticationService.logInUser(user)
+            return authenticationService.logInUser(user)
         } catch (illegalArgumentException: IllegalArgumentException) {
             throw ResponseStatusException(HttpStatus.NOT_FOUND, "Could not find user with username ${user.username} and password ${user.password}", illegalArgumentException)
         }

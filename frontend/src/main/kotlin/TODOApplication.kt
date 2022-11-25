@@ -118,6 +118,7 @@ class TODOApplication : Application() {
         super.stop()
         groupViewController.saveCurrentSortOrderIfNeeded()
         cache.saveGroupToItemOrdering()
+        cache.saveUserToItemOrdering()
         cache.editWindowSettings(WindowSettings(primaryStage.x, primaryStage.y, primaryStage.height, primaryStage.width))
         cache.saveWindowSettings()
         commandHandler.execute(LogOutUserCommand())
