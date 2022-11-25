@@ -16,7 +16,7 @@ import javafx.scene.input.MouseEvent
 import javafx.scene.layout.HBox
 import javafx.scene.layout.VBox
 import models.Item
-import java.util.*
+import java.util.Optional
 import kotlin.properties.Delegates
 
 class GroupView(private val controller: GroupViewController) : VBox(36.0) {
