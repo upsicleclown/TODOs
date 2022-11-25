@@ -32,10 +32,10 @@ class AuthenticationService {
      *
      * @throws IllegalArgumentException if username does not exist or password does not match.
      */
-    fun logInUser(user: User) {
+    fun logInUser(user: User): User {
         userLoggedIn = SQLiteDB.getUser(user, authenticationHelper.computePasswordHash(user.password))
         isUserLoggedIn = true
-        SQLiteDB.setUserLoggedIn(userLoggedIn!!)
+        return SQLiteDB.setUserLoggedIn(userLoggedIn!!)
     }
 
     /**

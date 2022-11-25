@@ -32,10 +32,21 @@ object TODOClient {
     private val client: HttpClient = HttpClient.newBuilder().build()
     private val successCode: Int = 200
 
+    // used to cached current logged-in user.
+    private var loggedInUser: User? = null
+
     fun init() {
         getLabels()
         getGroups()
         getItems()
+    }
+
+    /* Method related to cached logged-in user */
+    fun getLoggedInUser(): User {
+        if (loggedInUser == null) {
+            throw IllegalArgumentException("This method should only be called once the user has logged in.")
+        }
+        return loggedInUser as User
     }
 
     /* Methods related to user endpoint */
@@ -65,6 +76,7 @@ object TODOClient {
         if (response.statusCode() != successCode) {
             throw IllegalArgumentException("Invalid password for user ${user.username}")
         }
+        loggedInUser = Json.decodeFromString(response.body())
     }
 
     fun logOutUser() {
@@ -74,6 +86,7 @@ object TODOClient {
             .POST(HttpRequest.BodyPublishers.noBody())
             .build()
         client.send(request, HttpResponse.BodyHandlers.ofString())
+        loggedInUser = null
     }
 
     /* Methods related to item endpoint */

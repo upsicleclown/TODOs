@@ -54,7 +54,6 @@ class GroupViewController(todoApp: TODOApplication, private val cache: Cache) {
         currentGroupProperty.addListener { _, oldGroup, _ ->
             saveSortOrderIfNeeded(oldGroup, displayItemList)
             reloadDisplayItemList(itemListProperty.value)
-            resetSortOrderIfNeeded()
         }
     }
 
@@ -196,12 +195,24 @@ class GroupViewController(todoApp: TODOApplication, private val cache: Cache) {
     }
 
     /**
-     * Orders the provided item list based on the cached item order for the current group.
-     * The list is left un-touched if nothing is cached for the current group or the current group is null.
+     * If the current group is null, which assumes the provided item list is for the default view (all items),
+     * this method orders the list based on the cached item order for the logged-in user.
+     *
+     * If the current group is not null, which assumes the provided item list is for that group,
+     * this method orders the list based on the cached item order for the group.
+     *
+     * The list is left un-touched if nothing is cached.
      */
     private fun orderByCustom(itemList: MutableList<Item>): List<Item> {
-        val currentGroupId: Int = currentGroupProperty.value?.id ?: return itemList
-        val itemIdOrdering: List<Int> = cache.getGroupToItemOrdering()[currentGroupId] ?: return itemList
+        // Look at the right cache.
+        val itemIdOrdering: List<Int>? = if (currentGroupProperty.value == null) {
+            cache.getUserToItemOrdering()[todoClient.getLoggedInUser().id]
+        } else {
+            cache.getGroupToItemOrdering()[currentGroupProperty.value.id]
+        }
+
+        // Nothing is cached, return.
+        if (itemIdOrdering == null) return itemList
 
         // for all items that have a saved order, order them.
         val orderedItemList = mutableListOf<Item>()
@@ -223,21 +234,21 @@ class GroupViewController(todoApp: TODOApplication, private val cache: Cache) {
     }
 
     /**
-     * If current group is default group and sort order is custom, reset to default sort order.
-     * (We do not support custom ordering for the default group.)
-     */
-    private fun resetSortOrderIfNeeded() {
-        if (currentGroupProperty.value == null && view?.sortOrder!!.attribute == GroupView.Attribute.CUSTOM) {
-            setSortOrder(GroupView.SortOrder())
-        }
-    }
-
-    /**
-     * If current group is not default and sort order is custom, save sort order.
-     * Items are passed in the order to be saved in.
+     * If sort order is not custom, nothing happens here.
+     *
+     * If the current group is null, which assumes the provided item list is for the default view (all items),
+     * this method saves the provided item order for the logged-in user.
+     *
+     * If the current group is not null, which assumes the provided item list is for that group,
+     * this method saves the provided item order for the provided group.
      */
     private fun saveSortOrderIfNeeded(group: Group?, items: List<Item>) {
-        if (group != null && view?.sortOrder!!.attribute == GroupView.Attribute.CUSTOM) {
+        if (view?.sortOrder!!.attribute != GroupView.Attribute.CUSTOM) return
+        if (group == null) {
+            val userToItemOrdering: HashMap<Int, List<Int>> = cache.getUserToItemOrdering()
+            userToItemOrdering[todoClient.getLoggedInUser().id] = items.map { item -> item.id }
+            cache.editUserToItemOrdering(userToItemOrdering)
+        } else {
             val groupToItemOrdering: HashMap<Int, List<Int>> = cache.getGroupToItemOrdering()
             groupToItemOrdering[group.id] = items.map { item -> item.id }
             cache.editGroupToItemOrdering(groupToItemOrdering)
