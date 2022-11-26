@@ -31,7 +31,7 @@ class GroupCreationView(private val controller: SidepaneController) : Dialog<Gro
     private val dateRangePickerContainer = HBox()
     private val completionPickerContainer = HBox()
     private val completeButton = RadioButton("Complete")
-    private val incompleteButton = RadioButton("Inomplete")
+    private val incompleteButton = RadioButton("Incomplete")
     private val labelViewScrollContainer = ScrollPane()
     private val labelViewContainer = HBox(20.0)
     private val priorityPickerContainer = HBox()
