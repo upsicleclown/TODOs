@@ -3,8 +3,11 @@ package views
 import controllers.GroupViewController
 import javafx.collections.ObservableList
 import javafx.event.EventHandler
+import javafx.geometry.Pos
 import javafx.scene.Node
+import javafx.scene.control.Alert
 import javafx.scene.control.Button
+import javafx.scene.control.ButtonType
 import javafx.scene.control.ComboBox
 import javafx.scene.control.Label
 import javafx.scene.control.ScrollPane
@@ -13,6 +16,7 @@ import javafx.scene.input.MouseEvent
 import javafx.scene.layout.HBox
 import javafx.scene.layout.VBox
 import models.Item
+import java.util.Optional
 import kotlin.properties.Delegates
 
 class GroupView(private val controller: GroupViewController) : VBox(36.0) {
@@ -37,6 +41,8 @@ class GroupView(private val controller: GroupViewController) : VBox(36.0) {
     private val itemListContainer = VBox(36.0)
     private val itemCreationField = TextField()
     private var currentGroupName = Label("Default View")
+    private var logoutButton = Button("logout")
+    private var logoutButtonContainer = HBox()
 
     init {
         /* region styling */
@@ -45,9 +51,14 @@ class GroupView(private val controller: GroupViewController) : VBox(36.0) {
         itemCreationField.styleClass.addAll("h2", "group__create-item")
         itemListScrollContainer.styleClass.addAll("group__item-list__container")
         itemListContainer.styleClass.addAll("group__item-list")
+        logoutButton.styleClass.addAll("logout-button", "body")
         /* end region styling */
 
         /* region event filters */
+        logoutButton.setOnAction {
+            logoutUser()
+        }
+
         // when enter is pressed
         itemCreationField.setOnAction {
             controller.createItem(Item(itemCreationField.text, false))
@@ -73,6 +84,9 @@ class GroupView(private val controller: GroupViewController) : VBox(36.0) {
         /* end region event filters */
 
         /* region view setup */
+        logoutButtonContainer.children.add(logoutButton)
+        logoutButtonContainer.alignment = Pos.BASELINE_RIGHT
+
         setUpSortOrderPicker()
 
         itemCreationField.promptText = "Create a new item..."
@@ -82,7 +96,7 @@ class GroupView(private val controller: GroupViewController) : VBox(36.0) {
         itemListScrollContainer.hmax = 0.0
         itemListScrollContainer.hbarPolicy = ScrollPane.ScrollBarPolicy.NEVER
 
-        children.addAll(currentGroupName, sortOrderPicker, itemCreationField, itemListScrollContainer)
+        children.addAll(logoutButtonContainer, currentGroupName, sortOrderPicker, itemCreationField, itemListScrollContainer)
         /* end region view setup */
 
         /* region data bindings */
@@ -113,6 +127,19 @@ class GroupView(private val controller: GroupViewController) : VBox(36.0) {
             )
         }
         /* end region data bindings */
+    }
+
+    private fun logoutUser() {
+        val alert = Alert(Alert.AlertType.CONFIRMATION)
+        alert.title = "Confirmation Dialog"
+        alert.headerText = "Are you sure you want to logout?"
+
+        val result: Optional<ButtonType> = alert.showAndWait()
+        if (result.get() === ButtonType.OK) {
+            controller.logoutUser()
+        } else {
+            // do nothing
+        }
     }
 
     private fun loadSortOrderPicker() {
