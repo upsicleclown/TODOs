@@ -30,8 +30,8 @@ class GroupCreationView(private val controller: SidepaneController) : Dialog<Gro
     private var cancelButton = Button()
     private val dateRangePickerContainer = HBox()
     private val completionPickerContainer = HBox()
-    private val complete = RadioButton("Complete")
-    private val incomplete = RadioButton("Inomplete")
+    private val completeButton = RadioButton("Complete")
+    private val incompleteButton = RadioButton("Inomplete")
     private val labelViewScrollContainer = ScrollPane()
     private val labelViewContainer = HBox(20.0)
     private val priorityPickerContainer = HBox()
@@ -139,18 +139,18 @@ class GroupCreationView(private val controller: SidepaneController) : Dialog<Gro
 
     private fun setupCompletionPicker() {
         val group = ToggleGroup()
-        complete.toggleGroup = group
-        incomplete.toggleGroup = group
+        completeButton.toggleGroup = group
+        incompleteButton.toggleGroup = group
 
         val clearButton = Button("Clear")
 
         clearButton.setOnAction {
-            complete.isSelected = false
-            incomplete.isSelected = false
+            completeButton.isSelected = false
+            incompleteButton.isSelected = false
         }
 
         completionPickerContainer.spacing = 20.0
-        completionPickerContainer.children.addAll(complete, incomplete, clearButton)
+        completionPickerContainer.children.addAll(completeButton, incompleteButton, clearButton)
     }
 
     private fun setUpDateRangePicker() {
@@ -191,7 +191,7 @@ class GroupCreationView(private val controller: SidepaneController) : Dialog<Gro
                     }
                     group.filter.labelIds = controller.labelListProperty.filter { it.name in controller.groupCreationLabelListProperty.value.map { groupCreationLabel -> groupCreationLabel.name } }.map { it.id }.toMutableList()
                     group.filter.priorities.addAll((priorityPickerContainer.children.filter { it is CheckBox && it.isSelected } as List<CheckBox>).map { Priority.valueOf(it.text) })
-                    group.filter.isCompleted = if (complete.isSelected == incomplete.isSelected) null else { complete.isSelected }
+                    group.filter.isCompleted = if (completeButton.isSelected == incompleteButton.isSelected) null else { completeButton.isSelected }
                     group.filter.edtStartDateRange = edtStartDatePicker.localDateTime
                     group.filter.edtEndDateRange = edtEndDatePicker.localDateTime
                     result = group
