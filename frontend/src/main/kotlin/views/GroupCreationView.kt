@@ -8,23 +8,35 @@ import javafx.geometry.Pos
 import javafx.scene.control.Button
 import javafx.scene.control.ButtonBar
 import javafx.scene.control.ButtonType
+import javafx.scene.control.CheckBox
 import javafx.scene.control.Dialog
+import javafx.scene.control.RadioButton
 import javafx.scene.control.ScrollPane
 import javafx.scene.control.TextField
+import javafx.scene.control.ToggleGroup
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.HBox
 import javafx.scene.layout.VBox
+import jfxtras.scene.control.LocalDateTimeTextField
 import models.Filter
 import models.Group
 import models.Label
+import models.Priority
 import javafx.scene.control.Label as JfxLabel
 
 class GroupCreationView(private val controller: SidepaneController) : Dialog<Group?>() {
     var group = Group("", Filter())
     private var createButton = Button()
     private var cancelButton = Button()
+    private val dateRangePickerContainer = HBox()
+    private val completionPickerContainer = HBox()
+    private val completeButton = RadioButton("Complete")
+    private val incompleteButton = RadioButton("Incomplete")
     private val labelViewScrollContainer = ScrollPane()
     private val labelViewContainer = HBox(20.0)
+    private val priorityPickerContainer = HBox()
+    private val edtStartDatePicker = LocalDateTimeTextField()
+    private val edtEndDatePicker = LocalDateTimeTextField()
     private val groupCreationContainer = VBox(24.0)
     private val groupNameField = TextField("")
     private val groupFilterLabel = JfxLabel("FILTERS")
@@ -45,6 +57,7 @@ class GroupCreationView(private val controller: SidepaneController) : Dialog<Gro
 
         labelViewScrollContainer.styleClass.addAll("group-creation__label-container")
         groupFilterContainer.styleClass.add("group-creation__filters")
+        groupFilterContainer.spacing = 15.0
 
         dialogPane.buttonTypes.addAll(createButtonType, ButtonType.CANCEL)
         createButton = dialogPane.lookupButton(createButtonType) as Button
@@ -59,6 +72,9 @@ class GroupCreationView(private val controller: SidepaneController) : Dialog<Gro
         /* end region styling */
 
         /* region view setup */
+        setupPriorityPicker()
+        setupCompletionPicker()
+        setUpDateRangePicker()
         setupLabelViewContainer()
         loadLabelViewContainer()
         setupGroupResultConverter()
@@ -66,7 +82,7 @@ class GroupCreationView(private val controller: SidepaneController) : Dialog<Gro
         dialogPane.content = groupCreationContainer
 
         groupNameField.promptText = "group name..."
-        groupFilterContainer.children.add(labelViewScrollContainer)
+        groupFilterContainer.children.addAll(priorityPickerContainer, completionPickerContainer, dateRangePickerContainer, labelViewScrollContainer)
         groupCreationContainer.children.addAll(groupNameField, groupFilterLabel, groupFilterContainer)
         /* end region view setup */
 
@@ -115,6 +131,53 @@ class GroupCreationView(private val controller: SidepaneController) : Dialog<Gro
         labelViewContainer.children.add(AddGroupCreationLabelChip(controller = controller))
     }
 
+    private fun setupPriorityPicker() {
+        priorityPickerContainer.spacing = 20.0
+        priorityPickerContainer.children.add(JfxLabel("Priorities: "))
+        priorityPickerContainer.children.addAll(Priority.values().map { CheckBox(it.name) })
+    }
+
+    private fun setupCompletionPicker() {
+        val group = ToggleGroup()
+        completeButton.toggleGroup = group
+        incompleteButton.toggleGroup = group
+
+        val clearButton = Button("Clear")
+
+        clearButton.setOnAction {
+            completeButton.isSelected = false
+            incompleteButton.isSelected = false
+        }
+
+        completionPickerContainer.spacing = 20.0
+        completionPickerContainer.children.addAll(completeButton, incompleteButton, clearButton)
+    }
+
+    private fun setUpDateRangePicker() {
+        dateRangePickerContainer.spacing = 20.0
+        dateRangePickerContainer.children.addAll(edtStartDatePicker, JfxLabel("to"), edtEndDatePicker)
+
+        edtStartDatePicker.localDateTimeProperty().addListener(
+            ChangeListener { _, _, newValue ->
+                edtEndDatePicker.localDateTime?.let {
+                    if (newValue > it) {
+                        edtStartDatePicker.localDateTime = null
+                    }
+                }
+            }
+        )
+
+        edtEndDatePicker.localDateTimeProperty().addListener(
+            ChangeListener { _, _, newValue ->
+                edtStartDatePicker.localDateTime?.let {
+                    if (newValue < it) {
+                        edtEndDatePicker.localDateTime = null
+                    }
+                }
+            }
+        )
+    }
+
     private fun setupGroupResultConverter() {
         setResultConverter { dialogButton ->
 
@@ -127,6 +190,10 @@ class GroupCreationView(private val controller: SidepaneController) : Dialog<Gro
                         }
                     }
                     group.filter.labelIds = controller.labelListProperty.filter { it.name in controller.groupCreationLabelListProperty.value.map { groupCreationLabel -> groupCreationLabel.name } }.map { it.id }.toMutableList()
+                    group.filter.priorities.addAll((priorityPickerContainer.children.filter { it is CheckBox && it.isSelected } as List<CheckBox>).map { Priority.valueOf(it.text) })
+                    group.filter.isCompleted = if (completeButton.isSelected == incompleteButton.isSelected) null else { completeButton.isSelected }
+                    group.filter.edtStartDateRange = edtStartDatePicker.localDateTime
+                    group.filter.edtEndDateRange = edtEndDatePicker.localDateTime
                     result = group
                 }
                 else -> result = null
