@@ -13,7 +13,7 @@ class SettingsView(
     private val controller: GroupViewController
 ) : Stage() {
     private val settingsViewScrollContainer = ScrollPane()
-    private val settingsViewContainer = VBox()
+    private val settingsViewContainer = VBox(8.0)
     private var labelTitle = Text("Labels")
 
     init {
@@ -43,6 +43,7 @@ class SettingsView(
             if (labelChips.isNotEmpty()) {
                 settingsViewContainer.children.addAll(labelChips)
             }
+            settingsViewContainer.children.add(AddSettingsLabelChip(controller = controller))
         }
 
         val settingsScene = Scene(root, 400.0, 400.0)

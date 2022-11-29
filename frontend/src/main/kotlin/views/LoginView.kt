@@ -8,6 +8,7 @@ import javafx.scene.control.Alert
 import javafx.scene.control.Button
 import javafx.scene.control.Label
 import javafx.scene.control.TextField
+import javafx.scene.input.KeyCode
 import javafx.scene.layout.HBox
 import javafx.scene.layout.VBox
 import models.User
@@ -56,14 +57,14 @@ class LoginView(private val todoApplication: TODOApplication) : VBox(24.0) {
         }
 
         loginButton.setOnAction {
-            handleButtonOperation(
-                User(usernameTextField.text, passwordTextField.text)
-            ) { user ->
-                todoApplication.commandHandler.execute(LogInUserCommand(user))
-                todoApplication.setMainView()
-            }
+            attemptLogIn()
         }
         /* end region event filters */
+
+        // on keypress enter, attempt to log-in.
+        this.setOnKeyPressed {
+            if (it.code == KeyCode.ENTER) attemptLogIn()
+        }
 
         usernameContainer.children.addAll(usernameLabel, usernameTextField)
         passwordContainer.children.addAll(passwordLabel, passwordTextField)
@@ -81,6 +82,15 @@ class LoginView(private val todoApplication: TODOApplication) : VBox(24.0) {
         } catch (ignore: IllegalArgumentException) {
             Alert(Alert.AlertType.ERROR, "Username and password invalid.").show()
             return
+        }
+    }
+
+    private fun attemptLogIn() {
+        handleButtonOperation(
+            User(usernameTextField.text, passwordTextField.text)
+        ) { user ->
+            todoApplication.commandHandler.execute(LogInUserCommand(user))
+            todoApplication.setMainView()
         }
     }
 }

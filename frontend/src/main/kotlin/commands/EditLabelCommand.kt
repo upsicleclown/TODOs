@@ -20,6 +20,7 @@ class EditLabelCommand(
 
     override fun execute() {
         if (collision) return
+        newLabel.id = originalLabel.id
         client.editLabel(originalLabel.id, newLabel)
     }
 

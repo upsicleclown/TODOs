@@ -7,6 +7,7 @@ import controllers.GroupViewController
 import controllers.SidepaneController
 import javafx.application.Application
 import javafx.event.EventHandler
+import javafx.scene.Cursor
 import javafx.scene.Scene
 import javafx.scene.control.Menu
 import javafx.scene.control.MenuBar
@@ -94,6 +95,10 @@ class TODOApplication : Application() {
         enableHotkeys(primaryStage.scene)
     }
 
+    fun setLoginView() {
+        primaryStage.scene.root = LoginView(this)
+    }
+
     override fun start(stage: Stage) {
         primaryStage = stage
         val root = LoginView(this)
@@ -115,6 +120,9 @@ class TODOApplication : Application() {
 
     override fun stop() {
         super.stop()
+        groupViewController.saveCurrentSortOrderIfNeeded()
+        cache.saveGroupToItemOrdering()
+        cache.saveUserToItemOrdering()
         cache.editWindowSettings(WindowSettings(primaryStage.x, primaryStage.y, primaryStage.height, primaryStage.width))
         cache.saveWindowSettings()
         commandHandler.execute(LogOutUserCommand())
@@ -171,6 +179,10 @@ class TODOApplication : Application() {
                         commandHandler.redo()
                     } else if (commandComma.match(event)) {
                         settingsView.show()
+                    } else if (event?.code == KeyCode.UP) {
+                        moveItem(downwards = false)
+                    } else if (event?.code == KeyCode.DOWN) {
+                        moveItem(downwards = true)
                     } else {
                         // Don't consume event if not one of the above.
                         return
@@ -208,5 +220,27 @@ class TODOApplication : Application() {
         if (item != null) {
             groupViewController.createItem(item)
         }
+    }
+
+    fun moveItem(downwards: Boolean) {
+        val item: Item? = groupViewController.focusedItemProperty.value
+        if (item != null) {
+            groupViewController.moveItem(item, downwards)
+        }
+    }
+
+    /**
+     * Cursor functions
+     */
+    fun setOpenHandCursor() {
+        primaryStage.scene.cursor = Cursor.OPEN_HAND
+    }
+
+    fun setClosedHandCursor() {
+        primaryStage.scene.cursor = Cursor.CLOSED_HAND
+    }
+
+    fun resetCursor() {
+        primaryStage.scene.cursor = Cursor.DEFAULT
     }
 }

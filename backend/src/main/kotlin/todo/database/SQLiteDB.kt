@@ -32,10 +32,12 @@ object SQLiteDB {
     /**
      * Sets the current user logged in.
      */
-    fun setUserLoggedIn(user: models.User) {
+    fun setUserLoggedIn(user: models.User): models.User {
         transaction {
             userLoggedIn = User.find { Users.username eq user.username }.first()
         }
+        user.id = userLoggedIn!!.id.value
+        return user
     }
 
     /**
