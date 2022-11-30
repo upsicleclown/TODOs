@@ -28,7 +28,7 @@ import kotlin.properties.Delegates
 class GroupView(private val controller: GroupViewController) : VBox(36.0) {
 
     enum class Attribute(val value: String) {
-        IS_COMPLETED("completed"), EDT_DUEDATE("due date"), PRIORITY("priority"), CUSTOM("");
+        IS_COMPLETED("completed"), EDT_DUEDATE("due date"), PRIORITY("priority"), CUSTOM("custom");
 
         companion object {
             private val map = values().associateBy { it.value }
@@ -58,7 +58,7 @@ class GroupView(private val controller: GroupViewController) : VBox(36.0) {
     private val itemListScrollContainer = ScrollPane()
     private val itemListContainer = VBox(36.0)
     private val itemCreationField = TextField()
-    private var currentGroupName = Label("Default View")
+    private var currentGroupName = Label("All Items")
     private var logoutButton = Button("logout")
     private var logoutButtonContainer = HBox()
 
@@ -127,7 +127,7 @@ class GroupView(private val controller: GroupViewController) : VBox(36.0) {
 
                 filterSortContainer.children.setAll(sortOrderPicker, HBox(groupFilterLabel, groupFilterContainer))
             } else {
-                currentGroupName.text = "Default View"
+                currentGroupName.text = "All Items"
                 filterSortContainer.children.setAll(sortOrderPicker)
             }
         }
