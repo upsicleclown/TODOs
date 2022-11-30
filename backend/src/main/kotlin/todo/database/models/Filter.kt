@@ -16,5 +16,6 @@ class Filter(id: EntityID<Int>) : IntEntity(id) {
     var edtEndDateRange by Filters.edtEndDateRange
     var isComplete by Filters.isCompleted
     var priorities by Priority via FilterPriorities
+    var labelBooleanOperator by Filters.labelBooleanOperator
     var labels by Label via FilterLabels
 }

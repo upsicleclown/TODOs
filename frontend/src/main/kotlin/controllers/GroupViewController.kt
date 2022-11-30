@@ -22,6 +22,7 @@ import javafx.beans.property.SimpleListProperty
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import javafx.scene.Node
+import models.BooleanOperator
 import models.Filter
 import models.Group
 import models.Item
@@ -101,7 +102,13 @@ class GroupViewController(todoApp: TODOApplication, private val cache: Cache) {
                         ) &&
 
                     (if (it.priority == null) currentGroupProperty.value!!.filter.priorities.size == 0 else it.priority in currentGroupProperty.value!!.filter.priorities) &&
-                    currentGroupProperty.value!!.filter.labelIds.all { labelId -> labelId in it.labelIds }
+                    (
+                        when (currentGroupProperty.value!!.filter.labelBooleanOperator) {
+                            BooleanOperator.AND -> currentGroupProperty.value!!.filter.labelIds.all { labelId -> labelId in it.labelIds }
+                            BooleanOperator.OR -> currentGroupProperty.value!!.filter.labelIds.any { labelId -> labelId in it.labelIds }
+                            else -> !currentGroupProperty.value!!.filter.labelIds.any { labelId -> labelId in it.labelIds }
+                        }
+                        )
             }
         } else {
             newItemList.toList()

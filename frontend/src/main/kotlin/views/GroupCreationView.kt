@@ -9,6 +9,7 @@ import javafx.scene.control.Button
 import javafx.scene.control.ButtonBar
 import javafx.scene.control.ButtonType
 import javafx.scene.control.CheckBox
+import javafx.scene.control.ComboBox
 import javafx.scene.control.Dialog
 import javafx.scene.control.RadioButton
 import javafx.scene.control.ScrollPane
@@ -18,6 +19,7 @@ import javafx.scene.input.MouseEvent
 import javafx.scene.layout.HBox
 import javafx.scene.layout.VBox
 import jfxtras.scene.control.LocalDateTimeTextField
+import models.BooleanOperator
 import models.Filter
 import models.Group
 import models.Label
@@ -25,7 +27,8 @@ import models.Priority
 import javafx.scene.control.Label as JfxLabel
 
 class GroupCreationView(private val controller: SidepaneController) : Dialog<Group?>() {
-    var group = Group("", Filter())
+    private val DEFAULT_BOOLEAN_OPERATOR = BooleanOperator.AND
+    var group = Group("", Filter(labelBooleanOperator = DEFAULT_BOOLEAN_OPERATOR))
     private var createButton = Button()
     private var cancelButton = Button()
     private val dateRangePickerContainer = HBox()
@@ -34,6 +37,8 @@ class GroupCreationView(private val controller: SidepaneController) : Dialog<Gro
     private val incompleteButton = RadioButton("Incomplete")
     private val labelViewScrollContainer = ScrollPane()
     private val labelViewContainer = HBox(20.0)
+    private val labelBooleanOperatorPicker = ComboBox<BooleanOperator>()
+    private val labelContainer = HBox(20.0)
     private val priorityPickerContainer = HBox()
     private val edtStartDatePicker = LocalDateTimeTextField()
     private val edtEndDatePicker = LocalDateTimeTextField()
@@ -75,14 +80,14 @@ class GroupCreationView(private val controller: SidepaneController) : Dialog<Gro
         setupPriorityPicker()
         setupCompletionPicker()
         setUpDateRangePicker()
-        setupLabelViewContainer()
+        setupLabelContainer()
         loadLabelViewContainer()
         setupGroupResultConverter()
 
         dialogPane.content = groupCreationContainer
 
         groupNameField.promptText = "group name..."
-        groupFilterContainer.children.addAll(priorityPickerContainer, completionPickerContainer, dateRangePickerContainer, labelViewScrollContainer)
+        groupFilterContainer.children.addAll(priorityPickerContainer, completionPickerContainer, dateRangePickerContainer, labelContainer)
         groupCreationContainer.children.addAll(groupNameField, groupFilterLabel, groupFilterContainer)
         /* end region view setup */
 
@@ -102,12 +107,17 @@ class GroupCreationView(private val controller: SidepaneController) : Dialog<Gro
         /* end region event filters */
     }
 
-    private fun setupLabelViewContainer() {
+    private fun setupLabelContainer() {
+        labelBooleanOperatorPicker.items.addAll(BooleanOperator.values())
+        labelBooleanOperatorPicker.value = DEFAULT_BOOLEAN_OPERATOR
+
         labelViewScrollContainer.isFitToHeight = true
         labelViewScrollContainer.prefHeight = 62.0
         labelViewScrollContainer.vbarPolicy = ScrollPane.ScrollBarPolicy.NEVER // hide vertical scroll bar
         labelViewScrollContainer.vmax = 0.0 // prevent vertical scrolling
         labelViewScrollContainer.content = labelViewContainer
+
+        labelContainer.children.setAll(labelBooleanOperatorPicker, labelViewScrollContainer)
 
         controller.groupCreationLabelListProperty.addListener(
             ChangeListener { _, _, newList ->
@@ -189,6 +199,7 @@ class GroupCreationView(private val controller: SidepaneController) : Dialog<Gro
                             controller.createLabel(false, label)
                         }
                     }
+                    group.filter.labelBooleanOperator = labelBooleanOperatorPicker.value
                     group.filter.labelIds = controller.labelListProperty.filter { it.name in controller.groupCreationLabelListProperty.value.map { groupCreationLabel -> groupCreationLabel.name } }.map { it.id }.toMutableList()
                     group.filter.priorities.addAll((priorityPickerContainer.children.filter { it is CheckBox && it.isSelected } as List<CheckBox>).map { Priority.valueOf(it.text) })
                     group.filter.isCompleted = if (completeButton.isSelected == incompleteButton.isSelected) null else { completeButton.isSelected }
