@@ -13,14 +13,17 @@ import commands.CreateLabelCommand
 import commands.DeleteItemCommand
 import commands.DeleteItemLabelCommand
 import commands.DeleteLabelCommand
+import commands.EditGroupFilterCommand
 import commands.EditItemCommand
 import commands.EditItemLabelCommand
 import commands.EditLabelCommand
 import commands.EditSortOrderCommand
 import commands.LogOutUserCommand
+import javafx.beans.property.SimpleListProperty
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import javafx.scene.Node
+import models.Filter
 import models.Group
 import models.Item
 import models.Label
@@ -33,12 +36,14 @@ class GroupViewController(todoApp: TODOApplication, private val cache: Cache) {
     private var app: TODOApplication? = null
     private var view: GroupView? = null
     private val todoClient = TODOClient
+    private val groupFilterLabelList: ObservableList<Int> = FXCollections.observableArrayList()
     var displayItemList: ObservableList<Item>
 
     var displayItemListProperty: ItemListProperty
     var itemListProperty: ItemListProperty
     var labelListProperty: LabelListProperty
     var currentGroupProperty = GroupProperty()
+    var groupFilterLabelListProperty = SimpleListProperty(groupFilterLabelList)
     var focusedItemProperty = ItemProperty()
 
     init {
@@ -96,7 +101,7 @@ class GroupViewController(todoApp: TODOApplication, private val cache: Cache) {
                         }
                         ) &&
 
-                    (if (currentGroupProperty.value!!.filter.priorities.size != 0) it.priority in currentGroupProperty.value!!.filter.priorities else true) &&
+                    (if (it.priority == null) currentGroupProperty.value!!.filter.priorities.size == 0 else it.priority in currentGroupProperty.value!!.filter.priorities) &&
                     currentGroupProperty.value!!.filter.labelIds.all { labelId -> labelId in it.labelIds }
             }
         } else {
@@ -117,6 +122,11 @@ class GroupViewController(todoApp: TODOApplication, private val cache: Cache) {
         displayItemList.setAll(
             sortedList
         )
+    }
+
+    fun reloadCurrentGroup(group: Group) {
+        currentGroupProperty.value = group
+        reloadDisplayItemList(itemListProperty.value)
     }
 
     fun setSortOrder(newSortOrder: GroupView.SortOrder) {
@@ -176,6 +186,14 @@ class GroupViewController(todoApp: TODOApplication, private val cache: Cache) {
     fun editSortOrder(newSortOrder: GroupView.SortOrder, oldSortOrder: GroupView.SortOrder) {
         val editSortOrderCommand = EditSortOrderCommand(newSortOrder, oldSortOrder, this)
         app?.commandHandler?.execute(editSortOrderCommand)
+    }
+
+    fun editCurrentGroupFilter(newFilter: Filter) {
+        val newGroup = currentGroupProperty.value.copy()
+        newGroup.filter = newFilter
+        val editGroupFilterCommand = EditGroupFilterCommand(newGroup, currentGroupProperty.value, this)
+        editGroupFilterCommand.execute()
+        groupFilterLabelListProperty.setAll(newGroup.filter.labelIds)
     }
 
     fun labels(): LabelListProperty {
