@@ -261,7 +261,8 @@ class GroupView(private val controller: GroupViewController) : VBox(36.0) {
         }
 
         controller.currentGroupProperty.value.filter.isCompleted?.let {
-            if (it) completeFilterButton.isSelected = true else incompleteFilterButton.isSelected = true
+            completeFilterButton.isSelected = it
+            incompleteFilterButton.isSelected = !it
         }
 
         completionFilterPickerContainer.spacing = 20.0

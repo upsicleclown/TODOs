@@ -13,7 +13,6 @@ import commands.CreateLabelCommand
 import commands.DeleteItemCommand
 import commands.DeleteItemLabelCommand
 import commands.DeleteLabelCommand
-import commands.EditGroupFilterCommand
 import commands.EditItemCommand
 import commands.EditItemLabelCommand
 import commands.EditLabelCommand
@@ -189,10 +188,14 @@ class GroupViewController(todoApp: TODOApplication, private val cache: Cache) {
     }
 
     fun editCurrentGroupFilter(newFilter: Filter) {
+        // This is not implemented as a command, it is a workaround.
+        // In order to support undo, the currentGroupProperty would have to be listenable in a meaningful way for the UI to be up-to-date.
+        // Since listeners perform equality checks and equality for a Group is by id, changing a Group's filter does not trigger an event
+        val todoClient = TODOClient
         val newGroup = currentGroupProperty.value.copy()
         newGroup.filter = newFilter
-        val editGroupFilterCommand = EditGroupFilterCommand(newGroup, currentGroupProperty.value, this)
-        editGroupFilterCommand.execute()
+        todoClient.editGroup(currentGroupProperty.value.id, newGroup)
+        reloadCurrentGroup(newGroup)
         groupFilterLabelListProperty.setAll(newGroup.filter.labelIds)
     }
 
