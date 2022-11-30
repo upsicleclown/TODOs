@@ -316,6 +316,11 @@ class GroupView(private val controller: GroupViewController) : VBox(36.0) {
                 loadGroupFilterLabelViewContainer()
             }
         )
+        controller.labelListProperty.addListener(
+                ChangeListener { _, _, _ ->
+                    loadGroupFilterLabelViewContainer()
+                }
+        )
     }
 
     fun loadGroupFilterLabelViewContainer() {
