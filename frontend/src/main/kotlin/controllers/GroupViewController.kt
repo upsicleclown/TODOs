@@ -106,7 +106,8 @@ class GroupViewController(todoApp: TODOApplication, private val cache: Cache) {
                         when (currentGroupProperty.value!!.filter.labelBooleanOperator) {
                             BooleanOperator.AND -> currentGroupProperty.value!!.filter.labelIds.all { labelId -> labelId in it.labelIds }
                             BooleanOperator.OR -> currentGroupProperty.value!!.filter.labelIds.any { labelId -> labelId in it.labelIds }
-                            else -> !currentGroupProperty.value!!.filter.labelIds.any { labelId -> labelId in it.labelIds }
+                            BooleanOperator.NOT -> !currentGroupProperty.value!!.filter.labelIds.any { labelId -> labelId in it.labelIds }
+                            else -> throw Exception("Boolean operator not supported in group filter!")
                         }
                         )
             }
