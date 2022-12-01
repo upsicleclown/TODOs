@@ -2,6 +2,7 @@ package todo.database
 
 import org.jetbrains.exposed.sql.SizedCollection
 import org.jetbrains.exposed.sql.or
+import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 import todo.database.config.ISQLiteConfig
 import todo.database.models.Filter
@@ -9,6 +10,7 @@ import todo.database.models.Group
 import todo.database.models.Item
 import todo.database.models.Label
 import todo.database.models.User
+import todo.database.tables.BooleanOperators
 import todo.database.tables.Labels
 import todo.database.tables.Priorities
 import java.time.LocalDateTime
@@ -88,7 +90,9 @@ class SQLiteDBTestConfig(override val connectionString: String = "jdbc:sqlite:sr
             // Group data
             Group.new {
                 name = "group1"
-                filter = Filter.new {}
+                filter = Filter.new {
+                    labelBooleanOperator = BooleanOperators.select { BooleanOperators.id eq "AND" }.single()[BooleanOperators.id]
+                }
                 user = user1
             }
             Group.new {
@@ -96,6 +100,7 @@ class SQLiteDBTestConfig(override val connectionString: String = "jdbc:sqlite:sr
                 filter = Filter.new {
                     edtStartDateRange = LocalDateTime.parse("2010-06-01T22:19:44")
                     edtEndDateRange = LocalDateTime.parse("2016-06-01T22:19:44")
+                    labelBooleanOperator = BooleanOperators.select { BooleanOperators.id eq "AND" }.single()[BooleanOperators.id]
                     isComplete = true
                 }
                 user = user1
@@ -106,6 +111,7 @@ class SQLiteDBTestConfig(override val connectionString: String = "jdbc:sqlite:sr
                     edtStartDateRange = LocalDateTime.parse("2010-06-01T22:19:44")
                     edtEndDateRange = LocalDateTime.parse("2016-06-01T22:19:44")
                     isComplete = false
+                    labelBooleanOperator = BooleanOperators.select { BooleanOperators.id eq "AND" }.single()[BooleanOperators.id]
                     priorities = todo.database.models.Priority.find {
                         (Priorities.id eq "LOW").or(Priorities.id eq "MEDIUM")
                     }
@@ -117,7 +123,9 @@ class SQLiteDBTestConfig(override val connectionString: String = "jdbc:sqlite:sr
             }
             Group.new {
                 name = "group4"
-                filter = Filter.new {}
+                filter = Filter.new {
+                    labelBooleanOperator = BooleanOperators.select { BooleanOperators.id eq "OR" }.single()[BooleanOperators.id]
+                }
                 user = user2
             }
         }

@@ -1,5 +1,6 @@
 package todo.service
 
+import models.BooleanOperator
 import models.Filter
 import models.Group
 import models.Item
@@ -74,7 +75,7 @@ class ServiceTest {
         val nonExistingLabelIds = mutableListOf(10000)
 
         assertFailsWith<IllegalArgumentException> {
-            service.addGroup(Group("test", Filter(labelIds = nonExistingLabelIds)))
+            service.addGroup(Group("test", Filter(labelIds = nonExistingLabelIds, labelBooleanOperator = BooleanOperator.AND)))
         }
     }
 
@@ -84,7 +85,7 @@ class ServiceTest {
         val nonExistingLabelIds = mutableListOf(10000)
 
         assertFailsWith<IllegalArgumentException> {
-            service.editGroup(existingGroupId, Group("test", Filter(labelIds = nonExistingLabelIds)))
+            service.editGroup(existingGroupId, Group("test", Filter(labelIds = nonExistingLabelIds, labelBooleanOperator = BooleanOperator.AND)))
         }
     }
 }

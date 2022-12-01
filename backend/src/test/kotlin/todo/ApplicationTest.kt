@@ -96,7 +96,7 @@ class ApplicationTest {
 
         // Test creating new Group
         val newGroupResponse: ResponseEntity<Any> = testRestTemplate
-            .postForEntity("/groups", HttpEntity("{\"name\":\"group4\", \"filter\":{}}", headers))
+            .postForEntity("/groups", HttpEntity("{\"name\":\"group4\", \"filter\":{\"labelBooleanOperator\":\"AND\"}}", headers))
         assertEquals(HttpStatus.OK, newGroupResponse.statusCode)
 
         // Test retrieving existing Groups
@@ -110,7 +110,7 @@ class ApplicationTest {
         val newGroup = newGroups[0]
 
         // Test updating previously created Group
-        testRestTemplate.put("/groups/" + newGroup.get("id"), HttpEntity("{\"name\":\"group4.1\", \"filter\":{\"edtStartDateRange\":\"2010-06-01T22:19:44\", \"edtEndDateRange\":\"2019-06-01T22:19:44\", \"isCompleted\":false, \"priorities\":[\"HIGH\", \"MEDIUM\"]} }", headers))
+        testRestTemplate.put("/groups/" + newGroup.get("id"), HttpEntity("{\"name\":\"group4.1\", \"filter\":{\"edtStartDateRange\":\"2010-06-01T22:19:44\", \"edtEndDateRange\":\"2019-06-01T22:19:44\", \"isCompleted\":false, \"priorities\":[\"HIGH\", \"MEDIUM\"], \"labelBooleanOperator\":\"OR\"} }", headers))
 
         getGroupsResponse = testRestTemplate.getForEntity("/groups", String::class.java)
         assertEquals(HttpStatus.OK, getGroupsResponse?.statusCode)

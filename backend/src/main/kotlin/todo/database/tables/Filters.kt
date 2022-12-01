@@ -7,4 +7,5 @@ object Filters : IntIdTable() {
     val edtStartDateRange = datetime(name = "edtStartDateRange").nullable()
     val edtEndDateRange = datetime(name = "edtEndDateRange").nullable()
     val isCompleted = bool("is_completed").nullable()
+    val labelBooleanOperator = reference("booleanOperator", BooleanOperators)
 }

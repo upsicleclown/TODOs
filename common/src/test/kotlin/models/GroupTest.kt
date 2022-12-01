@@ -8,10 +8,11 @@ internal class GroupTest {
     @Test
     fun testConstructor() {
         val expectedName = "testGroup"
-        val expectedFilter = Filter()
+        val expectedLabelBooleanOperator = BooleanOperator.AND
+        val expectedFilter = Filter(labelBooleanOperator = expectedLabelBooleanOperator)
 
         val group = Group(expectedName, expectedFilter)
         assertEquals(group.name, expectedName)
-        assertEquals(group.filter, Filter())
+        assertEquals(group.filter, expectedFilter)
     }
 }

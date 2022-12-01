@@ -3,6 +3,7 @@ package todo.database
 import org.jetbrains.exposed.sql.SizedCollection
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.transaction
+import todo.database.models.BooleanOperator
 import todo.database.models.Filter
 import todo.database.models.Group
 import todo.database.models.Item
@@ -13,6 +14,7 @@ import todo.database.tables.Groups
 import todo.database.tables.Items
 import todo.database.tables.Labels
 import todo.database.tables.Users
+import models.BooleanOperator as BooleanOperatorEnum
 import models.Priority as PriorityEnum
 
 /*
@@ -334,6 +336,7 @@ object SQLiteDB {
                     isComplete = groupFilter.isCompleted
                     priorities = SizedCollection(groupFilter.priorities.map { Priority[it.name] })
                     labels = SizedCollection(labelsToSave)
+                    labelBooleanOperator = BooleanOperator[groupFilter.labelBooleanOperator.name].id
                     user = userLoggedIn!!
                 }
             }
@@ -387,6 +390,7 @@ object SQLiteDB {
                 oldFilter.edtEndDateRange = newFilter.edtEndDateRange
                 oldFilter.isComplete = newFilter.isCompleted
                 oldFilter.labels = SizedCollection(labelsToSave)
+                oldFilter.labelBooleanOperator = BooleanOperator[newFilter.labelBooleanOperator.name].id
                 oldFilter.priorities = SizedCollection(newFilter.priorities.map { Priority[it.name] })
 
                 oldGroup.name = newGroup.name
@@ -412,7 +416,8 @@ object SQLiteDB {
                         filter.edtEndDateRange,
                         filter.isComplete,
                         filter.priorities.map { priority -> PriorityEnum.valueOf(priority.id.toString()) } as MutableList<models.Priority>,
-                        filter.labels.map { label -> label.id.value } as MutableList<Int>
+                        filter.labels.map { label -> label.id.value } as MutableList<Int>,
+                        BooleanOperatorEnum.valueOf(filter.labelBooleanOperator.value)
                     ),
                     it.id.value
                 )

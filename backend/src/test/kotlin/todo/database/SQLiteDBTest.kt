@@ -1,5 +1,6 @@
 package todo.database
 
+import models.BooleanOperator
 import models.Filter
 import models.Group
 import models.Item
@@ -168,7 +169,8 @@ internal class SQLiteDBTest {
             LocalDateTime.parse("2016-06-01T22:19:44"),
             false,
             mutableListOf(Priority.MEDIUM, Priority.LOW),
-            mutableListOf()
+            mutableListOf(),
+            BooleanOperator.AND
         )
 
         val insertedGroup = SQLiteDB.addGroup(Group(expectedGroupTitle, expectedGroupFilter))
@@ -192,7 +194,8 @@ internal class SQLiteDBTest {
             LocalDateTime.parse("2016-06-01T22:19:44"),
             false,
             mutableListOf(Priority.MEDIUM, Priority.LOW),
-            mutableListOf()
+            mutableListOf(),
+            BooleanOperator.OR
         )
 
         SQLiteDB.editGroup(expectedGroupId, Group(newName, newGroupFilter))
@@ -205,7 +208,7 @@ internal class SQLiteDBTest {
     fun testGetGroups() {
         val expectedGroupIds = listOf(1, 2, 3, 5)
 
-        SQLiteDB.addGroup(Group("group4", Filter()))
+        SQLiteDB.addGroup(Group("group4", Filter(labelBooleanOperator = BooleanOperator.AND)))
         assertEquals(SQLiteDB.getGroups().map { group: Group -> group.id }, expectedGroupIds)
     }
 

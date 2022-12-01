@@ -20,6 +20,7 @@ import javafx.scene.input.MouseEvent
 import javafx.scene.layout.HBox
 import javafx.scene.layout.VBox
 import jfxtras.scene.control.LocalDateTimeTextField
+import models.BooleanOperator
 import models.Item
 import models.Priority
 import java.util.Optional
@@ -49,6 +50,8 @@ class GroupView(private val controller: GroupViewController) : VBox(36.0) {
     private val incompleteFilterButton = RadioButton("Incomplete")
     private val labelViewFilterScrollContainer = ScrollPane()
     private val labelViewFilterContainer = HBox(20.0)
+    private val labelFilterBooleanOperatorPicker = ComboBox<BooleanOperator>()
+    private val labelFilterContainer = HBox(20.0)
     private val priorityFilterPickerContainer = HBox()
     private val edtStartDateFilterPicker = LocalDateTimeTextField()
     private val edtEndDateFilterPicker = LocalDateTimeTextField()
@@ -201,11 +204,11 @@ class GroupView(private val controller: GroupViewController) : VBox(36.0) {
 
     private fun setUpFilterPicker() {
         groupFilterContainer.spacing = 15.0
-        groupFilterContainer.children.setAll(priorityFilterPickerContainer, completionFilterPickerContainer, dateRangeFilterPickerContainer, labelViewFilterScrollContainer)
+        groupFilterContainer.children.setAll(priorityFilterPickerContainer, completionFilterPickerContainer, dateRangeFilterPickerContainer, labelFilterContainer)
         setupPriorityFilterPicker()
         setupCompletionPicker()
         setUpDateRangePicker()
-        setupGroupFilterLabelViewContainer()
+        setupGroupFilterLabelContainer()
         loadGroupFilterLabelViewContainer()
     }
 
@@ -303,12 +306,27 @@ class GroupView(private val controller: GroupViewController) : VBox(36.0) {
         )
     }
 
-    fun setupGroupFilterLabelViewContainer() {
+    fun setupGroupFilterLabelContainer() {
+        labelFilterBooleanOperatorPicker.items.addAll(BooleanOperator.values())
+        labelFilterBooleanOperatorPicker.value = controller.currentGroupProperty.value.filter.labelBooleanOperator
+
+        labelFilterBooleanOperatorPicker.valueProperty().addListener(
+            ChangeListener { _, oldValue, newValue ->
+                if (oldValue != newValue) {
+                    val newFilter = controller.currentGroupProperty.value.filter.copy()
+                    newFilter.labelBooleanOperator = newValue
+                    controller.editCurrentGroupFilter(newFilter)
+                }
+            }
+        )
+
         labelViewFilterScrollContainer.isFitToHeight = true
         labelViewFilterScrollContainer.prefHeight = 62.0
         labelViewFilterScrollContainer.vbarPolicy = ScrollPane.ScrollBarPolicy.NEVER // hide vertical scroll bar
         labelViewFilterScrollContainer.vmax = 0.0 // prevent vertical scrolling
         labelViewFilterScrollContainer.content = labelViewFilterContainer
+
+        labelFilterContainer.children.setAll(labelFilterBooleanOperatorPicker, labelViewFilterScrollContainer)
 
         controller.groupFilterLabelListProperty.value.setAll(controller.currentGroupProperty.value.filter.labelIds)
         controller.groupFilterLabelListProperty.addListener(
@@ -317,9 +335,9 @@ class GroupView(private val controller: GroupViewController) : VBox(36.0) {
             }
         )
         controller.labelListProperty.addListener(
-                ChangeListener { _, _, _ ->
-                    loadGroupFilterLabelViewContainer()
-                }
+            ChangeListener { _, _, _ ->
+                loadGroupFilterLabelViewContainer()
+            }
         )
     }
 
