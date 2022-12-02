@@ -337,13 +337,13 @@ class GroupView(private val controller: GroupViewController, private val cache: 
     }
 
     fun setupGroupFilterLabelContainer() {
-        labelFilterBooleanOperatorPicker.items.addAll(BooleanOperator.values())
+        labelFilterBooleanOperatorPicker.items.setAll(*BooleanOperator.values())
         labelFilterBooleanOperatorPicker.value = controller.currentGroupProperty.value.filter.labelBooleanOperator
         labelFilterBooleanOperatorPicker.styleClass.addAll("sort", "sort__picker", "label-max")
 
         labelFilterBooleanOperatorPicker.valueProperty().addListener(
             ChangeListener { _, oldValue, newValue ->
-                if (oldValue != newValue) {
+                if (oldValue != newValue && newValue != null) {
                     val newFilter = controller.currentGroupProperty.value.filter.copy()
                     newFilter.labelBooleanOperator = newValue
                     controller.editCurrentGroupFilter(newFilter)
