@@ -4,6 +4,11 @@
     -fx-faint-focus-color: transparent;
 }
 
+.text-field {
+    -fx-highlight-fill: -text-highlight;
+    -fx-highlight-text-fill: -text--negative;
+}
+
 /* hide empty list cells */
 .list-cell:empty {
     visibility: hidden;
@@ -28,6 +33,7 @@
     scroll-pane.viewport, and scroll-pane.corner */
 .scroll-pane > * > * {
     -fx-background-radius: 12px;
+    -fx-background-color: transparent;
 }
 
 /* remove default scroll bar background */
@@ -55,6 +61,18 @@
 }
 /* end region hide scroll bar arrows */
 
+
+.date-picker .text-field {
+    -fx-border-style : solid;
+    -fx-border-color: -border--secondary;
+    -fx-border-width: 0.5px;
+    -fx-text-fill: -text--secondary;
+    -fx-background-color: transparent;
+}
+
+.date-picker:focused {
+    -fx-background-color: transparent;
+}
 /* end region modifications to modena.css*/
 
 /* region color variables */
@@ -115,7 +133,7 @@
 
 .title-max {
     -fx-font-family: "Cydnel";
-    -fx-font-size: 128;
+    -fx-font-size: 86;
 }
 
 .subtitle {

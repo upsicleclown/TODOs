@@ -6,7 +6,7 @@
 }
 
 .group__item-list__container .viewport{
-    -fx-background-color: -background--primary;
+    -fx-background-color: transparent;
 }
 
 .group__item-list {

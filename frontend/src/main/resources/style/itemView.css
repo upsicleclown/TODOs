@@ -9,6 +9,15 @@
     -fx-background-radius: 12px;
 }
 
+.item--focused {
+    -fx-background-color: -background--accent;
+    -fx-border-width: 1px;
+    -fx-border-color: -border--secondary;
+    -fx-border-style: solid;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+}
+
 .item__heading {
     -fx-background-color: transparent;
     -fx-text-fill: -text--primary;
@@ -16,6 +25,11 @@
 
 .item__delete-button {
     -fx-background-color: transparent;
+    -fx-text-fill: -text--primary;
+}
+
+.item__delete-button:hover {
+    -fx-text-fill: -foreground--accent;
 }
 
 .item__completion-button {
@@ -66,7 +80,7 @@
 }
 
 .item__label-content {
-    -fx-background-color: -background--primary;
+    -fx-background-color: transparent;
     -fx-background-radius: 0px 0px 12px 12px;
     -fx-padding: 8px;
 }
@@ -98,8 +112,4 @@
 .item__add-label-chip__button {
     -fx-background-color: transparent;
     -fx-text-fill: -text--negative;
-}
-
-// Revisit this: https://stackoverflow.com/questions/19343531/javafx-combobox-styling
-.item__add-label-chip__combo-box {
 }

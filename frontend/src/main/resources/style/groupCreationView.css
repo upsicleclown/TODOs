@@ -1,10 +1,70 @@
 @import "config.css";
 
-.group-creation {
+.group {
     -fx-padding: 36px;
+    -fx-background-color: -background--primary;
 }
 
-.group-creation__filters {
+.group__text-field {
+    -fx-border-style : solid;
+    -fx-border-color: -border--primary;
+    -fx-border-width: 0.5px;
+    -fx-text-fill: -text--primary;
+    -fx-background-color: -background--primary;
+}
+
+.group__priority-picker__label,
+.group__completion-picker,
+.group__priority-picker,
+.group__priority-picker__check-box {
+    -fx-text-fill: -text--primary;
+}
+
+.group__priority-picker__check-box .box {
+    -fx-background-radius: 0;
+    -fx-background-color: -background--primary;
+    -fx-border-style : solid;
+    -fx-border-color: -border--primary;
+    -fx-border-width: 0.5px;
+}
+
+.group__priority-picker__check-box .box {
+    -fx-background-radius: 0;
+    -fx-background-color: -background--primary;
+    -fx-border-style : solid;
+    -fx-border-color: -border--primary;
+    -fx-border-width: 0.5px;
+}
+
+.group__priority-picker__check-box:hover .box,
+.group__priority-picker__check-box:focused:hover .box{
+    -fx-background-color: -background--secondary;
+    -fx-border-style : solid;
+    -fx-border-color: -border--secondary;
+    -fx-border-width: 0.5px;
+}
+
+.group__priority-picker__check-box:selected .box .mark{
+    -fx-background-color: -foreground--accent;
+}
+
+.group__priority-picker__check-box:selected:hover .box {
+    -fx-background-color: -background--negative;
+    -fx-border-style : solid;
+    -fx-border-color: -border--negative;
+    -fx-border-width: 0.5px;
+}
+
+.group__priority-picker__check-box:selected:hover .box .mark {
+    -fx-background-color: -background--accent;
+}
+
+.group__priority-picker__check-box:focused .box {
+    -fx-background-color: -background--primary;
+    -fx-border-color: -border--primary;
+}
+
+.group__filters {
     -fx-border-style: solid;
     -fx-border-width: 1px;
     -fx-border-color: -border--primary;
@@ -12,11 +72,63 @@
     -fx-padding: 16px;
 }
 
-.group-creation__filters .viewport {
+.group__filters__label {
+    -fx-text-fill: -text--primary;
+}
+
+.group__filters .viewport {
     -fx-background-color: transparent;
 }
 
-.group-creation__cancel-button {
+.group__completion-picker__complete-button,
+.group__completion-picker__incomplete-button {
+    -fx-text-fill: -text--primary;
+}
+
+.group__completion-picker__complete-button .radio,
+.group__completion-picker__incomplete-button .radio {
+    -fx-background-color: -background--primary;
+    -fx-border-style: solid;
+    -fx-border-color: -border--primary;
+    -fx-border-radius: 1.0em;
+    -fx-border-width: 1px;
+}
+
+.group__completion-picker__complete-button:hover .radio,
+.group__completion-picker__incomplete-button:hover .radio {
+    -fx-background-color: -background--accent;
+}
+
+.group__completion-picker__complete-button:selected:hover .radio,
+.group__completion-picker__incomplete-button:selected:hover .radio {
+    -fx-background-color: -background--primary;
+}
+
+.group__completion-picker__complete-button:selected .dot,
+.group__completion-picker__incomplete-button:selected .dot {
+    -fx-background-color: -foreground--accent;
+}
+
+.group__completion-picker__clear-button {
+    -fx-text-fill: -text--primary;
+    -fx-background-color: -background--primary;
+    -fx-background-radius: 8px;
+    -fx-border-color: -border--primary;
+    -fx-border-radius: 8px;
+    -fx-border-width: 1px;
+}
+
+.group__completion-picker__clear-button:hover {
+    -fx-text-fill: -text--negative;
+    -fx-background-color: -background--negative;
+    -fx-border-color: -border--negative;
+}
+
+.group__date-picker__label {
+    -fx-text-fill: -text--primary;
+}
+
+.group__cancel-button {
     -fx-background-color: -background--negative;
     -fx-text-fill: -text--negative;
     -fx-border-style: solid;
@@ -24,13 +136,13 @@
     -fx-border-width: 1px;
 }
 
-.group-creation__cancel-button:hover {
+.group__cancel-button:hover {
     -fx-text-fill: -text--primary;
     -fx-background-color: -background--primary;
     -fx-border-color: -border--primary;
 }
 
-.group-creation__create-button {
+.group__create-button {
     -fx-background-color: -background--primary;
     -fx-text-fill: -button--confirm;
     -fx-border-style : solid;
@@ -38,7 +150,7 @@
     -fx-border-width: 1px;
 }
 
-.group-creation__create-button:hover {
+.group__create-button:hover {
     -fx-text-fill: -text--negative;
     -fx-background-color: -button--confirm;
 }

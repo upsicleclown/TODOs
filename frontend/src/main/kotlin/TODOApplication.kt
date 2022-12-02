@@ -33,7 +33,7 @@ class TODOApplication : Application() {
     val commandHandler = CommandHandler()
     private val cache = Cache()
     private val clipboard = Clipboard()
-    private val minSize = 500.0
+    private val minSize = 660.0
 
     private val sidepaneController = SidepaneController(this)
     val groupViewController = GroupViewController(this, cache)

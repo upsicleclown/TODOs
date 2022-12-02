@@ -19,6 +19,7 @@ import javafx.scene.control.TextField
 import javafx.scene.control.ToggleGroup
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.HBox
+import javafx.scene.layout.Region
 import javafx.scene.layout.VBox
 import jfxtras.scene.control.LocalDateTimeTextField
 import models.BooleanOperator
@@ -45,19 +46,21 @@ class GroupView(private val controller: GroupViewController, private val cache: 
     private val sortOrderIsDescButton = Button()
     private val sortOrderPicker = HBox(12.0)
     private val sortOrderLabel = Label("SORT")
-    private val dateRangeFilterPickerContainer = HBox()
-    private val completionFilterPickerContainer = HBox()
-    private val completeFilterButton = RadioButton("Complete")
-    private val incompleteFilterButton = RadioButton("Incomplete")
+    private val dateRangeFilterPickerContainer = HBox(20.0)
+    private val completionFilterPickerContainer = HBox(20.0)
+    private val completeFilterButton = RadioButton("COMPLETE")
+    private val incompleteFilterButton = RadioButton("INCOMPLETE")
+    private val clearButton = Button("CLEAR")
     private val labelViewFilterScrollContainer = ScrollPane()
     private val labelViewFilterContainer = HBox(20.0)
     private val labelFilterBooleanOperatorPicker = ComboBox<BooleanOperator>()
     private val labelFilterContainer = HBox(20.0)
-    private val priorityFilterPickerContainer = HBox()
+    private val priorityFilterPickerContainer = HBox(20.0)
+    private val priorityFilterPickerLabel = Label("PRIORITIES")
     private val edtStartDateFilterPicker = LocalDateTimeTextField()
     private val edtEndDateFilterPicker = LocalDateTimeTextField()
-    private val groupFilterLabel = Label("FILTER ")
-    private val groupFilterContainer = VBox()
+    private val groupFilterLabel = Label("FILTERS")
+    private val groupFilterContainer = VBox(15.0)
     private val filterSortContainer = HBox()
     private val itemListScrollContainer = ScrollPane()
     private val itemListContainer = VBox(36.0)
@@ -73,7 +76,8 @@ class GroupView(private val controller: GroupViewController, private val cache: 
         itemCreationField.styleClass.addAll("h2", "group__create-item")
         itemListScrollContainer.styleClass.addAll("group__item-list__container")
         itemListContainer.styleClass.addAll("group__item-list")
-        logoutButton.styleClass.addAll("logout-button", "body")
+        logoutButton.styleClass.addAll("group__cancel-button", "body")
+        logoutButton.minWidth = 125.0 /* prevent crunching logout button text */
         /* end region styling */
 
         /* region event filters */
@@ -120,7 +124,10 @@ class GroupView(private val controller: GroupViewController, private val cache: 
         itemListScrollContainer.hbarPolicy = ScrollPane.ScrollBarPolicy.NEVER
 
         filterSortContainer.spacing = 30.0
-        children.addAll(logoutButtonContainer, currentGroupName, filterSortContainer, itemCreationField, itemListScrollContainer)
+        val headerSpacer = Region()
+        val header = HBox(currentGroupName, headerSpacer, logoutButtonContainer)
+        HBox.setHgrow(headerSpacer, javafx.scene.layout.Priority.ALWAYS)
+        children.addAll(header, filterSortContainer, itemCreationField, itemListScrollContainer)
         /* end region view setup */
 
         /* region data bindings */
@@ -129,7 +136,16 @@ class GroupView(private val controller: GroupViewController, private val cache: 
                 currentGroupName.text = newGroup.name
                 setUpFilterPicker()
 
-                filterSortContainer.children.setAll(sortOrderPicker, HBox(groupFilterLabel, groupFilterContainer))
+                groupFilterLabel.styleClass.addAll("h1", "group__filters__label")
+                val filterSortContainerSpacer = Region()
+                val groupFilterParentContainer = HBox(8.0)
+                groupFilterParentContainer.children.setAll(
+                    groupFilterLabel,
+                    filterSortContainerSpacer,
+                    groupFilterContainer
+                )
+                HBox.setHgrow(filterSortContainerSpacer, javafx.scene.layout.Priority.ALWAYS)
+                filterSortContainer.children.setAll(sortOrderPicker, groupFilterParentContainer)
             } else {
                 currentGroupName.text = "All Items"
                 filterSortContainer.children.setAll(sortOrderPicker)
@@ -204,8 +220,12 @@ class GroupView(private val controller: GroupViewController, private val cache: 
     }
 
     private fun setUpFilterPicker() {
-        groupFilterContainer.spacing = 15.0
-        groupFilterContainer.children.setAll(priorityFilterPickerContainer, completionFilterPickerContainer, dateRangeFilterPickerContainer, labelFilterContainer)
+        groupFilterContainer.children.setAll(
+            priorityFilterPickerContainer,
+            completionFilterPickerContainer,
+            dateRangeFilterPickerContainer,
+            labelFilterContainer
+        )
         setupPriorityFilterPicker()
         setupCompletionPicker()
         setUpDateRangePicker()
@@ -214,9 +234,14 @@ class GroupView(private val controller: GroupViewController, private val cache: 
     }
 
     private fun setupPriorityFilterPicker() {
-        priorityFilterPickerContainer.spacing = 20.0
+        priorityFilterPickerContainer.styleClass.addAll("group__priority-picker")
+        priorityFilterPickerLabel.styleClass.addAll("group__priority-picker__label", "label-max")
 
-        val priorityBoxes = Priority.values().map { CheckBox(it.name) }
+        val priorityBoxes = Priority.values().map {
+            val checkBox = CheckBox(it.name)
+            checkBox.styleClass.addAll("group__priority-picker__check-box","label-min")
+            checkBox
+        }
         priorityBoxes.forEach { checkbox ->
             if (Priority.valueOf(checkbox.text) in controller.currentGroupProperty.value.filter.priorities) {
                 checkbox.isSelected = true
@@ -238,13 +263,16 @@ class GroupView(private val controller: GroupViewController, private val cache: 
                 }
             )
         }
-        priorityFilterPickerContainer.children.setAll(listOf(Label("Priorities: ")) + priorityBoxes)
+        priorityFilterPickerContainer.children.setAll(listOf(priorityFilterPickerLabel) + priorityBoxes)
     }
 
     private fun setupCompletionPicker() {
         val group = ToggleGroup()
+        completeFilterButton.styleClass.addAll("group__completion-picker__complete-button", "label-max")
         completeFilterButton.toggleGroup = group
+        incompleteFilterButton.styleClass.addAll("group__completion-picker__incomplete-button", "label-max")
         incompleteFilterButton.toggleGroup = group
+        clearButton.styleClass.addAll("group__completion-picker__clear-button", "label-max")
 
         group.selectedToggleProperty().addListener(
             ChangeListener { _, _, toggle ->
@@ -253,8 +281,6 @@ class GroupView(private val controller: GroupViewController, private val cache: 
                 controller.editCurrentGroupFilter(newFilter)
             }
         )
-
-        val clearButton = Button("Clear")
 
         clearButton.setOnAction {
             completeFilterButton.isSelected = false
@@ -269,16 +295,19 @@ class GroupView(private val controller: GroupViewController, private val cache: 
             incompleteFilterButton.isSelected = !it
         }
 
-        completionFilterPickerContainer.spacing = 20.0
+        completionFilterPickerContainer.styleClass.addAll("group__completion-picker")
         completionFilterPickerContainer.children.setAll(completeFilterButton, incompleteFilterButton, clearButton)
     }
 
     private fun setUpDateRangePicker() {
-        dateRangeFilterPickerContainer.spacing = 20.0
-        dateRangeFilterPickerContainer.children.setAll(edtStartDateFilterPicker, Label("to"), edtEndDateFilterPicker)
+        val dateRangeLabel = Label("TO")
+        dateRangeLabel.styleClass.addAll("group__date-picker__label", "label-max")
+        dateRangeFilterPickerContainer.children.setAll(edtStartDateFilterPicker, dateRangeLabel, edtEndDateFilterPicker)
 
         edtStartDateFilterPicker.localDateTime = controller.currentGroupProperty.value.filter.edtStartDateRange
+        edtStartDateFilterPicker.styleClass.setAll("date-picker", "label-max")
         edtEndDateFilterPicker.localDateTime = controller.currentGroupProperty.value.filter.edtEndDateRange
+        edtEndDateFilterPicker.styleClass.setAll("date-picker", "label-max")
 
         edtStartDateFilterPicker.localDateTimeProperty().addListener(
             ChangeListener { _, _, newValue ->
@@ -310,6 +339,7 @@ class GroupView(private val controller: GroupViewController, private val cache: 
     fun setupGroupFilterLabelContainer() {
         labelFilterBooleanOperatorPicker.items.addAll(BooleanOperator.values())
         labelFilterBooleanOperatorPicker.value = controller.currentGroupProperty.value.filter.labelBooleanOperator
+        labelFilterBooleanOperatorPicker.styleClass.addAll("sort", "sort__picker", "label-max")
 
         labelFilterBooleanOperatorPicker.valueProperty().addListener(
             ChangeListener { _, oldValue, newValue ->

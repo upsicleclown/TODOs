@@ -33,46 +33,46 @@ class GroupCreationView(private val controller: SidepaneController, private val 
     var group = Group("", Filter(labelBooleanOperator = DEFAULT_BOOLEAN_OPERATOR))
     private var createButton = Button()
     private var cancelButton = Button()
-    private val dateRangePickerContainer = HBox()
-    private val completionPickerContainer = HBox()
-    private val completeButton = RadioButton("Complete")
-    private val incompleteButton = RadioButton("Incomplete")
+    private val dateRangePickerContainer = HBox(20.0)
+    private val completionPickerContainer = HBox(20.0)
+    private val completeButton = RadioButton("COMPLETE")
+    private val incompleteButton = RadioButton("INCOMPLETE")
+    private val clearButton = Button("CLEAR")
     private val labelViewScrollContainer = ScrollPane()
     private val labelViewContainer = HBox(20.0)
     private val labelBooleanOperatorPicker = ComboBox<BooleanOperator>()
     private val labelContainer = HBox(20.0)
-    private val priorityPickerContainer = HBox()
+    private val priorityPickerContainer = HBox(20.0)
+    private val priorityPickerLabel = JfxLabel("PRIORITIES")
     private val edtStartDatePicker = LocalDateTimeTextField()
     private val edtEndDatePicker = LocalDateTimeTextField()
     private val groupCreationContainer = VBox(24.0)
     private val groupNameField = TextField("")
     private val groupFilterLabel = JfxLabel("FILTERS")
-    private val groupFilterContainer = VBox()
+    private val groupFilterContainer = VBox(15.0)
     private val createButtonType = ButtonType("save", ButtonBar.ButtonData.YES)
 
     init {
         /* region styling */
         dialogPane.scene.stylesheets.add("/style/TODOApplication.css")
         dialogPane.scene.root.style = Theme.stylesForTheme(cache.getWindowSettings().theme)
-        controller.todoApp()?.enableHotkeys(dialogPane.scene)
 
-        groupCreationContainer.styleClass.add("group-creation")
+        dialogPane.scene.root.styleClass.add("group")
         groupCreationContainer.alignment = Pos.CENTER
-        groupNameField.styleClass.addAll("title-min", "group-creation__text-field")
+        groupNameField.styleClass.addAll("title-min", "group__text-field")
         groupNameField.maxWidth = 540.0
 
-        groupFilterLabel.styleClass.addAll("subtitle")
 
-        labelViewScrollContainer.styleClass.addAll("group-creation__label-container")
-        groupFilterContainer.styleClass.add("group-creation__filters")
-        groupFilterContainer.spacing = 15.0
+        labelViewScrollContainer.styleClass.addAll("group__label-container")
+        groupFilterContainer.styleClass.add("group__filters")
+        groupFilterLabel.styleClass.addAll("subtitle", "group__filters__label")
 
         dialogPane.buttonTypes.addAll(createButtonType, ButtonType.CANCEL)
         createButton = dialogPane.lookupButton(createButtonType) as Button
         cancelButton = dialogPane.lookupButton(ButtonType.CANCEL) as Button
         cancelButton.text = "cancel"
-        createButton.styleClass.addAll("body", "group-creation__create-button")
-        cancelButton.styleClass.addAll("body", "group-creation__cancel-button")
+        createButton.styleClass.addAll("body", "group__create-button")
+        cancelButton.styleClass.addAll("body", "group__cancel-button")
 
         title = "Create a Group"
         isResizable = true
@@ -80,6 +80,7 @@ class GroupCreationView(private val controller: SidepaneController, private val 
         /* end region styling */
 
         /* region view setup */
+        controller.todoApp()?.enableHotkeys(dialogPane.scene)
         setupPriorityPicker()
         setupCompletionPicker()
         setUpDateRangePicker()
@@ -90,7 +91,12 @@ class GroupCreationView(private val controller: SidepaneController, private val 
         dialogPane.content = groupCreationContainer
 
         groupNameField.promptText = "group name..."
-        groupFilterContainer.children.addAll(priorityPickerContainer, completionPickerContainer, dateRangePickerContainer, labelContainer)
+        groupFilterContainer.children.addAll(
+            priorityPickerContainer,
+            completionPickerContainer,
+            dateRangePickerContainer,
+            labelContainer
+        )
         groupCreationContainer.children.addAll(groupNameField, groupFilterLabel, groupFilterContainer)
         /* end region view setup */
 
@@ -113,6 +119,7 @@ class GroupCreationView(private val controller: SidepaneController, private val 
     private fun setupLabelContainer() {
         labelBooleanOperatorPicker.items.addAll(BooleanOperator.values())
         labelBooleanOperatorPicker.value = DEFAULT_BOOLEAN_OPERATOR
+        labelBooleanOperatorPicker.styleClass.addAll("sort", "sort__picker", "label-max")
 
         labelViewScrollContainer.isFitToHeight = true
         labelViewScrollContainer.prefHeight = 62.0
@@ -145,30 +152,37 @@ class GroupCreationView(private val controller: SidepaneController, private val 
     }
 
     private fun setupPriorityPicker() {
-        priorityPickerContainer.spacing = 20.0
-        priorityPickerContainer.children.add(JfxLabel("Priorities: "))
-        priorityPickerContainer.children.addAll(Priority.values().map { CheckBox(it.name) })
+        priorityPickerContainer.styleClass.addAll("group__priority-picker")
+        priorityPickerLabel.styleClass.addAll("group__priority-picker__label", "label-max")
+        priorityPickerContainer.children.add(priorityPickerLabel)
+        priorityPickerContainer.children.addAll(Priority.values().map {
+            val checkBox = CheckBox(it.name)
+            checkBox.styleClass.addAll("group__priority-picker__check-box","label-min")
+            checkBox
+        })
     }
 
     private fun setupCompletionPicker() {
         val group = ToggleGroup()
+        completeButton.styleClass.addAll("group__completion-picker__complete-button", "label-max")
         completeButton.toggleGroup = group
+        incompleteButton.styleClass.addAll("group__completion-picker__incomplete-button", "label-max")
         incompleteButton.toggleGroup = group
-
-        val clearButton = Button("Clear")
+        clearButton.styleClass.addAll("group__completion-picker__clear-button", "label-max")
 
         clearButton.setOnAction {
             completeButton.isSelected = false
             incompleteButton.isSelected = false
         }
 
-        completionPickerContainer.spacing = 20.0
+        completionPickerContainer.styleClass.addAll("group__completion-picker")
         completionPickerContainer.children.addAll(completeButton, incompleteButton, clearButton)
     }
 
     private fun setUpDateRangePicker() {
-        dateRangePickerContainer.spacing = 20.0
-        dateRangePickerContainer.children.addAll(edtStartDatePicker, JfxLabel("to"), edtEndDatePicker)
+        val dateRangeLabel = JfxLabel("TO")
+        dateRangeLabel.styleClass.addAll("group__date-picker__label", "label-max")
+        dateRangePickerContainer.children.addAll(edtStartDatePicker, dateRangeLabel, edtEndDatePicker)
 
         edtStartDatePicker.localDateTimeProperty().addListener(
             ChangeListener { _, _, newValue ->
@@ -179,6 +193,7 @@ class GroupCreationView(private val controller: SidepaneController, private val 
                 }
             }
         )
+        edtStartDatePicker.styleClass.setAll("date-picker", "label-max")
 
         edtEndDatePicker.localDateTimeProperty().addListener(
             ChangeListener { _, _, newValue ->
@@ -189,6 +204,7 @@ class GroupCreationView(private val controller: SidepaneController, private val 
                 }
             }
         )
+        edtEndDatePicker.styleClass.setAll("date-picker", "label-max")
     }
 
     private fun setupGroupResultConverter() {
