@@ -8,6 +8,8 @@ import javafx.scene.control.Button
 import javafx.scene.control.ScrollPane
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.HBox
+import javafx.scene.layout.Priority
+import javafx.scene.layout.Region
 import javafx.scene.layout.VBox
 import javafx.stage.Stage
 import models.Label
@@ -25,6 +27,7 @@ class SettingsView(
     private val darkModeButton = Button("dark")
     private val lightModeButton = Button("light")
     private val root = HBox(12.0)
+    private val spacer = Region()
     private val labelContainer = VBox()
     private val themeContainer = VBox(12.0)
 
@@ -34,6 +37,7 @@ class SettingsView(
 
         /* region styling */
         root.styleClass.add("settings")
+        HBox.setHgrow(spacer, Priority.ALWAYS)
         root.style = Theme.stylesForTheme(cache.getWindowSettings().theme)
         cache.themeChangeProperty.addListener { _, _, _ ->
             root.style = Theme.stylesForTheme(cache.getWindowSettings().theme)
@@ -50,7 +54,7 @@ class SettingsView(
         labelScrollContainer.content = labelContent
         labelContainer.children.addAll(labelTitle, labelScrollContainer)
         themeContainer.children.addAll(themeTitle, darkModeButton, lightModeButton)
-        root.children.addAll(labelContainer, themeContainer)
+        root.children.addAll(labelContainer, spacer, themeContainer)
         /* end region view setup */
 
         /* region event filters */

@@ -18,6 +18,7 @@ import javafx.scene.image.ImageView
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
 import javafx.scene.input.MouseEvent
+import javafx.scene.layout.Background
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.HBox
 import javafx.scene.layout.Region
@@ -46,15 +47,16 @@ class ItemView(private val controller: GroupViewController, private val item: It
 
     init {
         /* region styling */
-        styleClass.addAll("item")
+        styleClass.setAll("item")
         textField.styleClass.addAll("body", "item__heading")
-        deleteButton.styleClass.addAll("item__delete-button")
+        deleteButton.styleClass.addAll("item__delete-button", "body")
         completionButton.styleClass.addAll("item__completion-button")
         labelViewScrollContainer.styleClass.addAll("item__label-container")
         labelViewContainer.styleClass.add("item__label-content")
         priorityPickerContainer.styleClass.add("item__priority-picker-content")
         priorityPicker.styleClass.addAll("item__priority-picker", "list-cell", "label-max")
         priorityPicker.minWidth = 130.0
+        dueDatePicker.styleClass.addAll("date-picker", "label-max")
         /* end region styling */
 
         /* region item setup */
@@ -71,6 +73,25 @@ class ItemView(private val controller: GroupViewController, private val item: It
         propertyContainer.children.addAll(priorityPickerContainer, dueDatePicker, labelViewScrollContainer, HSpacer, dragContainer)
         HBox.setHgrow(labelViewScrollContainer, JfxPriority.ALWAYS)
 
+        controller.focusedItemProperty.addListener { _, _, newFocusedItem ->
+            if (newFocusedItem == item) {
+                styleClass.setAll("item--focused")
+            } else {
+                styleClass.setAll("item")
+            }
+        }
+
+        /* region event filters */
+        addEventHandler(MouseEvent.MOUSE_CLICKED) {
+            it.consume()
+            focusItem()
+        }
+
+        propertyContainer.addEventHandler(MouseEvent.MOUSE_CLICKED) {
+            focusItem()
+        }
+        /* end region event filters */
+
         left = completionButton
         right = deleteButton
         center = textField
@@ -79,14 +100,10 @@ class ItemView(private val controller: GroupViewController, private val item: It
 
     private fun focusItem() {
         controller.focusItem(item)
-        left = null
-        right = null
     }
 
     private fun unfocusItem() {
         controller.clearFocus()
-        left = completionButton
-        right = deleteButton
     }
 
     private fun setupLabelViewContainer() {
@@ -180,15 +197,12 @@ class ItemView(private val controller: GroupViewController, private val item: It
     /* region lifecycle methods */
     private fun startEdit() {
         // hide delete and completion button
-        focusItem()
-
         textField.text = item.title
         textField.requestFocus()
     }
 
     private fun cancelEdit() {
         // show completion and deletion button
-        unfocusItem()
         textField.text = item.title
     }
 
@@ -197,6 +211,7 @@ class ItemView(private val controller: GroupViewController, private val item: It
             val originalItem = item.copy()
             item.title = textField.text
             controller.editItem(item, originalItem)
+            focusItem()
         }
     }
     /* end region lifecycle methods */
