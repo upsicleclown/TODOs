@@ -137,7 +137,7 @@ class TODOApplication : Application() {
                 primaryStage.y,
                 primaryStage.height,
                 primaryStage.width,
-                Theme.LIGHT
+                cache.getWindowSettings().theme
             )
         )
         cache.saveWindowSettings()
