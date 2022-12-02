@@ -117,7 +117,7 @@ class GroupCreationView(private val controller: SidepaneController, private val 
     }
 
     private fun setupLabelContainer() {
-        labelBooleanOperatorPicker.items.addAll(BooleanOperator.values())
+        labelBooleanOperatorPicker.items.setAll(*BooleanOperator.values())
         labelBooleanOperatorPicker.value = DEFAULT_BOOLEAN_OPERATOR
         labelBooleanOperatorPicker.styleClass.addAll("sort", "sort__picker", "label-max")
 
