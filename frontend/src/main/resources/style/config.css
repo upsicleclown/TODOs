@@ -20,6 +20,10 @@
 .scroll-pane {
     -fx-background-color: transparent;
 }
+
+.scroll-pane > * {
+    -fx-background-color: transparent;
+}
 /* apply background-radius to scroll-pane.scroll-bar,
     scroll-pane.viewport, and scroll-pane.corner */
 .scroll-pane > * > * {
@@ -34,7 +38,7 @@
 /* set scroll bar thumb color and size */
 .scroll-bar .thumb {
     -fx-background-insets: 1.5 0 0;
-    -fx-background-color: -background-grey;
+    -fx-background-color: -background--secondary;
 }
 
 /* region hide scroll bar arrows */
@@ -54,16 +58,38 @@
 /* end region modifications to modena.css*/
 
 /* region color variables */
+/*
 * {
-    -background-grey: #585252;
-    -background-white: #FFFFFF;
-    -primary-black: #171717;
-    -secondary-beige: #FFBD80;
-    -error-red: #FF0000;
-    -selection-blue: #0029FF;
-    -accent-purple: #8000FF;
-    -burnt-orange: #833F00;
-}
+    /* DEFAULT: background-grey */
+    -background--secondary: #585252;
+    -text--secondary: #585252;
+    -text-highlight: #585252;
+    -border--secondary: #585252;
+
+    /* DEFAULT: background-white */
+    -text--negative: #FFFFFF;
+    -text-highlight--negative: #FFFFFF;
+    -background--primary: #FFFFFF;
+    -border--negative: #FFFFFF;
+
+    /* DEFAULT: primary-black */
+    -background--negative: #171717;
+    -border--primary: #171717;
+    -text--primary: #171717;
+
+    /* DEFAULT: selection-blue */
+    -button--confirm: #0029FF;
+    -selection--hover: #0029FF;
+
+    /* DEFAULT: accent-purple */
+    -selection--static: #8000FF;
+
+    /* DEFAULT: burnt-orange */
+    -foreground--accent: #833F00;
+
+    /* DEFAULT: secondary-beige */
+    -background--accent: #FFBD80;
+}*/
 /* end region color variables */
 
 /* region font installation */

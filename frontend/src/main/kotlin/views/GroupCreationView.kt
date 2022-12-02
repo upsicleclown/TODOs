@@ -1,5 +1,6 @@
 package views
 
+import cache.Cache
 import controllers.SidepaneController
 import javafx.beans.value.ChangeListener
 import javafx.event.ActionEvent
@@ -24,9 +25,10 @@ import models.Filter
 import models.Group
 import models.Label
 import models.Priority
+import theme.Theme
 import javafx.scene.control.Label as JfxLabel
 
-class GroupCreationView(private val controller: SidepaneController) : Dialog<Group?>() {
+class GroupCreationView(private val controller: SidepaneController, private val cache: Cache) : Dialog<Group?>() {
     private val DEFAULT_BOOLEAN_OPERATOR = BooleanOperator.AND
     var group = Group("", Filter(labelBooleanOperator = DEFAULT_BOOLEAN_OPERATOR))
     private var createButton = Button()
@@ -51,6 +53,7 @@ class GroupCreationView(private val controller: SidepaneController) : Dialog<Gro
     init {
         /* region styling */
         dialogPane.scene.stylesheets.add("/style/TODOApplication.css")
+        dialogPane.scene.root.style = Theme.stylesForTheme(cache.getWindowSettings().theme)
         controller.todoApp()?.enableHotkeys(dialogPane.scene)
 
         groupCreationContainer.styleClass.add("group-creation")

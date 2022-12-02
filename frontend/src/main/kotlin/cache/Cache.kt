@@ -1,10 +1,12 @@
 package cache
 
+import javafx.beans.property.SimpleBooleanProperty
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.encodeToJsonElement
 import models.WindowSettings
+import theme.Theme
 import java.io.File
 
 /**
@@ -16,10 +18,15 @@ class Cache(
     private val groupToItemOrderingFilePath: String = "group_id_to_item_id_ordering.json",
     private val userToItemOrderingFilePath: String = "user_id_to_item_id_ordering.json"
 ) {
+
     private val emptyLength = 0L
+
+    /* Exposed so views can listen for live theme updates and repaint */
+    var themeChangeProperty = SimpleBooleanProperty()
 
     /* Properties related to window settings. */
     private lateinit var windowSettings: WindowSettings
+    private val defaultTheme = Theme.LIGHT
     private val defaultPosition = 0.0
     private val defaultSize = 500.0
 
@@ -30,7 +37,7 @@ class Cache(
     init {
         // If file content is empty, set default values.
         if (File(windowSettingsFilePath).length() == emptyLength) {
-            windowSettings = WindowSettings(defaultPosition, defaultPosition, defaultSize, defaultSize)
+            windowSettings = WindowSettings(defaultPosition, defaultPosition, defaultSize, defaultSize, defaultTheme)
         } else {
             loadWindowSettings()
         }

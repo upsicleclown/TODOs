@@ -1,6 +1,7 @@
 package cache
 
 import models.WindowSettings
+import theme.Theme
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -19,13 +20,15 @@ class CacheTest {
         val newY = 70.0
         val newHeight = 600.0
         val newWidth = 400.0
+        val newTheme = Theme.DARK
 
-        cache.editWindowSettings(WindowSettings(newX, newY, newHeight, newWidth))
+        cache.editWindowSettings(WindowSettings(newX, newY, newHeight, newWidth, newTheme))
         val newWindowSettings = cache.getWindowSettings()
         assertEquals(newWindowSettings.x, newX)
         assertEquals(newWindowSettings.y, newY)
         assertEquals(newWindowSettings.height, newHeight)
         assertEquals(newWindowSettings.width, newWidth)
+        assertEquals(newWindowSettings.theme, newTheme)
     }
 
     @Test

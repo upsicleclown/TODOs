@@ -1,5 +1,6 @@
 package views
 
+import cache.Cache
 import controllers.GroupViewController
 import javafx.beans.value.ChangeListener
 import javafx.collections.ObservableList
@@ -26,7 +27,7 @@ import models.Priority
 import java.util.Optional
 import kotlin.properties.Delegates
 
-class GroupView(private val controller: GroupViewController) : VBox(36.0) {
+class GroupView(private val controller: GroupViewController, private val cache: Cache) : VBox(36.0) {
 
     enum class Attribute(val value: String) {
         IS_COMPLETED("completed"), EDT_DUEDATE("due date"), PRIORITY("priority"), CUSTOM("custom");
@@ -139,7 +140,7 @@ class GroupView(private val controller: GroupViewController) : VBox(36.0) {
             itemListContainer.children.setAll(
                 newItemList.map {
                         item ->
-                    ItemView(controller, item)
+                    ItemView(controller, item, cache)
                 }
             )
         }
@@ -149,7 +150,7 @@ class GroupView(private val controller: GroupViewController) : VBox(36.0) {
             itemListContainer.children.setAll(
                 controller.displayItemList.map {
                         item ->
-                    ItemView(controller, item)
+                    ItemView(controller, item, cache)
                 }
             )
         }
@@ -177,7 +178,7 @@ class GroupView(private val controller: GroupViewController) : VBox(36.0) {
     private fun setUpSortOrderPicker() {
         /* region styling */
         sortOrderPicker.styleClass.addAll("sort")
-        sortOrderLabel.styleClass.addAll("h1")
+        sortOrderLabel.styleClass.addAll("sort__label", "h1")
         sortOrderAttributePicker.styleClass.addAll("label-max", "sort__picker")
         sortOrderIsDescButton.styleClass.addAll("label-max", "sort__desc-button")
         /* end region styling */

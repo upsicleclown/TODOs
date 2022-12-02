@@ -1,9 +1,9 @@
 @import "config.css";
 
 .item {
-    -fx-background-color: -background-white;
+    -fx-background-color: -background--primary;
     -fx-border-width: 1px;
-    -fx-border-color: -primary-black;
+    -fx-border-color: -border--primary;
     -fx-border-style: solid;
     -fx-border-radius: 12px;
     -fx-background-radius: 12px;
@@ -11,7 +11,7 @@
 
 .item__heading {
     -fx-background-color: transparent;
-    -fx-text-fill: -primary-black;
+    -fx-text-fill: -text--primary;
 }
 
 .item__delete-button {
@@ -27,14 +27,32 @@
 }
 
 .item__priority-picker {
-    -fx-background-color: -primary-black;
-    -fx-padding: 0px 8px;
+    -fx-alignment: center;
+    -fx-border-color: -border--primary;
+    -fx-background-color: -background--negative;
+    -fx-text-fill: -text--negative;
     -fx-background-radius: 16px;
-    -fx-spacing: 12px;
+    -fx-border-radius: 16px;
+    -fx-padding: 0px 0px 0px 8px;
+}
+
+.item__priority-picker .list-view .list-cell {
+    -fx-text-fill: -text--negative;
+    -fx-background-color: -background--negative;
+    -fx-padding: 8px;
+    -fx-border-style: hidden hidden solid hidden;
+    -fx-border-width: 1px;
+    -fx-border-color: -border--negative;
+}
+
+.item__priority-picker .list-view .list-cell:hover,
+.item__priority-picker .list-view .list-cell:focused {
+    -fx-text-fill: -text--primary;
+    -fx-background-color: -background--primary;
 }
 
 .item__priority-picker .list-cell:selected {
-    -fx-text-fill: white;
+    -fx-text-fill: -text--negative;
 }
 
 .item__label-container {
@@ -48,30 +66,30 @@
 }
 
 .item__label-content {
-    -fx-background-color: -background-white;
+    -fx-background-color: -background--primary;
     -fx-background-radius: 0px 0px 12px 12px;
     -fx-padding: 8px;
 }
 
 .item__label-chip {
     -fx-padding: 0px 8px 0px 16px;
-    -fx-background-color: -primary-black;
+    -fx-background-color: -background--negative;
     -fx-border-radius: 16px;
     -fx-background-radius: 16px;
 }
 
 .item__label-chip__text {
-    -fx-text-fill: -background-white;
+    -fx-text-fill: -text--negative;
 }
 
 .item__label-chip__delete-button {
-    -fx-text-fill: -background-white;
+    -fx-text-fill: -text--negative;
     -fx-background-color: transparent;
     -fx-align: center;
 }
 
 .item__add-label-chip {
-    -fx-background-color: -primary-black;
+    -fx-background-color: -background--negative;
     -fx-padding: 0px 8px;
     -fx-border-radius: 16px;
     -fx-background-radius: 16px;
@@ -79,7 +97,7 @@
 
 .item__add-label-chip__button {
     -fx-background-color: transparent;
-    -fx-text-fill: -background-white;
+    -fx-text-fill: -text--negative;
 }
 
 // Revisit this: https://stackoverflow.com/questions/19343531/javafx-combobox-styling
