@@ -21,6 +21,7 @@ import javafx.scene.layout.BorderPane
 import javafx.stage.Stage
 import models.Item
 import models.WindowSettings
+import theme.Theme
 import views.GroupView
 import views.LoginView
 import views.SettingsView
@@ -37,9 +38,9 @@ class TODOApplication : Application() {
     private val sidepaneController = SidepaneController(this)
     val groupViewController = GroupViewController(this, cache)
     private val todoClient = TODOClient
-    private val sidepaneView = SidepaneView(sidepaneController)
-    private val groupView = GroupView(groupViewController)
-    private val settingsView = SettingsView(groupViewController)
+    private val sidepaneView = SidepaneView(sidepaneController, cache)
+    private val groupView = GroupView(groupViewController, cache)
+    private val settingsView = SettingsView(groupViewController, cache)
 
     init {
         sidepaneController.addView(sidepaneView)
@@ -90,18 +91,25 @@ class TODOApplication : Application() {
 
         menuBar.menus.addAll(fileMenu, editMenu, settingsMenu)
         root.top = menuBar
+        root.style = Theme.stylesForTheme(cache.getWindowSettings().theme)
+        cache.themeChangeProperty.addListener { _, _, _ ->
+            root.style = Theme.stylesForTheme(cache.getWindowSettings().theme)
+        }
         primaryStage.scene.root = root
 
         enableHotkeys(primaryStage.scene)
     }
 
     fun setLoginView() {
-        primaryStage.scene.root = LoginView(this)
+        val root = LoginView(this)
+        root.style = Theme.stylesForTheme(cache.getWindowSettings().theme)
+        primaryStage.scene.root = root
     }
 
     override fun start(stage: Stage) {
         primaryStage = stage
         val root = LoginView(this)
+        root.style = Theme.stylesForTheme(cache.getWindowSettings().theme)
 
         val scene = Scene(root)
         scene.stylesheets.add("/style/TODOApplication.css")
@@ -123,7 +131,15 @@ class TODOApplication : Application() {
         groupViewController.saveCurrentSortOrderIfNeeded()
         cache.saveGroupToItemOrdering()
         cache.saveUserToItemOrdering()
-        cache.editWindowSettings(WindowSettings(primaryStage.x, primaryStage.y, primaryStage.height, primaryStage.width))
+        cache.editWindowSettings(
+            WindowSettings(
+                primaryStage.x,
+                primaryStage.y,
+                primaryStage.height,
+                primaryStage.width,
+                Theme.LIGHT
+            )
+        )
         cache.saveWindowSettings()
         commandHandler.execute(LogOutUserCommand())
     }

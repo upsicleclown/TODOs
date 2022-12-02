@@ -1,5 +1,6 @@
 package views
 
+import cache.Cache
 import controllers.SidepaneController
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
@@ -12,7 +13,8 @@ import models.Group
 import java.util.Optional
 
 class SidepaneView(
-    private val sidepaneController: SidepaneController
+    private val sidepaneController: SidepaneController,
+    private val cache: Cache
 ) : VBox(24.0) {
 
     private var groupListContainer = VBox(24.0)
@@ -50,7 +52,7 @@ class SidepaneView(
         // Field to create groups
         openGroupCreationDialogButton.onAction = EventHandler {
 
-            groupCreationDialog = GroupCreationView(sidepaneController)
+            groupCreationDialog = GroupCreationView(sidepaneController, cache)
             val createdGroup: Optional<Group?> = groupCreationDialog!!.showAndWait()
             if (createdGroup.isPresent) {
                 sidepaneController.createGroup(createdGroup.get())

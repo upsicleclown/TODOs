@@ -28,16 +28,16 @@ class LoginView(private val todoApplication: TODOApplication) : VBox(24.0) {
     init {
         /* region styling */
         alignment = Pos.CENTER
-        title.styleClass.addAll("title-max")
+        styleClass.addAll("login")
+        title.styleClass.addAll("login__title", "title-max")
 
         usernameContainer.alignment = Pos.CENTER
         usernameContainer.styleClass.addAll("username")
-        usernameLabel.styleClass.addAll("subtitle")
+        usernameLabel.styleClass.addAll("username__label", "subtitle")
         usernameTextField.styleClass.addAll("username__text-field", "body")
 
         passwordContainer.alignment = Pos.CENTER
-        passwordContainer.styleClass.addAll("password")
-        passwordLabel.styleClass.addAll("subtitle")
+        passwordLabel.styleClass.addAll("password__label", "subtitle")
         passwordTextField.styleClass.addAll("password__text-field", "body")
 
         buttonsContainer.alignment = Pos.CENTER

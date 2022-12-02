@@ -1,5 +1,5 @@
 @import "config.css";
 
 .main-view {
-    -fx-background-color: -background-white;
+    -fx-background-color: -background--primary;
 }

@@ -1,5 +1,6 @@
 package views
 
+import cache.Cache
 import controllers.GroupViewController
 import javafx.beans.value.ChangeListener
 import javafx.event.ActionEvent
@@ -9,6 +10,9 @@ import javafx.scene.control.Button
 import javafx.scene.control.ComboBox
 import javafx.scene.control.ScrollPane
 import javafx.scene.control.TextField
+import javafx.scene.effect.Blend
+import javafx.scene.effect.BlendMode
+import javafx.scene.effect.ColorInput
 import javafx.scene.image.Image
 import javafx.scene.image.ImageView
 import javafx.scene.input.KeyCode
@@ -17,13 +21,15 @@ import javafx.scene.input.MouseEvent
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.HBox
 import javafx.scene.layout.Region
+import javafx.scene.paint.Color
 import jfxtras.scene.control.LocalDateTimeTextField
 import models.Item
 import models.Label
 import models.Priority
+import theme.Theme
 import javafx.scene.layout.Priority as JfxPriority
 
-class ItemView(private val controller: GroupViewController, private val item: Item) : BorderPane() {
+class ItemView(private val controller: GroupViewController, private val item: Item, private val cache: Cache) : BorderPane() {
     private val LABEL_VIEW_GUTTER_LENGTH = 12.0
 
     private val textField = TextField()
@@ -203,10 +209,34 @@ class ItemView(private val controller: GroupViewController, private val item: It
 
     private fun configCompletionButton(item: Item) {
         val imageUrl = if (item.isCompleted) "completed_item_48.png" else "uncompleted_item_48.png"
-        val image = Image(imageUrl)
+        var image = Image(imageUrl)
         val view = ImageView(image)
         view.fitHeight = 18.0
+        view.fitWidth = 18.0
         view.isPreserveRatio = true
+
+        var filter = Blend()
+        filter.mode = BlendMode.SRC_ATOP
+        filter.topInput = ColorInput(
+            view.x,
+            view.y,
+            view.fitWidth,
+            view.fitHeight,
+            Color.web(Theme.primaryColorForTheme(cache.getWindowSettings().theme))
+        )
+        view.effect = filter
+
+        cache.themeChangeProperty.addListener { _, _, _ ->
+            filter.topInput = ColorInput(
+                view.x,
+                view.y,
+                view.fitWidth,
+                view.fitHeight,
+                Color.web(Theme.primaryColorForTheme(cache.getWindowSettings().theme))
+            )
+            view.effect = filter
+        }
+
         completionButton.graphic = view
         completionButton.setOnAction {
             val newItem = item.copy()
@@ -216,7 +246,30 @@ class ItemView(private val controller: GroupViewController, private val item: It
     }
 
     private fun configDragContainer() {
-        dragContainer.children.add(ImageView(Image("drag_32.png")))
+        var dragHandle = ImageView(Image("drag_32.png"))
+        dragHandle.fitWidth = 32.0
+        dragHandle.fitHeight = 32.0
+        var filter = Blend()
+        filter.mode = BlendMode.SRC_ATOP
+        filter.topInput = ColorInput(
+            dragHandle.x,
+            dragHandle.y,
+            dragHandle.fitWidth,
+            dragHandle.fitHeight,
+            Color.web(Theme.primaryColorForTheme(cache.getWindowSettings().theme))
+        )
+        dragHandle.effect = filter
+        cache.themeChangeProperty.addListener { _, _, _ ->
+            filter.topInput = ColorInput(
+                dragHandle.x,
+                dragHandle.y,
+                dragHandle.fitWidth,
+                dragHandle.fitHeight,
+                Color.web(Theme.primaryColorForTheme(cache.getWindowSettings().theme))
+            )
+            dragHandle.effect = filter
+        }
+        dragContainer.children.add(dragHandle)
         dragContainer.padding = Insets(0.0, 5.0, 5.0, 0.0)
 
         /* hovering and dragging setup */

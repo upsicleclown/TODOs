@@ -2,10 +2,28 @@
 
 .settings {
     -fx-padding: 16px;
+    -fx-background-color: -background--primary;
 }
 
-.settings__title {
-    -fx-text-fill: -primary-black;
+.labels__title {
+    -fx-text-fill: -text--primary;
+}
+
+.themes__title {
+    -fx-text-fill: -text--primary;
+}
+
+.themes__button {
+    -fx-background-color: -background--primary;
+    -fx-text-fill: -button--confirm;
+    -fx-border-style : solid;
+    -fx-border-color: -button--confirm;
+     -fx-border-width: 1px;
+}
+
+.themes__button:hover {
+    -fx-text-fill: -text--negative;
+    -fx-background-color: -button--confirm;
 }
 
 .settings__label-text {

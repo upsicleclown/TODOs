@@ -7,8 +7,8 @@
 .group-creation__filters {
     -fx-border-style: solid;
     -fx-border-width: 1px;
-    -fx-border-color: -primary-black;
-    -fx-background-color: -background-white;
+    -fx-border-color: -border--primary;
+    -fx-background-color: -background--primary;
     -fx-padding: 16px;
 }
 
@@ -17,28 +17,28 @@
 }
 
 .group-creation__cancel-button {
-    -fx-background-color: -primary-black;
-    -fx-text-fill: -background-white;
+    -fx-background-color: -background--negative;
+    -fx-text-fill: -text--negative;
     -fx-border-style: solid;
-    -fx-border-color: -primary-black;
+    -fx-border-color: -border--primary;
     -fx-border-width: 1px;
 }
 
 .group-creation__cancel-button:hover {
-    -fx-text-fill: -primary-black;
-    -fx-background-color: -background-white;
-    -fx-border-color: -primary-black;
+    -fx-text-fill: -text--primary;
+    -fx-background-color: -background--primary;
+    -fx-border-color: -border--primary;
 }
 
 .group-creation__create-button {
-    -fx-background-color: -background-white;
-    -fx-text-fill: -selection-blue;
+    -fx-background-color: -background--primary;
+    -fx-text-fill: -button--confirm;
     -fx-border-style : solid;
-    -fx-border-color: -selection-blue;
+    -fx-border-color: -button--confirm;
     -fx-border-width: 1px;
 }
 
 .group-creation__create-button:hover {
-    -fx-text-fill: -background-white;
-    -fx-background-color: -selection-blue;
+    -fx-text-fill: -text--negative;
+    -fx-background-color: -button--confirm;
 }
