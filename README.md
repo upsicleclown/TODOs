@@ -1,6 +1,6 @@
 # CS 346 Project
 
-This repository represents a sample project that a team might create for their own use. This particular project relates to building a note-taking application, which was the project in the first offering of this course.
+This repository is a mirror of a GitLab project. This particular project relates to building a note-taking application, which was the project in the first offering of this course.
 
 ## Wiki
 
